@@ -111,3 +111,51 @@ This project includes code derived from V2Ray/Xray and Tun2Socks.
 ---
 
 **DOKODEMO** // SYSTEM_READY
+
+---
+
+## 🛠️ Usage Guide (使用指南)
+
+### 1. Import Profile (导入节点)
+DokoDemo supports multiple ways to import server configurations:
+
+*   **QR Scan**: Tap the **[SCAN]** button on the home dashboard to scan a VLESS/VMESS/Trojan QR code.
+*   **Clipboard**: Copy a `vmess://`, `vless://`, or `trojan://` link and tap **[IMPORT]**.
+*   **Manual**: Navigate to **Server List** -> **Add (+)** -> **Manual Input**.
+
+### 2. Connect (启动连接)
+*   On the **Home Dashboard**, tap the large **[CONNECT]** button.
+*   **First Run**: You will be prompted to grant **VPN Permission**. Accept to proceed.
+*   **Status**:
+    *   **IDLE**: Disconnected.
+    *   **CONNECTING**: Handshaking...
+    *   **CONNECTED**: VPN tunnel active. Traffic monitoring curve will activate.
+
+### 3. Split Tunneling (分应用代理)
+*   Go to **Settings** -> **Split Tunneling**.
+*   **Mode**:
+    *   **Proxy All**: All apps go through VPN.
+    *   **Bypass Selected**: Selected apps bypass VPN (Direct).
+    *   **Proxy Selected**: Only selected apps use VPN.
+*   Toggle switches for installed apps to configure their routing.
+
+### 4. System Logs (日志调试)
+*   Tap the **Terminal Icon** (Bottom Right) to open the System Logs console.
+*   View real-time V2Ray Core logs for troubleshooting connection issues.
+
+---
+
+## ⚠️ Troubleshooting (常见问题)
+
+**Q: Failed to load V2Ray Core?**
+A: Ensure you have successfully set up the native libraries (see **Setup & Build**). The app requires `libv2ray.aar` and `geoip/geosite` assets.
+
+**Q: Connection Timeout?**
+A: Check your server configuration. Verify that the server time matches your device time (V2Ray is time-sensitive).
+
+**Q: "Mock Mode" Warning?**
+A: This means `libv2ray.aar` was not found during build. The app is running in UI-only mode. Please download and install the AAR.
+
+---
+
+> **Note**: This project is for educational and research purposes only. Please comply with local laws and regulations.
