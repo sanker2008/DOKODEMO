@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Server List</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1f230f",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f230f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccff00;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white font-display overflow-hidden selection:bg-primary selection:text-black">
+<div class="relative flex h-screen w-full flex-col max-w-md mx-auto border-x border-white/10 shadow-2xl">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 bg-background-dark border-b border-white/10 shrink-0 z-10">
+<button class="text-white hover:text-primary transition-colors flex items-center justify-center p-2 rounded-sm active:bg-white/10">
+<span class="material-symbols-outlined text-3xl font-light">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-widest uppercase text-white select-none">Server List</h1>
+<button class="text-white hover:text-primary transition-colors flex items-center justify-center p-2 rounded-sm active:bg-white/10 group">
+<span class="material-symbols-outlined text-2xl group-active:rotate-180 transition-transform duration-300">refresh</span>
+</button>
+</header>
+<!-- Search Bar -->
+<div class="px-4 py-4 bg-background-dark shrink-0">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="material-symbols-outlined text-primary group-focus-within:text-white transition-colors">search</span>
+</div>
+<input class="block w-full p-3 pl-10 text-sm bg-black border border-primary text-white placeholder-white/40 focus:ring-0 focus:border-primary focus:bg-white/5 transition-all font-mono uppercase rounded-sm" placeholder="SEARCH_LOCALE..." type="text"/>
+</div>
+</div>
+<!-- Server List -->
+<div class="flex-1 overflow-y-auto flex flex-col divide-y divide-[#333333]">
+<!-- Active Item (Variant 1: Solid Acid Lime) -->
+<div class="group flex items-center justify-between px-4 py-3 bg-primary cursor-pointer">
+<div class="flex items-center gap-4">
+<!-- Country Code Box: Black border on Lime bg -->
+<div class="w-12 h-12 flex items-center justify-center border-2 border-black rounded-sm shrink-0">
+<span class="text-black font-bold text-lg leading-none">JP</span>
+</div>
+<div class="flex flex-col">
+<span class="text-black font-bold uppercase text-base tracking-wide">Tokyo_Core_01</span>
+<span class="text-black/80 text-xs font-mono uppercase">Protocol: WireGuard</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-black font-mono text-xl font-bold">12ms</span>
+<span class="material-symbols-outlined text-black icon-fill" style="font-variation-settings: 'FILL' 1, 'wght' 700;">signal_cellular_alt</span>
+</div>
+<span class="text-black/70 text-[10px] uppercase font-bold tracking-wider mt-1">Connected</span>
+</div>
+</div>
+<!-- Inactive Items -->
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<!-- Country Code Box: Lime border on Dark bg -->
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">US</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">New_York_East</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: OpenVPN</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">45ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">DE</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">Frankfurt_Hub</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: WireGuard</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">102ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt_2_bar</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">SG</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">Singapore_Direct</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: WireGuard</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">18ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">UK</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">London_Bridge</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: IKEv2</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">88ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt_2_bar</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">BR</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">Sao_Paulo_S1</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: WireGuard</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">156ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt_1_bar</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between px-4 py-4 hover:bg-white/5 transition-colors cursor-pointer bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center border border-primary rounded-sm shrink-0">
+<span class="text-primary font-bold text-lg leading-none">CA</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-medium uppercase text-base tracking-wide group-hover:text-primary transition-colors">Toronto_North</span>
+<span class="text-white/40 text-xs font-mono uppercase">Protocol: OpenVPN</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-1">
+<span class="text-primary font-mono text-xl">52ms</span>
+<span class="material-symbols-outlined text-primary">signal_cellular_alt</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Status -->
+<div class="bg-black border-t border-primary p-3 shrink-0">
+<div class="flex items-center justify-between text-xs font-mono uppercase">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+<span class="text-primary tracking-widest">System_Online</span>
+</div>
+<span class="text-white/60">V.2.0.4.1</span>
+</div>
+<div class="mt-2 text-primary font-bold uppercase tracking-wide text-sm flex justify-between">
+<span>Current Uplink:</span>
+<span>Tokyo_Core_01</span>
+</div>
+</div>
+</div>
+</body></html>

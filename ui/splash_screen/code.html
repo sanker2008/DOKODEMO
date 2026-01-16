@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo Splash Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#000000", // Adjusted to pure black for this specific design request
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Grotesk", "monospace"], // Using Space Grotesk for mono feel as per strict font request
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom utilities for neubrutalism tweaks if needed */
+        .no-blur {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black text-white antialiased font-display selection:bg-primary selection:text-black">
+<div class="relative flex h-screen w-full flex-col justify-between items-center bg-black overflow-hidden p-6">
+<!-- Background Grid Pattern (Subtle Industrial Texture) -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" data-alt="Abstract subtle grid pattern background" style="background-image: linear-gradient(#ccff00 1px, transparent 1px), linear-gradient(90deg, #ccff00 1px, transparent 1px); background-size: 40px 40px;">
+</div>
+<!-- Top Right Tech Spec -->
+<div class="w-full flex justify-end relative z-10">
+<span class="text-[#333333] text-[10px] font-bold tracking-widest uppercase font-mono">
+                v.1.0.4-alpha // DOKO_CLIENT
+            </span>
+</div>
+<!-- Center Content: Logo & Title -->
+<div class="flex flex-col items-center justify-center gap-12 relative z-10 flex-1">
+<!-- Abstract Portal Logo -->
+<div class="relative w-40 h-40 flex items-center justify-center">
+<!-- Outer Frame -->
+<div class="absolute inset-0 border-[6px] border-primary rounded-sm"></div>
+<!-- Inner Receding Frame 1 -->
+<div class="absolute inset-4 border-[2px] border-primary/50 rounded-sm"></div>
+<!-- Inner Receding Frame 2 -->
+<div class="absolute inset-8 border-[2px] border-primary/30 rounded-sm"></div>
+<!-- Center Core -->
+<div class="relative w-12 h-12 bg-primary rounded-sm flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-black text-3xl font-bold rotate-90">
+                        arrow_forward_ios
+                    </span>
+</div>
+<!-- Decorative Crosshairs -->
+<div class="absolute -top-2 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-primary"></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-primary"></div>
+<div class="absolute -left-2 top-1/2 -translate-y-1/2 h-[1px] w-4 bg-primary"></div>
+<div class="absolute -right-2 top-1/2 -translate-y-1/2 h-[1px] w-4 bg-primary"></div>
+</div>
+<!-- Title -->
+<div class="text-center space-y-2">
+<h1 class="text-white text-5xl font-bold tracking-[0.2em] leading-tight uppercase">
+                    DOKODEMO
+                </h1>
+<div class="w-16 h-1 bg-primary mx-auto rounded-none"></div>
+</div>
+</div>
+<!-- Bottom Status -->
+<div class="w-full flex flex-col items-center justify-end pb-8 gap-4 relative z-10">
+<!-- Status Text -->
+<p class="text-primary text-sm font-medium tracking-[0.15em] uppercase font-mono flex items-center">
+<span class="material-symbols-outlined text-base mr-2 animate-spin">
+                    data_usage
+                </span>
+                SYSTEM INITIALIZING... <span class="animate-pulse ml-1">_</span>
+</p>
+<!-- Industrial Loading Bar -->
+<div class="w-64 h-2 bg-[#1a1a1a] border border-[#333333] rounded-none relative overflow-hidden">
+<!-- Progress Block -->
+<div class="absolute left-0 top-0 bottom-0 w-2/3 bg-primary/80"></div>
+<!-- Striped Pattern Overlay on Bar -->
+<div class="absolute inset-0 w-full h-full opacity-30" data-alt="Striped hazard pattern on progress bar" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, #000 5px, #000 10px);">
+</div>
+</div>
+<div class="text-[#444444] text-[10px] uppercase tracking-widest mt-2">
+                Secure Connection Protocol
+            </div>
+</div>
+</div>
+</body></html>

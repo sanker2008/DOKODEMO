@@ -1,0 +1,5 @@
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.configeditor.ConfigEditorViewModel
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.configeditor.ConfigEditorViewModel
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.home.HomeViewModel
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.home.HomeViewModel
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.serverlist.ServerListViewModel

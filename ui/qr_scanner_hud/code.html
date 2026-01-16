@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo QR Scanner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1f230f",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom utilities for the industrial look */
+        .hud-corner {
+            position: absolute;
+            width: 2rem;
+            height: 2rem;
+            border-color: #ccff00;
+            border-style: solid;
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent, #ccff00, transparent);
+            opacity: 0.5;
+        }
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black font-display text-white antialiased overflow-hidden h-screen w-full selection:bg-primary selection:text-black">
+<!-- Main Container simulating Camera View -->
+<div class="relative h-full w-full flex flex-col justify-between bg-black">
+<!-- Simulated Camera Feed Background -->
+<div class="absolute inset-0 z-0 select-none overflow-hidden">
+<img class="h-full w-full object-cover opacity-40 grayscale contrast-125" data-alt="Dark blurry cyberpunk server room or city lights texture simulating camera feed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChc0EuLiYU23BJfBOOqzNoUzfjVf2K2PMHNb5sR3rrFJ8MbVGzp_oubKg3eMpm7KeGZWocv-cHrfBqv_bCa7FlQOA074aHOdKu4bx12umk8P4XxZTJ187HJ_zKrrA3y01Q8qhhYZsOXjHGO4kUzNXEubDp1KO-l1T_IhJT-7ZsdqBiPTn-txktqGG2MU23apVJhHGGbQw85TecCUPW_BlhkHE0kVILGq-u1u4b-5qt8jVOJTnYFV5hklK9m83FxagSO7bxdMYAw0l9"/>
+<div class="absolute inset-0 bg-black/60"></div>
+<!-- HUD Grid Overlay -->
+<div class="absolute inset-0 bg-grid-pattern z-10 pointer-events-none"></div>
+<!-- Vignette -->
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] z-10"></div>
+</div>
+<!-- Top Bar / Header -->
+<div class="relative z-20 w-full p-4 pt-12 flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 bg-primary rounded-full"></div>
+<h1 class="text-primary text-sm font-bold tracking-[0.2em]">SYS.READY</h1>
+</div>
+<p class="text-xs text-primary/60 font-mono tracking-widest pl-4">NET_SECURE // PROTOCOL_V2</p>
+</div>
+<button class="group relative flex h-12 w-12 items-center justify-center border border-primary/50 bg-black/40 text-primary hover:bg-primary hover:text-black transition-all duration-200">
+<span class="material-symbols-outlined text-2xl">close</span>
+<!-- Decorative corner accents for button -->
+<div class="absolute -top-[1px] -left-[1px] h-2 w-2 border-l-2 border-t-2 border-primary"></div>
+<div class="absolute -bottom-[1px] -right-[1px] h-2 w-2 border-r-2 border-b-2 border-primary"></div>
+</button>
+</div>
+<!-- Center Viewfinder HUD -->
+<div class="relative z-20 flex-1 flex flex-col items-center justify-center pointer-events-none">
+<!-- Target Box -->
+<div class="relative w-72 h-72 flex flex-col items-center justify-center">
+<!-- Brackets -->
+<div class="hud-corner top-0 left-0 border-t-4 border-l-4"></div>
+<div class="hud-corner top-0 right-0 border-t-4 border-r-4"></div>
+<div class="hud-corner bottom-0 left-0 border-b-4 border-l-4"></div>
+<div class="hud-corner bottom-0 right-0 border-b-4 border-r-4"></div>
+<!-- Center Crosshair -->
+<div class="absolute inset-0 flex items-center justify-center opacity-50">
+<div class="w-8 h-[1px] bg-primary"></div>
+<div class="h-8 w-[1px] bg-primary absolute"></div>
+</div>
+<!-- Scanning Line Effect -->
+<div class="absolute inset-x-4 top-1/2 h-[2px] bg-primary shadow-[0_0_15px_#ccff00] opacity-80"></div>
+<!-- Floating Data Text near box -->
+<div class="absolute -top-8 w-full flex justify-between text-[10px] text-primary/80 font-mono tracking-widest">
+<span>RANGE: 0.4M</span>
+<span>ISO: AUTO</span>
+</div>
+<div class="absolute -bottom-8 w-full text-center">
+<span class="bg-primary/10 border border-primary/30 px-3 py-1 text-xs text-primary tracking-[0.15em] font-bold backdrop-blur-sm">
+                        ALIGN QR CODE
+                    </span>
+</div>
+</div>
+<!-- Side HUD Elements (Decorative) -->
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-8 items-end text-[9px] text-primary/50 font-mono hidden sm:flex">
+<div class="flex flex-col items-end gap-1">
+<span class="h-[1px] w-8 bg-primary/50"></span>
+<span>Z: 12.44</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="h-[1px] w-4 bg-primary/50"></span>
+<span>X: 44.10</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="h-[1px] w-6 bg-primary/50"></span>
+<span>Y: 09.22</span>
+</div>
+</div>
+</div>
+<!-- Footer / Controls -->
+<div class="relative z-20 w-full p-6 pb-10 bg-gradient-to-t from-black via-black/95 to-transparent">
+<!-- Readout Status Bar -->
+<div class="flex justify-between items-end mb-6 border-b border-primary/30 pb-2 mx-1">
+<div class="flex flex-col">
+<span class="text-[10px] text-primary/60 font-mono uppercase">Status</span>
+<span class="text-primary text-sm font-bold tracking-widest">SCANNING...</span>
+</div>
+<div class="text-[10px] text-primary/60 font-mono">
+                    CAM_01 [ACTIVE]
+                </div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-4">
+<button class="group relative h-16 w-full overflow-hidden border-2 border-primary bg-black/50 backdrop-blur-md text-primary transition-all duration-300 hover:bg-primary/10 active:scale-[0.98]">
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">flash_on</span>
+<span class="text-xs font-bold tracking-[0.15em]">FLASH</span>
+</div>
+<!-- Industrial corner mark -->
+<div class="absolute bottom-0 left-0 h-0 w-0 border-b-[12px] border-l-[12px] border-b-primary border-l-transparent transition-all group-hover:border-b-[24px] group-hover:border-l-[24px]"></div>
+</button>
+<button class="group relative h-16 w-full overflow-hidden border-2 border-primary bg-black/50 backdrop-blur-md text-primary transition-all duration-300 hover:bg-primary/10 active:scale-[0.98]">
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-1">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">photo_library</span>
+<span class="text-xs font-bold tracking-[0.15em]">GALLERY</span>
+</div>
+<!-- Industrial corner mark -->
+<div class="absolute bottom-0 right-0 h-0 w-0 border-b-[12px] border-r-[12px] border-b-primary border-r-transparent transition-all group-hover:border-b-[24px] group-hover:border-r-[24px]"></div>
+</button>
+</div>
+<div class="mt-6 flex justify-center opacity-40 hover:opacity-100 transition-opacity">
+<p class="text-[10px] text-primary tracking-[0.3em] font-mono border-x border-primary/30 px-4">
+                    DOKODEMO VPN // V.2.0
+                </p>
+</div>
+</div>
+</div>
+</body></html>

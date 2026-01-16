@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo VPN - Subscription Manager</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ccff00",
+              "background-light": "#f8f8f5",
+              "background-dark": "#1f230f",
+              "surface-dark": "#262b14", // Slightly lighter than bg-dark for cards
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"],
+              "mono": ["Space Mono", "monospace"],
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem", "none": "0"},
+            boxShadow: {
+                "neubrutal": "4px 4px 0px 0px rgba(204, 255, 0, 0.1)",
+                "neubrutal-hover": "2px 2px 0px 0px rgba(204, 255, 0, 0.2)",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Industrial Grid Pattern */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f230f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #424b20;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccff00;
+        }
+
+        .text-shadow-glow {
+            text-shadow: 0 0 10px rgba(204, 255, 0, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased h-screen flex flex-col selection:bg-primary selection:text-black">
+<!-- Top AppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-4 py-4 bg-background-dark border-b-2 border-white/5 backdrop-blur-md bg-opacity-95">
+<div class="flex items-center justify-center w-10 h-10 -ml-2 rounded hover:bg-white/5 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-white group-hover:text-primary">arrow_back</span>
+</div>
+<div class="flex flex-col items-center">
+<h2 class="text-white text-lg font-bold leading-tight tracking-wider uppercase">SOURCES <span class="text-primary opacity-50 mx-1">//</span> DokoDemo</h2>
+<!-- Connection Status -->
+<div class="flex items-center gap-2 mt-1">
+<div class="w-1.5 h-1.5 bg-red-500 rounded-none animate-pulse"></div>
+<span class="text-[10px] font-mono font-bold text-red-500 tracking-widest leading-none">DISCONNECTED</span>
+</div>
+</div>
+<button class="flex items-center justify-center h-8 px-3 text-xs font-bold tracking-widest text-primary border border-primary/30 hover:bg-primary hover:text-background-dark hover:border-primary transition-all uppercase rounded">
+            EDIT
+        </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-grid-pattern relative">
+<div class="flex flex-col w-full pb-32">
+<!-- List Header/Label -->
+<div class="px-5 py-3 flex items-center justify-between border-b border-white/5 bg-background-dark/50">
+<span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Config_List_v2.0</span>
+<span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">3 Entries</span>
+</div>
+<!-- List Item 1: VLESS -->
+<div class="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-5 border-b border-white/10 hover:bg-white/[0.02] transition-colors">
+<!-- Left Accent Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-center"></div>
+<div class="flex items-center gap-4 flex-1 w-full">
+<div class="flex items-center justify-center w-12 h-12 bg-surface-dark border border-white/10 rounded shrink-0 group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">database</span>
+</div>
+<div class="flex flex-col justify-center min-w-0">
+<p class="text-white text-base font-bold leading-tight tracking-wide truncate group-hover:text-shadow-glow transition-all">VLESS-Config-01</p>
+<p class="text-gray-500 text-xs font-mono mt-1 truncate max-w-[240px]">https://api.vless.org/sub/123...</p>
+<div class="flex gap-2 mt-1">
+<span class="text-[9px] px-1 py-0.5 bg-white/5 text-gray-400 font-mono rounded-sm">TLS</span>
+<span class="text-[9px] px-1 py-0.5 bg-white/5 text-gray-400 font-mono rounded-sm">443</span>
+</div>
+</div>
+</div>
+<div class="shrink-0 w-full sm:w-auto flex justify-end">
+<button class="flex items-center justify-center w-full sm:w-auto h-9 px-4 bg-transparent border-2 border-primary text-primary text-xs font-bold tracking-wider hover:bg-primary hover:text-background-dark transition-all rounded-sm uppercase group/btn">
+<span class="truncate">Update</span>
+<span class="material-symbols-outlined text-sm ml-2 group-hover/btn:rotate-180 transition-transform duration-500">sync</span>
+</button>
+</div>
+</div>
+<!-- List Item 2: Trojan -->
+<div class="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-5 border-b border-white/10 hover:bg-white/[0.02] transition-colors">
+<!-- Left Accent Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-center"></div>
+<div class="flex items-center gap-4 flex-1 w-full">
+<div class="flex items-center justify-center w-12 h-12 bg-surface-dark border border-white/10 rounded shrink-0 group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">public</span>
+</div>
+<div class="flex flex-col justify-center min-w-0">
+<p class="text-white text-base font-bold leading-tight tracking-wide truncate group-hover:text-shadow-glow transition-all">Trojan-US-West</p>
+<p class="text-gray-500 text-xs font-mono mt-1 truncate max-w-[240px]">https://trojan.io/api/v1/dl...</p>
+<div class="flex gap-2 mt-1">
+<span class="text-[9px] px-1 py-0.5 bg-white/5 text-gray-400 font-mono rounded-sm">XTLS</span>
+</div>
+</div>
+</div>
+<div class="shrink-0 w-full sm:w-auto flex justify-end">
+<button class="flex items-center justify-center w-full sm:w-10 h-9 bg-surface-dark border border-white/20 text-white hover:border-primary hover:text-primary transition-all rounded-sm">
+<span class="material-symbols-outlined text-lg animate-spin-slow">autorenew</span>
+</button>
+</div>
+</div>
+<!-- List Item 3: VMess -->
+<div class="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-5 border-b border-white/10 hover:bg-white/[0.02] transition-colors">
+<!-- Left Accent Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-center"></div>
+<div class="flex items-center gap-4 flex-1 w-full">
+<div class="flex items-center justify-center w-12 h-12 bg-surface-dark border border-white/10 rounded shrink-0 group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">hard_drive</span>
+</div>
+<div class="flex flex-col justify-center min-w-0">
+<p class="text-white text-base font-bold leading-tight tracking-wide truncate group-hover:text-shadow-glow transition-all">VMess-Backup</p>
+<p class="text-gray-500 text-xs font-mono mt-1 truncate max-w-[240px]">192.168.1.55:8080/sub</p>
+<div class="flex gap-2 mt-1">
+<span class="text-[9px] px-1 py-0.5 bg-red-500/10 text-red-500 font-mono rounded-sm border border-red-500/20">INSECURE</span>
+</div>
+</div>
+</div>
+<div class="shrink-0 w-full sm:w-auto flex justify-end">
+<button class="flex items-center justify-center w-full sm:w-auto h-9 px-4 bg-transparent border-2 border-primary text-primary text-xs font-bold tracking-wider hover:bg-primary hover:text-background-dark transition-all rounded-sm uppercase group/btn">
+<span class="truncate">Update</span>
+<span class="material-symbols-outlined text-sm ml-2 group-hover/btn:rotate-180 transition-transform duration-500">sync</span>
+</button>
+</div>
+</div>
+<!-- Decorative End Element -->
+<div class="mt-8 mx-5 border border-dashed border-white/10 p-4 rounded-lg flex items-center justify-center opacity-40">
+<span class="text-[10px] font-mono text-gray-500 uppercase">/// END OF STREAM ///</span>
+</div>
+</div>
+</main>
+<!-- FAB Section -->
+<div class="fixed bottom-0 right-0 left-0 p-6 z-40 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent pointer-events-none flex justify-end">
+<button class="pointer-events-auto shadow-neubrutal hover:shadow-neubrutal-hover translate-y-0 hover:translate-y-0.5 active:translate-y-1 transition-all duration-150 flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-sm h-14 px-6 bg-primary text-background-dark min-w-0 gap-3 border-2 border-primary">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+<span class="text-base font-bold leading-normal tracking-wider uppercase">ADD SOURCE</span>
+</button>
+</div>
+</body></html>

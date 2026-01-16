@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo Add Profile</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0a0a", /* Overriding to darker black for industrial feel */
+                        "surface-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem",
+                        "none": "0",
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for industrial feel if needed */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccff00;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased overflow-hidden">
+<!-- Mockup of the screen behind the modal (simulated app interface) -->
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-5 bg-background-dark border-b border-primary/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">vpn_lock</span>
+<h1 class="text-xl font-bold tracking-tight text-white uppercase">DokoDemo</h1>
+</div>
+<div class="h-8 w-8 rounded bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+</header>
+<!-- Main Content Area (Blurred/Dimmed) -->
+<main class="flex-1 flex flex-col p-4 gap-4 relative">
+<!-- Simulated server list item -->
+<div class="h-24 w-full border border-white/10 bg-white/5 rounded p-4 flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<div class="h-4 w-32 bg-white/20 rounded-sm"></div>
+<div class="h-3 w-20 bg-white/10 rounded-sm"></div>
+</div>
+<div class="h-8 w-8 rounded-full bg-primary/20"></div>
+</div>
+<div class="h-24 w-full border border-white/10 bg-white/5 rounded p-4 flex items-center justify-between opacity-50">
+<div class="flex flex-col gap-1">
+<div class="h-4 w-24 bg-white/20 rounded-sm"></div>
+<div class="h-3 w-16 bg-white/10 rounded-sm"></div>
+</div>
+<div class="h-8 w-8 rounded-full bg-white/10"></div>
+</div>
+<!-- Backdrop Overlay -->
+<div class="absolute inset-0 bg-black/80 backdrop-blur-sm z-10"></div>
+</main>
+<!-- MODAL BOTTOM SHEET -->
+<div class="absolute bottom-0 left-0 z-20 w-full flex flex-col justify-end">
+<!-- Modal Container -->
+<div class="flex flex-col items-stretch bg-black border-t-4 border-primary rounded-t-xl shadow-2xl relative">
+<!-- BottomSheetHandle -->
+<div class="flex flex-col items-center pt-4 pb-2 w-full">
+<!-- Industrial Handle: Rectangular and distinct -->
+<div class="h-1.5 w-16 bg-white/20 rounded-none mb-1"></div>
+<!-- Decorative screws/rivets purely CSS -->
+<div class="flex w-full justify-between px-4 absolute top-4 opacity-30">
+<div class="w-1.5 h-1.5 bg-white/50 rounded-full"></div>
+<div class="w-1.5 h-1.5 bg-white/50 rounded-full"></div>
+</div>
+</div>
+<!-- HeadlineText -->
+<div class="px-6 pt-4 pb-6 text-center">
+<h2 class="text-primary tracking-widest text-3xl font-bold uppercase leading-none border-b-2 border-primary/20 pb-4 inline-block px-8">
+                        Add Profile
+                    </h2>
+</div>
+<!-- Action Buttons Container -->
+<div class="flex flex-col gap-4 px-6 pb-10 w-full max-w-md mx-auto">
+<!-- Button: Scan QR -->
+<button class="group relative flex w-full items-center justify-start h-16 px-6 bg-transparent border-2 border-white/20 hover:border-primary active:bg-primary transition-all duration-200 overflow-hidden">
+<!-- Hover Fill Effect -->
+<div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
+<!-- Content -->
+<div class="relative z-10 flex items-center gap-5 w-full">
+<span class="material-symbols-outlined text-primary group-hover:text-black group-active:text-black transition-colors" style="font-size: 28px;">qr_code_scanner</span>
+<span class="text-lg font-bold tracking-widest text-white group-hover:text-black group-active:text-black transition-colors uppercase truncate">
+                                Scan QR Code
+                            </span>
+<span class="ml-auto text-xs font-mono text-white/50 group-hover:text-black/50 hidden sm:block">[01]</span>
+</div>
+</button>
+<!-- Button: Paste Clipboard -->
+<button class="group relative flex w-full items-center justify-start h-16 px-6 bg-transparent border-2 border-white/20 hover:border-primary active:bg-primary transition-all duration-200 overflow-hidden">
+<!-- Hover Fill Effect -->
+<div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
+<!-- Content -->
+<div class="relative z-10 flex items-center gap-5 w-full">
+<span class="material-symbols-outlined text-primary group-hover:text-black group-active:text-black transition-colors" style="font-size: 28px;">content_paste</span>
+<span class="text-lg font-bold tracking-widest text-white group-hover:text-black group-active:text-black transition-colors uppercase truncate">
+                                Paste From Clipboard
+                            </span>
+<span class="ml-auto text-xs font-mono text-white/50 group-hover:text-black/50 hidden sm:block">[02]</span>
+</div>
+</button>
+<!-- Button: Manual Entry -->
+<button class="group relative flex w-full items-center justify-start h-16 px-6 bg-transparent border-2 border-white/20 hover:border-primary active:bg-primary transition-all duration-200 overflow-hidden">
+<!-- Hover Fill Effect -->
+<div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
+<!-- Content -->
+<div class="relative z-10 flex items-center gap-5 w-full">
+<span class="material-symbols-outlined text-primary group-hover:text-black group-active:text-black transition-colors" style="font-size: 28px;">keyboard</span>
+<span class="text-lg font-bold tracking-widest text-white group-hover:text-black group-active:text-black transition-colors uppercase truncate">
+                                Manual Entry
+                            </span>
+<span class="ml-auto text-xs font-mono text-white/50 group-hover:text-black/50 hidden sm:block">[03]</span>
+</div>
+</button>
+</div>
+<!-- Footer / Cancel -->
+<div class="pb-8 text-center">
+<button class="text-white/40 hover:text-white text-sm font-bold tracking-widest uppercase border-b border-transparent hover:border-white transition-all">
+                        Cancel
+                    </button>
+</div>
+<!-- Bottom safe area spacer -->
+<div class="h-6 bg-black w-full"></div>
+</div>
+</div>
+</div>
+</body></html>

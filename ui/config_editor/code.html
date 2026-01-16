@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Config Editor - DokoDemo VPN</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1f230f", // Dark olive/black base
+                        "surface-dark": "#12140a", // Even darker for contrast
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom overrides for specific industrial feel */
+        .industrial-border-b {
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+        }
+        
+        /* Remove default form styling focus rings */
+        input:focus, textarea:focus, select:focus {
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* Custom Scrollbar for textarea */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #1f230f;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #ccff00;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display antialiased selection:bg-primary selection:text-black flex flex-col relative">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-sm border-b border-white/10 pt-safe-top pb-2 px-6 pt-4 flex items-center justify-between h-16 shrink-0">
+<button class="text-gray-400 hover:text-primary transition-colors font-mono text-sm tracking-wider uppercase">
+            Cancel
+        </button>
+<h1 class="text-white text-lg font-bold tracking-tight uppercase">Server Config</h1>
+<div class="w-[60px] flex justify-end">
+<span class="material-symbols-outlined text-primary/50 text-sm">settings_ethernet</span>
+</div>
+</header>
+<!-- Main Content Form -->
+<main class="flex-1 w-full max-w-md mx-auto p-6 pb-32 flex flex-col gap-8">
+<!-- Status Indicator / Info -->
+<div class="flex gap-2">
+<div class="bg-surface-dark border border-white/10 px-3 py-1 rounded flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-primary text-xs font-mono tracking-widest">ONLINE</span>
+</div>
+<div class="bg-surface-dark border border-white/10 px-3 py-1 rounded flex items-center gap-2">
+<span class="text-gray-400 text-xs font-mono tracking-widest">PING: 42ms</span>
+</div>
+</div>
+<!-- Protocol Selector -->
+<div class="flex flex-col gap-2">
+<label class="text-gray-500 text-xs font-mono uppercase tracking-widest pl-1">Protocol:</label>
+<div class="grid grid-cols-3 gap-1 bg-surface-dark p-1 rounded border border-white/5">
+<button class="bg-primary text-black font-bold font-mono text-sm py-2 rounded-sm uppercase">Vmess</button>
+<button class="text-gray-400 hover:text-white font-mono text-sm py-2 rounded-sm uppercase hover:bg-white/5 transition-colors">Vless</button>
+<button class="text-gray-400 hover:text-white font-mono text-sm py-2 rounded-sm uppercase hover:bg-white/5 transition-colors">Trojan</button>
+</div>
+</div>
+<!-- Inputs Section -->
+<div class="space-y-6">
+<!-- Remarks -->
+<div class="group relative">
+<label class="block text-gray-500 text-xs font-mono uppercase tracking-widest mb-1 pl-1">Remarks:</label>
+<div class="relative">
+<input class="w-full bg-surface-dark/50 text-white font-mono text-base px-4 py-4 rounded-t-sm industrial-border-b border-gray-700 focus:border-primary placeholder-gray-700 transition-colors duration-75" placeholder="MY-SERVER-01" type="text" value="OSAKA_NODE_01"/>
+</div>
+</div>
+<!-- Address & Port Grid -->
+<div class="grid grid-cols-3 gap-4">
+<div class="col-span-2 group relative">
+<label class="block text-gray-500 text-xs font-mono uppercase tracking-widest mb-1 pl-1">Address:</label>
+<input class="w-full bg-surface-dark/50 text-white font-mono text-base px-4 py-4 rounded-t-sm industrial-border-b border-gray-700 focus:border-primary placeholder-gray-700 transition-colors duration-75" placeholder="0.0.0.0" type="text" value="192.168.1.45"/>
+</div>
+<div class="group relative">
+<label class="block text-gray-500 text-xs font-mono uppercase tracking-widest mb-1 pl-1">Port:</label>
+<input class="w-full bg-surface-dark/50 text-white font-mono text-base px-4 py-4 rounded-t-sm industrial-border-b border-gray-700 focus:border-primary placeholder-gray-700 transition-colors duration-75" placeholder="443" type="number" value="443"/>
+</div>
+</div>
+<!-- UUID -->
+<div class="group relative">
+<label class="block text-gray-500 text-xs font-mono uppercase tracking-widest mb-1 pl-1">UUID / Password:</label>
+<textarea class="w-full bg-surface-dark/50 text-white font-mono text-sm px-4 py-4 rounded-t-sm industrial-border-b border-gray-700 focus:border-primary placeholder-gray-700 transition-colors duration-75 resize-none leading-relaxed" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" rows="3">a1b2c3d4-e5f6-7890-1234-567890abcdef</textarea>
+<div class="absolute right-2 bottom-3">
+<button class="text-gray-500 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="text-gray-500 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+</div>
+</div>
+<!-- Security Toggles -->
+<div class="pt-4 border-t border-white/5 space-y-4">
+<!-- Toggle 1 -->
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex flex-col">
+<span class="text-white font-mono text-sm font-medium uppercase tracking-wider">Allow Insecure</span>
+<span class="text-gray-600 text-xs font-mono">Skip certificate verification</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-6 bg-gray-800 border border-gray-700 rounded-sm peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-gray-500 after:border-gray-500 after:border after:rounded-sm after:h-4 after:w-5 after:transition-all peer-checked:bg-primary/20 peer-checked:border-primary peer-checked:after:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle 2 -->
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex flex-col">
+<span class="text-white font-mono text-sm font-medium uppercase tracking-wider">TLS</span>
+<span class="text-gray-600 text-xs font-mono">Transport Layer Security</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-6 bg-gray-800 border border-gray-700 rounded-sm peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-gray-500 after:border-gray-500 after:border after:rounded-sm after:h-4 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:after:bg-black"></div>
+</label>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-background-dark/80 backdrop-blur-md border-t border-white/10 p-4 pb-8 z-40">
+<button class="w-full bg-primary hover:bg-[#b3e600] active:scale-[0.99] transition-all duration-75 text-black font-display font-bold text-xl py-4 rounded-sm uppercase tracking-wide shadow-[0_0_15px_rgba(204,255,0,0.15)] flex items-center justify-center gap-3">
+<span class="material-symbols-outlined font-bold">save</span>
+            Save Config
+        </button>
+</div>
+</body></html>

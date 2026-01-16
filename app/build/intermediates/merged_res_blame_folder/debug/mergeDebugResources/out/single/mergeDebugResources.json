@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-hdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-hdpi_ic_launcher_monochrome.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-hdpi/ic_launcher_monochrome.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-hdpi_ic_launcher_background.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-hdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-mdpi_ic_launcher_monochrome.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-mdpi/ic_launcher_monochrome.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-mdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxhdpi_ic_launcher_monochrome.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxhdpi/ic_launcher_monochrome.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxxhdpi_ic_launcher_monochrome.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxxhdpi/ic_launcher_monochrome.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-mdpi_ic_launcher_background.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-mdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xhdpi_ic_launcher_monochrome.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xhdpi/ic_launcher_monochrome.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxhdpi_ic_launcher_background.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxhdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxxhdpi_ic_launcher_background.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxxhdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xxxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "com.dokodemo.app-debug-72:/mipmap-xhdpi_ic_launcher_background.png.flat",
+        "source": "com.dokodemo.app-main-74:/mipmap-xhdpi/ic_launcher_background.png"
+    }
+]

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo VPN Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0a0a", // Modified to be closer to black as requested
+                        "surface-dark": "#161616",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                        "mono": ["monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem",
+                        "sm": "0.125rem" // Sharp corners for brutalism
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+        .oscilloscope-grid {
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden select-none">
+<!-- App Container -->
+<div class="relative flex flex-col h-full min-h-screen w-full max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden border-x border-[#333]">
+<!-- Header Section -->
+<header class="flex flex-col border-b border-[#333] bg-background-dark z-20">
+<!-- Top Bar -->
+<div class="flex items-center justify-between p-4 pb-2">
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-white text-xl font-bold tracking-widest">DOKODEMO <span class="text-primary">//</span> VPN</h1>
+<button class="text-white hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+</div>
+<!-- Status Bar -->
+<div class="bg-[#ccff00] text-black px-4 py-1 flex justify-between items-center font-mono text-xs font-bold tracking-wider uppercase border-b border-primary">
+<span>Status: Disconnected</span>
+<span>:: Unsecured ::</span>
+</div>
+</header>
+<!-- Main Content (Scrollable) -->
+<main class="flex-1 overflow-y-auto relative z-10 custom-scrollbar">
+<!-- Scanline Overlay -->
+<div class="absolute inset-0 scanlines opacity-20 pointer-events-none z-50 mix-blend-overlay"></div>
+<div class="p-4 flex flex-col gap-6">
+<!-- Server Location Card -->
+<div class="group relative w-full h-32 overflow-hidden rounded-sm border border-[#333]">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Abstract dark map of Tokyo city streets with neon glow" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDEsqgT7I72SGNhrNJ93s0bA4Kmf6VxVxE27Odh73shOC8eSsiHJ9NAjcdW7CvbqfdykRCfHihZXWVDEgrUPgJoEfSu8PbX1nvQ2PBTyqblgzhBIv5Md-4KFzwaC-WXLv8IOnN1dTEZBI1XZP6uaE1r1ZTAobv5MZuV2yvkevOzohPE1JgBw1O-bSRIgUNkzT3xSX0-rbkvbImjugNHI1Rx0reg8sCcXrqg68PINQaA8sfCoFmf1tQHqt3cYYK8ze-zEfvxdKTtFanU');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
+<div class="absolute inset-0 p-4 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-sm">public</span>
+<span class="text-primary text-xs font-bold tracking-widest uppercase">Target Server</span>
+</div>
+<h2 class="text-white text-3xl font-bold tracking-tight uppercase">Tokyo <span class="text-gray-500 text-lg align-top font-normal">// JP</span></h2>
+<div class="flex items-center gap-2 mt-2">
+<span class="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+<span class="text-gray-400 text-xs font-mono">PING: --ms</span>
+</div>
+</div>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent hover:bg-primary/20 border border-primary/50 text-primary p-2 rounded-sm transition-colors">
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+<!-- THE BIG SWITCH -->
+<div class="flex justify-center py-2">
+<button class="group relative w-full max-w-[320px] h-24 flex items-center justify-center bg-transparent border-[3px] border-primary rounded-sm overflow-hidden transition-all duration-100 active:scale-[0.98]">
+<!-- Hover Fill Effect -->
+<div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+<div class="relative z-10 flex flex-col items-center gap-1">
+<span class="text-primary group-hover:text-black text-3xl font-bold tracking-[0.2em] transition-colors">CONNECT</span>
+<span class="text-primary/60 group-hover:text-black/70 text-[10px] font-mono tracking-widest uppercase transition-colors">
+                                [ INIT_Handshake_v4 ]
+                            </span>
+</div>
+<!-- Decorative Corners -->
+<div class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-primary bg-background-dark"></div>
+<div class="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-primary bg-background-dark"></div>
+<div class="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-primary bg-background-dark"></div>
+<div class="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-primary bg-background-dark"></div>
+</button>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-3 gap-2">
+<div class="bg-surface-dark border border-[#333] p-3 rounded-sm flex flex-col gap-1">
+<span class="text-gray-500 text-[10px] font-bold tracking-wider uppercase">IP_ADDR</span>
+<span class="text-white font-mono text-sm truncate">UNPROTECTED</span>
+</div>
+<div class="bg-surface-dark border border-[#333] p-3 rounded-sm flex flex-col gap-1">
+<span class="text-gray-500 text-[10px] font-bold tracking-wider uppercase">Protocol</span>
+<span class="text-primary font-mono text-sm">UDP/443</span>
+</div>
+<div class="bg-surface-dark border border-[#333] p-3 rounded-sm flex flex-col gap-1">
+<span class="text-gray-500 text-[10px] font-bold tracking-wider uppercase">Encryption</span>
+<span class="text-white font-mono text-sm">AES-256</span>
+</div>
+</div>
+<!-- Oscilloscope Graph -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end px-1">
+<p class="text-white text-sm font-bold uppercase tracking-wider">Traffic_Monitor</p>
+<div class="flex gap-2 text-[10px] font-mono text-primary">
+<span>UP: 0 KB/s</span>
+<span class="text-gray-600">|</span>
+<span>DL: 0 KB/s</span>
+</div>
+</div>
+<div class="relative w-full h-40 bg-black border border-[#333] rounded-sm overflow-hidden oscilloscope-grid">
+<!-- Digital Noise Overlay -->
+<div class="absolute inset-0 bg-repeat opacity-10" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAN2yAOhqoPeZOVY68MCKZK1qvGY7q9F-jLC2ZIiMU7c4a_Q-sstmMcyNlgy2TXnPMx_8YkR0ZuLWOIBVY_97wcrog24o5QoH06C2If7E1gu6Fw4bnAoQiO_5kDQjwDpPQXFJQNLQegU3XpXipSVulqEm5a1fL2sPaT9Z09p1LTriq9FHmdsTarY-wClRGPjB42aGitBI-x74XhYDL_qFzpTgtrgocEJf5nD-4ccbFKfnJSa68W756RlC3NjpzJkEQF9sQWm2IzOGyd');"></div>
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 400 150">
+<!-- Gradient Def -->
+<defs>
+<lineargradient id="grid-gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ccff00" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#ccff00" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Static Line (Baseline) -->
+<line stroke="#333" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="75" y2="75"></line>
+<!-- The Jittery Line -->
+<path class="drop-shadow-[0_0_5px_rgba(204,255,0,0.8)]" d="M0 75 Q 10 75, 20 75 T 40 75 T 60 70 T 80 80 T 100 75 T 120 75 T 140 72 T 160 78 T 180 75 T 200 75 T 220 65 T 240 85 T 260 75 T 280 75 T 300 70 T 320 80 T 340 75 T 360 75 T 380 75 T 400 75" fill="none" stroke="#ccff00" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Area under curve (Optional for style) -->
+<path d="M0 75 L 20 75 L 40 75 L 60 70 L 80 80 L 100 75 L 120 75 L 140 72 L 160 78 L 180 75 L 200 75 L 220 65 L 240 85 L 260 75 L 280 75 L 300 70 L 320 80 L 340 75 L 360 75 L 380 75 L 400 75 V 150 H 0 Z" fill="url(#grid-gradient)" stroke="none"></path>
+</svg>
+<!-- Scanning Line Animation -->
+<div class="absolute top-0 bottom-0 w-[2px] bg-primary/50 shadow-[0_0_10px_#ccff00] animate-[ping_3s_linear_infinite] left-[60%]"></div>
+</div>
+</div>
+<div class="h-4"></div> <!-- Spacer -->
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="bg-black border-t border-[#333] pb-6 pt-2 px-6 z-30">
+<ul class="flex justify-between items-center w-full">
+<li class="flex-1 flex justify-center">
+<button class="flex flex-col items-center gap-1 group">
+<div class="bg-primary text-black p-2 rounded-sm w-12 h-10 flex items-center justify-center transition-all shadow-[0_0_10px_rgba(204,255,0,0.3)]">
+<span class="material-symbols-outlined text-[24px] font-bold">home</span>
+</div>
+<span class="text-[10px] font-bold text-primary tracking-wider uppercase opacity-100">Home</span>
+</button>
+</li>
+<li class="flex-1 flex justify-center">
+<button class="flex flex-col items-center gap-1 group">
+<div class="text-gray-400 group-hover:text-white p-2 rounded-sm w-12 h-10 flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[24px]">dns</span>
+</div>
+<span class="text-[10px] font-bold text-gray-500 group-hover:text-white tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity">Servers</span>
+</button>
+</li>
+<li class="flex-1 flex justify-center">
+<button class="flex flex-col items-center gap-1 group">
+<div class="text-gray-400 group-hover:text-white p-2 rounded-sm w-12 h-10 flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[24px]">terminal</span>
+</div>
+<span class="text-[10px] font-bold text-gray-500 group-hover:text-white tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity">Logs</span>
+</button>
+</li>
+<li class="flex-1 flex justify-center">
+<button class="flex flex-col items-center gap-1 group">
+<div class="text-gray-400 group-hover:text-white p-2 rounded-sm w-12 h-10 flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</div>
+<span class="text-[10px] font-bold text-gray-500 group-hover:text-white tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity">Config</span>
+</button>
+</li>
+</ul>
+</nav>
+</div>
+</body></html>

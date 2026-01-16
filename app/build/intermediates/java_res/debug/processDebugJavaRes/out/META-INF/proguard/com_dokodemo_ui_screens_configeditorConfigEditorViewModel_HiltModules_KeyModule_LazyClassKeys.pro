@@ -1,0 +1,2 @@
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.configeditor.ConfigEditorViewModel
+-keep,allowobfuscation,allowshrinking class com.dokodemo.ui.screens.configeditor.ConfigEditorViewModel

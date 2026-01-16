@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DokoDemo VPN - Settings Hub</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ccff00",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1f230f",
+                        "surface-dark": "#2a3015",
+                        "industrial-grey": "#333333",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Space Grotesk", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "0.75rem",
+                        "none": "0px",
+                        "sm": "2px",
+                    },
+                    boxShadow: {
+                        'neubrutalism': '4px 4px 0px 0px rgba(0,0,0,1)',
+                        'neubrutalism-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f230f; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccff00; 
+            border: 1px solid black;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b3e600; 
+        }
+
+        /* Toggle Checkbox Logic */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #000;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ccff00;
+        }
+        
+        /* Custom Check Styling */
+        .peer:checked ~ .toggle-bg {
+            background-color: #ccff00;
+        }
+        .peer:checked ~ .toggle-dot {
+            transform: translateX(100%);
+            border-color: black;
+            background-color: black;
+        }
+        /* Make the dot become a checkmark line or similar visually if needed, but simple square sliding is requested */
+        
+        /* Hide scrollbar for clean UI on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex flex-col selection:bg-primary selection:text-black">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b-2 border-black px-5 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-8 h-8 border-2 border-black bg-white dark:bg-surface-dark active:bg-primary transition-colors">
+<span class="material-symbols-outlined text-black dark:text-white dark:active:text-black text-xl font-bold">arrow_back</span>
+</button>
+<h1 class="text-2xl font-bold tracking-tight text-black dark:text-white uppercase leading-none mt-1">
+                SETTINGS HUB
+            </h1>
+</div>
+<div class="w-2 h-2 bg-primary animate-pulse"></div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 py-6 flex flex-col gap-8 pb-24 overflow-y-auto no-scrollbar">
+<!-- Network Group -->
+<section class="flex flex-col gap-2">
+<div class="flex items-center justify-between px-1">
+<h4 class="text-sm font-bold tracking-widest text-primary font-mono uppercase">[ NETWORK ]</h4>
+<span class="h-[1px] flex-1 bg-primary/30 ml-4"></span>
+</div>
+<div class="flex flex-col border-2 border-black dark:border-black bg-white dark:bg-surface-dark shadow-neubrutalism">
+<!-- List Item: Protocol -->
+<button class="group flex items-center justify-between p-4 border-b-2 border-black active:bg-primary/20 transition-colors w-full text-left">
+<div class="flex flex-col">
+<span class="text-base font-medium text-black dark:text-white">Protocol Selection</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-bold text-black/60 dark:text-primary uppercase tracking-wide">WireGuard</span>
+<span class="material-symbols-outlined text-black dark:text-white text-xl">chevron_right</span>
+</div>
+</button>
+<!-- List Item: Kill Switch -->
+<div class="flex items-center justify-between p-4 border-b-2 border-black bg-white dark:bg-surface-dark">
+<div class="flex flex-col gap-0.5">
+<span class="text-base font-medium text-black dark:text-white">Kill Switch</span>
+<span class="text-xs text-black/50 dark:text-gray-400 font-mono">Block non-VPN traffic</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-industrial-grey peer-focus:outline-none border-2 border-black peer-checked:bg-primary transition-colors duration-0 ease-linear toggle-bg flex items-center px-1">
+<!-- Custom blocky thumb -->
+<div class="bg-white w-5 h-5 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-transform duration-100 ease-linear peer-checked:translate-x-[22px] peer-checked:bg-black peer-checked:border-white"></div>
+</div>
+</label>
+</div>
+<!-- List Item: Split Tunneling -->
+<div class="flex items-center justify-between p-4 bg-white dark:bg-surface-dark">
+<div class="flex flex-col gap-0.5">
+<span class="text-base font-medium text-black dark:text-white">Split Tunneling</span>
+<span class="text-xs text-black/50 dark:text-gray-400 font-mono">App-based routing</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-industrial-grey peer-focus:outline-none border-2 border-black peer-checked:bg-primary transition-colors duration-0 ease-linear toggle-bg flex items-center px-1">
+<div class="bg-white w-5 h-5 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-transform duration-100 ease-linear peer-checked:translate-x-[22px] peer-checked:bg-black peer-checked:border-white"></div>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Behavior Group -->
+<section class="flex flex-col gap-2">
+<div class="flex items-center justify-between px-1">
+<h4 class="text-sm font-bold tracking-widest text-primary font-mono uppercase">[ BEHAVIOR ]</h4>
+<span class="h-[1px] flex-1 bg-primary/30 ml-4"></span>
+</div>
+<div class="flex flex-col border-2 border-black dark:border-black bg-white dark:bg-surface-dark shadow-neubrutalism">
+<!-- List Item: Auto-connect -->
+<div class="flex items-center justify-between p-4 border-b-2 border-black bg-white dark:bg-surface-dark">
+<span class="text-base font-medium text-black dark:text-white">Auto-connect on Wi-Fi</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-industrial-grey peer-focus:outline-none border-2 border-black peer-checked:bg-primary transition-colors duration-0 ease-linear toggle-bg flex items-center px-1">
+<div class="bg-white w-5 h-5 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-transform duration-100 ease-linear peer-checked:translate-x-[22px] peer-checked:bg-black peer-checked:border-white"></div>
+</div>
+</label>
+</div>
+<!-- List Item: Launch at startup -->
+<div class="flex items-center justify-between p-4 border-b-2 border-black bg-white dark:bg-surface-dark">
+<span class="text-base font-medium text-black dark:text-white">Launch at startup</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-industrial-grey peer-focus:outline-none border-2 border-black peer-checked:bg-primary transition-colors duration-0 ease-linear toggle-bg flex items-center px-1">
+<div class="bg-white w-5 h-5 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-transform duration-100 ease-linear peer-checked:translate-x-[22px] peer-checked:bg-black peer-checked:border-white"></div>
+</div>
+</label>
+</div>
+<!-- List Item: Haptic Feedback -->
+<div class="flex items-center justify-between p-4 bg-white dark:bg-surface-dark">
+<span class="text-base font-medium text-black dark:text-white">Haptic Feedback</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-industrial-grey peer-focus:outline-none border-2 border-black peer-checked:bg-primary transition-colors duration-0 ease-linear toggle-bg flex items-center px-1">
+<div class="bg-white w-5 h-5 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-transform duration-100 ease-linear peer-checked:translate-x-[22px] peer-checked:bg-black peer-checked:border-white"></div>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Account Group -->
+<section class="flex flex-col gap-2">
+<div class="flex items-center justify-between px-1">
+<h4 class="text-sm font-bold tracking-widest text-primary font-mono uppercase">[ ACCOUNT ]</h4>
+<span class="h-[1px] flex-1 bg-primary/30 ml-4"></span>
+</div>
+<div class="flex flex-col border-2 border-black dark:border-black bg-white dark:bg-surface-dark shadow-neubrutalism">
+<!-- List Item: Subscription -->
+<button class="group flex items-center justify-between p-4 border-b-2 border-black active:bg-primary/20 transition-colors w-full text-left">
+<span class="text-base font-medium text-black dark:text-white">Subscription Plan</span>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-primary border border-black text-xs font-bold text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">PRO</span>
+<span class="material-symbols-outlined text-black dark:text-white text-xl">chevron_right</span>
+</div>
+</button>
+<!-- List Item: Restore -->
+<button class="group flex items-center justify-between p-4 active:bg-primary/20 transition-colors w-full text-left">
+<span class="text-base font-medium text-black dark:text-white">Restore Purchases</span>
+<span class="material-symbols-outlined text-black dark:text-white text-xl">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Version Footer -->
+<div class="mt-4 flex flex-col items-center gap-1 opacity-60">
+<div class="w-full h-px bg-gradient-to-r from-transparent via-industrial-grey to-transparent"></div>
+<p class="text-[10px] font-mono tracking-widest text-industrial-grey dark:text-gray-500 uppercase mt-4">
+                v2.4.0_build_992
+            </p>
+<p class="text-[10px] font-mono text-industrial-grey dark:text-gray-600">
+                DOKODEMO // SECURE
+            </p>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full bg-background-light dark:bg-background-dark border-t-2 border-black px-4 py-3 pb-6 flex justify-between items-center z-40">
+<!-- Item 1 -->
+<button class="flex-1 flex flex-col items-center gap-1 group">
+<div class="p-2 border-2 border-transparent group-hover:border-black dark:group-hover:border-primary rounded-sm transition-colors">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 group-hover:text-black dark:group-hover:text-primary">dashboard</span>
+</div>
+</button>
+<!-- Item 2 (Active) -->
+<button class="flex-1 flex flex-col items-center gap-1">
+<div class="p-2 bg-primary border-2 border-black shadow-neubrutalism-sm rounded-sm translate-y-[-1px]">
+<span class="material-symbols-outlined text-black font-bold">settings</span>
+</div>
+</button>
+<!-- Item 3 -->
+<button class="flex-1 flex flex-col items-center gap-1 group">
+<div class="p-2 border-2 border-transparent group-hover:border-black dark:group-hover:border-primary rounded-sm transition-colors">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 group-hover:text-black dark:group-hover:text-primary">person</span>
+</div>
+</button>
+</nav>
+<!-- Scan lines overlay for extra industrial retro feel -->
+<div class="fixed inset-0 pointer-events-none z-0 opacity-[0.03] dark:opacity-[0.05] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+</body></html>
