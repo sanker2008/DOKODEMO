@@ -1,5 +1,8 @@
 package com.dokodemo.ui.screens.splittunneling
 
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,19 +32,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.ui.components.IndustrialCard
 import com.dokodemo.ui.components.IndustrialInput
-import com.dokodemo.ui.components.IndustrialToggleRow
 import com.dokodemo.ui.theme.AcidLime
 import com.dokodemo.ui.theme.IndustrialBlack
 import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @Composable
@@ -50,14 +58,18 @@ fun SplitTunnelingScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
+    LaunchedEffect(Unit) {
+        viewModel.loadInstalledApps()
+    }
+    
     Scaffold(
-        containerColor = IndustrialBlack,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             SplitTunnelingTopBar(onNavigateBack)
         }
     ) { paddingValues ->
         Column(
-             modifier = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp)
@@ -110,14 +122,25 @@ fun SplitTunnelingScreen(
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(uiState.apps) { app ->
-                        AppItem(
-                            app = app,
-                            onToggle = { viewModel.toggleApp(app.packageName) }
-                        )
+                if (uiState.isLoading) {
+                    Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                         Text(
+                             text = "LOADING APPLICATIONS...",
+                             color = IndustrialGrey,
+                             fontFamily = MonospaceFont
+                         )
+                    }
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        items(uiState.filteredApps) { app ->
+                            AppItem(
+                                app = app,
+                                onToggle = { viewModel.toggleApp(app.packageName) }
+                            )
+                        }
                     }
                 }
             } else {
@@ -155,7 +178,7 @@ private fun ModeButton(
             .background(if (selected) AcidLime else Color.Transparent)
             .clickable { onClick() }
             .then(
-                if (!selected) Modifier.background(IndustrialBlack) 
+                if (!selected) Modifier.background(MaterialTheme.colorScheme.surface) 
                 else Modifier
             ),
         contentAlignment = Alignment.Center
@@ -173,7 +196,7 @@ private fun ModeButton(
         
         Text(
             text = text,
-            color = if (selected) IndustrialBlack else TextGrey,
+            color = if (selected) IndustrialBlack else MaterialTheme.colorScheme.onSurface,
             fontFamily = MonospaceFont,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold
@@ -196,7 +219,7 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
             ) {
                 Text(
                     text = app.appName,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = MonospaceFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
@@ -204,7 +227,7 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .size(16.dp)
-                        .background(if (app.isProxied) AcidLime else IndustrialGrey)
+                        .background(if (app.isProxied) AcidLime else MaterialTheme.colorScheme.outline)
                 )
             }
             Spacer(Modifier.height(8.dp))
@@ -230,13 +253,13 @@ private fun SplitTunnelingTopBar(onBack: () -> Unit) {
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .background(IndustrialGrey)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable { onBack() },
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "<",
-                color = AcidLime,
+                color = MaterialTheme.colorScheme.primary,
                 fontFamily = MonospaceFont,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -247,7 +270,7 @@ private fun SplitTunnelingTopBar(onBack: () -> Unit) {
         
         Text(
             text = "SPLIT_TUNNEL.EXE",
-            color = AcidLime,
+            color = MaterialTheme.colorScheme.primary,
             fontFamily = MonospaceFont,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -268,48 +291,117 @@ data class AppInfo(
 
 data class SplitTunnelingUiState(
     val mode: RoutingMode = RoutingMode.BYPASS_CN,
-    val apps: List<AppInfo> = emptyList(),
-    val searchQuery: String = ""
+    val allApps: List<AppInfo> = emptyList(),
+    val filteredApps: List<AppInfo> = emptyList(),
+    val searchQuery: String = "",
+    val isLoading: Boolean = false
 )
 
 @HiltViewModel
-class SplitTunnelingViewModel @Inject constructor() : ViewModel() {
+class SplitTunnelingViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val appPreferences: AppPreferences
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SplitTunnelingUiState())
     val uiState = _uiState.asStateFlow()
     
-    // Mock apps
-    private val allApps = listOf(
-        AppInfo("Chrome", "com.android.chrome"),
-        AppInfo("YouTube", "com.google.android.youtube"),
-        AppInfo("Play Store", "com.android.vending"),
-        AppInfo("Telegram", "org.telegram.messenger"),
-        AppInfo("Twitter", "com.twitter.android")
-    )
-    
     init {
-        _uiState.update { it.copy(apps = allApps) }
+        // Observe preference changes to update checkbox states
+        viewModelScope.launch {
+            appPreferences.proxiedApps.collect { proxiedSet ->
+                _uiState.update { state ->
+                    val updatedApps = state.allApps.map { app ->
+                        app.copy(isProxied = proxiedSet.contains(app.packageName))
+                    }
+                    state.copy(
+                        allApps = updatedApps,
+                        filteredApps = filterApps(updatedApps, state.searchQuery)
+                    )
+                }
+            }
+        }
     }
     
     fun setMode(mode: RoutingMode) {
         _uiState.update { it.copy(mode = mode) }
     }
     
+    fun loadInstalledApps() {
+        if (_uiState.value.allApps.isNotEmpty()) return
+        
+        _uiState.update { it.copy(isLoading = true) }
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            val pm = context.packageManager
+            val intent = Intent(Intent.ACTION_MAIN, null)
+            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            
+            val apps = try {
+                 pm.queryIntentActivities(intent, 0).mapNotNull { resolveInfo ->
+                    try {
+                        val appInfo = resolveInfo.activityInfo.applicationInfo
+                        val packageName = appInfo.packageName
+                        val label = appInfo.loadLabel(pm).toString()
+                        
+                        // Exclude self
+                        if (packageName == context.packageName) null
+                        else AppInfo(label, packageName)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }.sortedBy { it.appName.lowercase() }
+            } catch (e: Exception) {
+                emptyList()
+            }
+            
+            // Sync with current preferences
+            // We can't access flow directly here easily, but the init block handles the update.
+            // We just set the base list for now.
+            
+            withContext(Dispatchers.Main) {
+                _uiState.update { 
+                    it.copy(
+                        allApps = apps,
+                        // Filter will be updated by the preference flow collector triggered shortly
+                        // or we trigger it manually here if flow is already emitted
+                        isLoading = false
+                    ) 
+                }
+                // Trigger a re-sync with preferences
+                // (Preference flow is hot, it will pick up the new allApps in the combine logic strictly speaking? 
+                // No, the collect block updates allApps based on existing allApps. 
+                // We need to ensure consistency. 
+                // Better approach: combine flows.)
+             }
+        }
+    }
+    
     fun search(query: String) {
         _uiState.update { 
             it.copy(
                 searchQuery = query,
-                apps = if (query.isEmpty()) allApps else allApps.filter { app ->
-                    app.appName.contains(query, ignoreCase = true)
-                }
+                filteredApps = filterApps(it.allApps, query)
             ) 
         }
     }
     
     fun toggleApp(packageName: String) {
-        // Toggle logic
-        val newApps = _uiState.value.apps.map { 
-            if (it.packageName == packageName) it.copy(isProxied = !it.isProxied) else it 
+        viewModelScope.launch {
+            val currentApps = _uiState.value.allApps
+            val app = currentApps.find { it.packageName == packageName } ?: return@launch
+            
+            if (app.isProxied) {
+                appPreferences.removeProxiedApp(packageName)
+            } else {
+                appPreferences.addProxiedApp(packageName)
+            }
         }
-        _uiState.update { it.copy(apps = newApps) }
+    }
+    
+    private fun filterApps(apps: List<AppInfo>, query: String): List<AppInfo> {
+        return if (query.isEmpty()) apps else apps.filter { 
+            it.appName.contains(query, ignoreCase = true) || 
+            it.packageName.contains(query, ignoreCase = true)
+        }
     }
 }

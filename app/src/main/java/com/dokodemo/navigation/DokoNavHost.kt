@@ -12,6 +12,8 @@ import com.dokodemo.ui.screens.home.HomeScreen
 import com.dokodemo.ui.screens.qrscanner.QrScannerScreen
 import com.dokodemo.ui.screens.serverlist.ServerListScreen
 import com.dokodemo.ui.screens.splash.SplashScreen
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun DokoNavHost(
@@ -63,10 +65,21 @@ fun DokoNavHost(
             )
         }
         
-        // Config Editor (New)
-        composable(Route.ConfigEditor.path) {
+        // ConfigEditor (New / Import)
+        composable(
+            route = "${Route.ConfigEditor.path}?uri={uri}",
+            arguments = listOf(
+                navArgument("uri") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val uri = backStackEntry.arguments?.getString("uri")
             ConfigEditorScreen(
                 serverId = null,
+                uri = uri,
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -96,8 +109,8 @@ fun DokoNavHost(
                     navController.popBackStack()
                 },
                 onQrCodeScanned = { code ->
-                    // TODO: Parse and save profile
-                    navController.popBackStack()
+                    val encodedUri = URLEncoder.encode(code, StandardCharsets.UTF_8.toString())
+                    navController.navigate("${Route.ConfigEditor.path}?uri=$encodedUri")
                 }
             )
         }

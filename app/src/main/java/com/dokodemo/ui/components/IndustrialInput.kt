@@ -42,6 +42,7 @@ import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
+import androidx.compose.material3.MaterialTheme
 
 /**
  * Industrial Input - Neubrutalism style text field
@@ -69,9 +70,18 @@ fun IndustrialInput(
     var isFocused by remember { mutableStateOf(false) }
     
     val underlineColor by animateColorAsState(
-        targetValue = if (isFocused) AcidLime else IndustrialGrey,
+        targetValue = if (isFocused) AcidLime else MaterialTheme.colorScheme.outline,
         animationSpec = tween(durationMillis = 150),
         label = "underlineColor"
+    )
+    
+    val isLight = MaterialTheme.colorScheme.background == IndustrialWhite
+    val targetBg = if (isLight && isFocused) Color(0x33CCFF00) else MaterialTheme.colorScheme.surface
+    
+    val containerColor by animateColorAsState(
+        targetValue = targetBg,
+        animationSpec = tween(durationMillis = 150),
+        label = "containerColor"
     )
     
     Column(modifier = modifier) {
@@ -90,8 +100,8 @@ fun IndustrialInput(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, IndustrialGrey, RectangleShape)
-                .background(IndustrialBlack)
+                .border(1.dp, MaterialTheme.colorScheme.outline, RectangleShape)
+                .background(containerColor)
         ) {
             Row(
                 modifier = Modifier
@@ -105,7 +115,7 @@ fun IndustrialInput(
                     enabled = enabled,
                     singleLine = true,
                     textStyle = TextStyle(
-                        color = IndustrialWhite,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = MonospaceFont,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal
@@ -168,7 +178,7 @@ fun IndustrialSearchInput(
     var isFocused by remember { mutableStateOf(false) }
     
     val borderColor by animateColorAsState(
-        targetValue = if (isFocused) AcidLime else IndustrialGrey,
+        targetValue = if (isFocused) AcidLime else MaterialTheme.colorScheme.outline,
         animationSpec = tween(durationMillis = 150),
         label = "borderColor"
     )
@@ -177,7 +187,7 @@ fun IndustrialSearchInput(
         modifier = modifier
             .fillMaxWidth()
             .border(1.dp, borderColor, RectangleShape)
-            .background(IndustrialBlack)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 12.dp, vertical = 12.dp)
     ) {
         Row(
@@ -198,7 +208,7 @@ fun IndustrialSearchInput(
                 onValueChange = onValueChange,
                 singleLine = true,
                 textStyle = TextStyle(
-                    color = IndustrialWhite,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = MonospaceFont,
                     fontSize = 14.sp
                 ),

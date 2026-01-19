@@ -37,11 +37,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dokodemo.ui.theme.AcidLime
-import com.dokodemo.ui.theme.IndustrialBlack
-import com.dokodemo.ui.theme.IndustrialGrey
-import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
+import androidx.compose.material3.MaterialTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -92,7 +89,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(IndustrialBlack)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Grid background
         GridBackground()
@@ -107,7 +104,7 @@ fun SplashScreen(
             // Top version text
             Text(
                 text = "V.1.0.4-ALPHA // DOKO_CLIENT",
-                color = IndustrialGrey,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = MonospaceFont,
                 fontSize = 10.sp,
                 letterSpacing = 1.sp,
@@ -129,7 +126,7 @@ fun SplashScreen(
                 // App name
                 Text(
                     text = "DOKODEMO",
-                    color = IndustrialWhite,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontFamily = MonospaceFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp,
@@ -147,10 +144,11 @@ fun SplashScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val primaryColor = MaterialTheme.colorScheme.primary
                     // Circle indicator
                     Canvas(modifier = Modifier.size(8.dp)) {
                         drawCircle(
-                            color = AcidLime,
+                            color = primaryColor,
                             radius = size.minDimension / 2
                         )
                     }
@@ -159,7 +157,7 @@ fun SplashScreen(
                     
                     Text(
                         text = "SYSTEM INITIALIZING...",
-                        color = AcidLime,
+                        color = primaryColor,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Medium,
                         fontSize = 12.sp,
@@ -169,7 +167,7 @@ fun SplashScreen(
                     // Blinking cursor
                     Text(
                         text = "_",
-                        color = AcidLime,
+                        color = primaryColor,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
@@ -193,7 +191,7 @@ fun SplashScreen(
                 // Footer text
                 Text(
                     text = "SECURE CONNECTION PROTOCOL",
-                    color = IndustrialGrey,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontFamily = MonospaceFont,
                     fontSize = 10.sp,
                     letterSpacing = 1.sp
@@ -205,6 +203,7 @@ fun SplashScreen(
 
 @Composable
 private fun GridBackground() {
+    val outlineColor = MaterialTheme.colorScheme.outline
     Canvas(modifier = Modifier.fillMaxSize()) {
         val gridSize = 40.dp.toPx()
         val strokeWidth = 0.5.dp.toPx()
@@ -213,7 +212,7 @@ private fun GridBackground() {
         var x = 0f
         while (x < size.width) {
             drawLine(
-                color = IndustrialGrey.copy(alpha = 0.3f),
+                color = outlineColor.copy(alpha = 0.3f),
                 start = Offset(x, 0f),
                 end = Offset(x, size.height),
                 strokeWidth = strokeWidth
@@ -225,7 +224,7 @@ private fun GridBackground() {
         var y = 0f
         while (y < size.height) {
             drawLine(
-                color = IndustrialGrey.copy(alpha = 0.3f),
+                color = outlineColor.copy(alpha = 0.3f),
                 start = Offset(0f, y),
                 end = Offset(size.width, y),
                 strokeWidth = strokeWidth
@@ -237,6 +236,8 @@ private fun GridBackground() {
 
 @Composable
 private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val backgroundColor = MaterialTheme.colorScheme.background
     Canvas(modifier = modifier) {
         val strokeWidth = 3.dp.toPx()
         val padding = 20.dp.toPx()
@@ -250,23 +251,22 @@ private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
         
         // Draw corner brackets for outer square
         val bracketLength = outerSize * 0.15f
-        val halfStroke = strokeWidth / 2
         
         // Top-left corner
-        drawLine(AcidLime, Offset(outerOffset.x, outerOffset.y + bracketLength), Offset(outerOffset.x, outerOffset.y), strokeWidth)
-        drawLine(AcidLime, Offset(outerOffset.x, outerOffset.y), Offset(outerOffset.x + bracketLength, outerOffset.y), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + bracketLength), Offset(outerOffset.x, outerOffset.y), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y), Offset(outerOffset.x + bracketLength, outerOffset.y), strokeWidth)
         
         // Top-right corner
-        drawLine(AcidLime, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y), strokeWidth)
-        drawLine(AcidLime, Offset(outerOffset.x + outerSize, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y + bracketLength), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x + outerSize, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y + bracketLength), strokeWidth)
         
         // Bottom-left corner
-        drawLine(AcidLime, Offset(outerOffset.x, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x, outerOffset.y + outerSize), strokeWidth)
-        drawLine(AcidLime, Offset(outerOffset.x, outerOffset.y + outerSize), Offset(outerOffset.x + bracketLength, outerOffset.y + outerSize), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x, outerOffset.y + outerSize), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + outerSize), Offset(outerOffset.x + bracketLength, outerOffset.y + outerSize), strokeWidth)
         
         // Bottom-right corner
-        drawLine(AcidLime, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y + outerSize), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
-        drawLine(AcidLime, Offset(outerOffset.x + outerSize, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y + outerSize), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
+        drawLine(primaryColor, Offset(outerOffset.x + outerSize, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
         
         // Middle square (full outline)
         val middleSize = outerSize - padding * 2
@@ -275,7 +275,7 @@ private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
             outerOffset.y + padding
         )
         drawRect(
-            color = AcidLime,
+            color = primaryColor,
             topLeft = middleOffset,
             size = Size(middleSize, middleSize),
             style = Stroke(width = strokeWidth)
@@ -288,7 +288,7 @@ private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
             middleOffset.y + padding
         )
         drawRect(
-            color = AcidLime,
+            color = primaryColor,
             topLeft = innerOffset,
             size = Size(innerSize, innerSize)
         )
@@ -307,8 +307,8 @@ private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
             innerOffset.y + innerSize * 0.3f
         )
         
-        drawLine(IndustrialBlack, checkStart, checkMiddle, strokeWidth * 1.5f)
-        drawLine(IndustrialBlack, checkMiddle, checkEnd, strokeWidth * 1.5f)
+        drawLine(backgroundColor, checkStart, checkMiddle, strokeWidth * 1.5f)
+        drawLine(backgroundColor, checkMiddle, checkEnd, strokeWidth * 1.5f)
     }
 }
 
@@ -317,6 +317,9 @@ private fun CautionProgressBar(
     progress: Float,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val bgColor = MaterialTheme.colorScheme.background
+    val outlineColor = MaterialTheme.colorScheme.outline
     Canvas(modifier = modifier) {
         val stripeWidth = 8.dp.toPx()
         val progressWidth = size.width * progress
@@ -325,9 +328,9 @@ private fun CautionProgressBar(
         var x = 0f
         var isYellow = true
         while (x < progressWidth) {
-            val width = minOf(stripeWidth, progressWidth - x)
+            val width = if (stripeWidth < progressWidth - x) stripeWidth else progressWidth - x
             drawRect(
-                color = if (isYellow) AcidLime else IndustrialBlack,
+                color = if (isYellow) primaryColor else bgColor,
                 topLeft = Offset(x, 0f),
                 size = Size(width, size.height)
             )
@@ -338,7 +341,7 @@ private fun CautionProgressBar(
         // Draw remaining empty part
         if (progressWidth < size.width) {
             drawRect(
-                color = IndustrialGrey.copy(alpha = 0.3f),
+                color = outlineColor.copy(alpha = 0.3f),
                 topLeft = Offset(progressWidth, 0f),
                 size = Size(size.width - progressWidth, size.height)
             )

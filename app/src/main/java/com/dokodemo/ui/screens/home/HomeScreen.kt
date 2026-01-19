@@ -40,6 +40,8 @@ import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.SolidColor
 
 @Composable
 fun HomeScreen(
@@ -50,7 +52,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     
     Scaffold(
-        containerColor = IndustrialBlack,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             BottomNavBar(
                 currentRoute = "home",
@@ -135,12 +137,12 @@ private fun TopBar() {
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .border(2.dp, AcidLime),
+                .border(2.dp, MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "◈",
-                color = AcidLime,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp
             )
         }
@@ -148,7 +150,7 @@ private fun TopBar() {
         // Title
         Text(
             text = "DOKODEMO // VPN",
-            color = AcidLime,
+            color = MaterialTheme.colorScheme.primary,
             fontFamily = MonospaceFont,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -159,7 +161,7 @@ private fun TopBar() {
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .border(1.dp, AcidLime),
+                .border(1.dp, MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -175,6 +177,8 @@ private fun StatusBar(
     isConnected: Boolean,
     isConnecting: Boolean
 ) {
+    val isLight = MaterialTheme.colorScheme.background == IndustrialWhite
+    
     val statusText = when {
         isConnecting -> "CONNECTING"
         isConnected -> "CONNECTED"
@@ -189,8 +193,8 @@ private fun StatusBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(IndustrialBlack)
-            .border(1.dp, IndustrialGrey)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -203,8 +207,9 @@ private fun StatusBar(
                 fontSize = 11.sp
             )
             Text(
+                modifier = if (isLight && (isConnected || isConnecting)) Modifier.background(AcidLime).padding(horizontal = 4.dp) else Modifier,
                 text = statusText,
-                color = if (isConnected) AcidLime else if (isConnecting) AcidLime.copy(alpha = 0.6f) else IndustrialWhite,
+                color = if (isLight) IndustrialBlack else if (isConnected) AcidLime else if (isConnecting) AcidLime.copy(alpha = 0.6f) else IndustrialWhite,
                 fontFamily = MonospaceFont,
                 fontWeight = FontWeight.Bold,
                 fontSize = 11.sp,
@@ -229,11 +234,12 @@ private fun TargetServerCard(
     ping: String,
     onClick: () -> Unit
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outline
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, IndustrialGrey)
-            .background(IndustrialBlack)
+            .border(1.dp, outlineColor)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable { onClick() }
     ) {
         // Radar/map background visual
@@ -247,7 +253,7 @@ private fun TargetServerCard(
             var x = 0f
             while (x < size.width) {
                 drawLine(
-                    color = IndustrialGrey.copy(alpha = 0.2f),
+                    color = outlineColor.copy(alpha = 0.2f),
                     start = Offset(x, 0f),
                     end = Offset(x, size.height),
                     strokeWidth = 0.5f
@@ -257,7 +263,7 @@ private fun TargetServerCard(
             var y = 0f
             while (y < size.height) {
                 drawLine(
-                    color = IndustrialGrey.copy(alpha = 0.2f),
+                    color = outlineColor.copy(alpha = 0.2f),
                     start = Offset(0f, y),
                     end = Offset(size.width, y),
                     strokeWidth = 0.5f
@@ -283,7 +289,7 @@ private fun TargetServerCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "TARGET SERVER",
-                        color = AcidLime,
+                        color = IndustrialBlack,
                         fontFamily = MonospaceFont,
                         fontSize = 10.sp,
                         letterSpacing = 1.sp
@@ -295,7 +301,7 @@ private fun TargetServerCard(
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = serverName,
-                        color = IndustrialWhite,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 28.sp,
@@ -304,7 +310,7 @@ private fun TargetServerCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "//$region",
-                        color = AcidLime,
+                        color = MaterialTheme.colorScheme.primary,
                         fontFamily = MonospaceFont,
                         fontSize = 14.sp
                     )
@@ -324,12 +330,12 @@ private fun TargetServerCard(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .border(1.dp, IndustrialGrey),
+                    .border(1.dp, outlineColor),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "▽",
-                    color = AcidLime,
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = 16.sp
                 )
             }
@@ -372,7 +378,7 @@ private fun InfoItem(
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
-            color = AcidLime,
+            color = MaterialTheme.colorScheme.primary,
             fontFamily = MonospaceFont,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp
@@ -396,7 +402,7 @@ private fun TrafficMonitor(
         ) {
             Text(
                 text = "TRAFFIC_MONITOR",
-                color = IndustrialWhite,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = MonospaceFont,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
@@ -412,7 +418,7 @@ private fun TrafficMonitor(
                 )
                 Text(
                     text = uploadSpeed,
-                    color = AcidLime,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = MonospaceFont,
                     fontSize = 10.sp
                 )
@@ -425,7 +431,7 @@ private fun TrafficMonitor(
                 )
                 Text(
                     text = downloadSpeed,
-                    color = AcidLime,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = MonospaceFont,
                     fontSize = 10.sp
                 )
@@ -439,8 +445,8 @@ private fun TrafficMonitor(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .border(1.dp, IndustrialGrey)
-                .background(IndustrialBlack)
+                .border(1.dp, MaterialTheme.colorScheme.outline)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             OscilloscopeGraph(
                 dataPoints = speedHistory,
@@ -457,6 +463,10 @@ private fun OscilloscopeGraph(
     dataPoints: List<Float>,
     modifier: Modifier = Modifier
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outline
+    val isLight = MaterialTheme.colorScheme.background == IndustrialWhite
+    val lineColor = if (isLight) IndustrialBlack else AcidLime
+    
     Canvas(modifier = modifier) {
         if (dataPoints.isEmpty()) return@Canvas
         
@@ -469,7 +479,7 @@ private fun OscilloscopeGraph(
         for (i in 1 until gridLines) {
             val y = height * i / gridLines
             drawLine(
-                color = IndustrialGrey.copy(alpha = 0.3f),
+                color = outlineColor.copy(alpha = 0.3f),
                 start = Offset(0f, y),
                 end = Offset(width, y),
                 strokeWidth = 0.5f
@@ -492,14 +502,14 @@ private fun OscilloscopeGraph(
         // Draw the line
         drawPath(
             path = path,
-            color = AcidLime,
+            color = lineColor,
             style = Stroke(width = 2.dp.toPx())
         )
         
         // Draw glow effect (thicker, semi-transparent)
         drawPath(
             path = path,
-            color = AcidLime.copy(alpha = 0.3f),
+            color = lineColor.copy(alpha = 0.3f),
             style = Stroke(width = 6.dp.toPx())
         )
     }
@@ -515,8 +525,8 @@ private fun BottomNavBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(IndustrialBlack)
-            .border(1.dp, IndustrialGrey)
+            .background(MaterialTheme.colorScheme.background)
+            .border(1.dp, MaterialTheme.colorScheme.outline)
             .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
@@ -549,21 +559,29 @@ private fun BottomNavItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val isLight = MaterialTheme.colorScheme.background == IndustrialWhite
+    val selectedBg = if (isSelected && isLight) AcidLime else Color.Transparent
+    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .clickable { onClick() }
+            .background(selectedBg)
             .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
+        val contentColor = if (isSelected) {
+            if (isLight) IndustrialBlack else AcidLime 
+        } else TextGrey
+
         Text(
             text = icon,
-            color = if (isSelected) AcidLime else TextGrey,
+            color = contentColor,
             fontSize = 20.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = label,
-            color = if (isSelected) AcidLime else TextGrey,
+            color = contentColor,
             fontFamily = MonospaceFont,
             fontSize = 9.sp,
             letterSpacing = 1.sp

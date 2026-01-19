@@ -37,6 +37,7 @@ import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun ServerListScreen(
@@ -48,14 +49,14 @@ fun ServerListScreen(
     val uiState by viewModel.uiState.collectAsState()
     
     Scaffold(
-        containerColor = IndustrialBlack,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             SquareFab(
                 onClick = onNavigateToAddProfile
             ) {
                 Text(
                     text = "+",
-                    color = AcidLime,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = MonospaceFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -90,7 +91,8 @@ fun ServerListScreen(
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 88.dp)
             ) {
                 items(
                     items = viewModel.filteredServers,
@@ -99,7 +101,8 @@ fun ServerListScreen(
                     ServerListItem(
                         server = server,
                         isSelected = server.id == uiState.selectedServerId,
-                        onClick = { viewModel.selectServer(server.id) }
+                        onClick = { viewModel.selectServer(server.id) },
+                        onDelete = { viewModel.deleteServer(server) }
                     )
                 }
             }
@@ -130,13 +133,13 @@ private fun ServerListTopBar(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .border(1.dp, IndustrialGrey)
+                .border(1.dp, MaterialTheme.colorScheme.outline)
                 .clickable { onNavigateBack() },
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "←",
-                color = IndustrialWhite,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp
             )
         }
@@ -144,7 +147,7 @@ private fun ServerListTopBar(
         // Title
         Text(
             text = "SERVER LIST",
-            color = IndustrialWhite,
+            color = MaterialTheme.colorScheme.onSurface,
             fontFamily = MonospaceFont,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -155,13 +158,13 @@ private fun ServerListTopBar(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .border(1.dp, IndustrialGrey)
+                .border(1.dp, MaterialTheme.colorScheme.outline)
                 .clickable { onRefresh() },
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "↻",
-                color = AcidLime,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 18.sp
             )
         }
@@ -172,10 +175,11 @@ private fun ServerListTopBar(
 private fun ServerListItem(
     server: ServerItem,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    val backgroundColor = if (isSelected) IndustrialBlack else IndustrialBlack
-    val borderColor = if (server.isConnected) AcidLime else IndustrialGrey
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surface
+    val borderColor = if (server.isConnected) AcidLime else MaterialTheme.colorScheme.outline
     
     Box(
         modifier = Modifier
@@ -199,14 +203,14 @@ private fun ServerListItem(
                 // Country code box
                 Box(
                     modifier = Modifier
-                        .border(1.dp, AcidLime)
-                        .background(if (server.isConnected) AcidLime else IndustrialBlack)
+                        .border(1.dp, if (server.isConnected) AcidLime else MaterialTheme.colorScheme.outline)
+                        .background(if (server.isConnected) AcidLime else Color.Transparent)
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = server.countryCode,
-                        color = if (server.isConnected) IndustrialBlack else AcidLime,
+                        color = if (server.isConnected) IndustrialBlack else MaterialTheme.colorScheme.onSurface,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
@@ -219,7 +223,7 @@ private fun ServerListItem(
                 Column {
                     Text(
                         text = server.name,
-                        color = if (server.isConnected) AcidLime else IndustrialWhite,
+                        color = if (server.isConnected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
@@ -234,7 +238,7 @@ private fun ServerListItem(
                 }
             }
             
-            // Right section: Ping + Signal
+            // Right section: Ping + Signal + Delete
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -244,7 +248,7 @@ private fun ServerListItem(
                 ) {
                     Text(
                         text = server.ping?.let { "${it}ms" } ?: "--ms",
-                        color = AcidLime,
+                        color = MaterialTheme.colorScheme.primary,
                         fontFamily = MonospaceFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
@@ -252,7 +256,7 @@ private fun ServerListItem(
                     if (server.isConnected) {
                         Text(
                             text = "CONNECTED",
-                            color = AcidLime,
+                            color = MaterialTheme.colorScheme.primary,
                             fontFamily = MonospaceFont,
                             fontSize = 9.sp,
                             letterSpacing = 0.5.sp
@@ -272,6 +276,23 @@ private fun ServerListItem(
                         else -> 1
                     }
                 )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Delete Button
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onDelete() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "×",
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                }
             }
         }
     }
@@ -290,7 +311,7 @@ private fun SignalBars(strength: Int) {
                 modifier = Modifier
                     .width(3.dp)
                     .height(height)
-                    .background(if (isActive) AcidLime else IndustrialGrey)
+                    .background(if (isActive) AcidLime else MaterialTheme.colorScheme.outline)
             )
         }
     }
@@ -305,8 +326,8 @@ private fun BottomStatusBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(IndustrialBlack)
-            .border(1.dp, IndustrialGrey)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline)
             .padding(12.dp)
     ) {
         Row(
@@ -322,7 +343,7 @@ private fun BottomStatusBar(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = systemStatus,
-                    color = AcidLime,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = MonospaceFont,
                     fontSize = 10.sp,
                     letterSpacing = 0.5.sp
@@ -349,7 +370,7 @@ private fun BottomStatusBar(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = currentUplink,
-                color = AcidLime,
+                color = MaterialTheme.colorScheme.primary,
                 fontFamily = MonospaceFont,
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.sp

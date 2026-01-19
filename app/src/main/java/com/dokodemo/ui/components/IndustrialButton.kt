@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -61,9 +62,9 @@ fun IndustrialButton(
     
     val backgroundColor by animateColorAsState(
         targetValue = when {
-            !enabled -> IndustrialBlack
+            !enabled -> MaterialTheme.colorScheme.surface
             shouldInvert -> AcidLime
-            else -> IndustrialBlack
+            else -> MaterialTheme.colorScheme.surface
         },
         animationSpec = tween(durationMillis = 100),
         label = "backgroundColor"
@@ -73,7 +74,7 @@ fun IndustrialButton(
         targetValue = when {
             !enabled -> Color.Gray
             shouldInvert -> IndustrialBlack
-            else -> IndustrialWhite
+            else -> MaterialTheme.colorScheme.onSurface
         },
         animationSpec = tween(durationMillis = 100),
         label = "contentColor"
@@ -82,7 +83,7 @@ fun IndustrialButton(
     val borderColor by animateColorAsState(
         targetValue = when {
             !enabled -> Color.Gray
-            else -> AcidLime
+            else -> MaterialTheme.colorScheme.primary
         },
         animationSpec = tween(durationMillis = 100),
         label = "borderColor"
@@ -136,13 +137,13 @@ fun LargeIndustrialButton(
     val shouldInvert = isActive || isPressed
     
     val backgroundColor by animateColorAsState(
-        targetValue = if (shouldInvert) AcidLime else IndustrialBlack,
+        targetValue = if (shouldInvert) AcidLime else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 100),
         label = "backgroundColor"
     )
     
     val contentColor by animateColorAsState(
-        targetValue = if (shouldInvert) IndustrialBlack else IndustrialWhite,
+        targetValue = if (shouldInvert) IndustrialBlack else MaterialTheme.colorScheme.onSurface,
         animationSpec = tween(durationMillis = 100),
         label = "contentColor"
     )
@@ -158,7 +159,7 @@ fun LargeIndustrialButton(
             ),
         shape = RectangleShape,
         color = backgroundColor,
-        border = BorderStroke(2.dp, AcidLime),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
         shadowElevation = 0.dp
     ) {
         Box(
@@ -214,7 +215,7 @@ fun SquareFab(
     val isPressed by interactionSource.collectIsPressedAsState()
     
     val backgroundColor by animateColorAsState(
-        targetValue = if (isPressed) AcidLime else IndustrialBlack,
+        targetValue = if (isPressed) AcidLime else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 100),
         label = "backgroundColor"
     )
@@ -228,7 +229,7 @@ fun SquareFab(
             ),
         shape = RectangleShape,
         color = backgroundColor,
-        border = BorderStroke(2.dp, AcidLime),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
         shadowElevation = 0.dp
     ) {
         Box(

@@ -41,21 +41,27 @@ import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun ConfigEditorScreen(
     serverId: Long? = null,
+    uri: String? = null,
     onNavigateBack: () -> Unit,
     viewModel: ConfigEditorViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
-    LaunchedEffect(serverId) {
-        serverId?.let { viewModel.loadServer(it) }
+    LaunchedEffect(serverId, uri) {
+        if (serverId != null) {
+            viewModel.loadServer(serverId)
+        } else if (uri != null) {
+            viewModel.parseUri(uri)
+        }
     }
     
     Scaffold(
-        containerColor = IndustrialBlack
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -127,7 +133,7 @@ fun ConfigEditorScreen(
                 uiState.addressError?.let {
                     Text(
                         text = it,
-                        color = AcidLime,
+                        color = MaterialTheme.colorScheme.error,
                         fontFamily = MonospaceFont,
                         fontSize = 10.sp,
                         modifier = Modifier.padding(top = 4.dp)
@@ -136,7 +142,7 @@ fun ConfigEditorScreen(
                 uiState.portError?.let {
                     Text(
                         text = it,
-                        color = AcidLime,
+                        color = MaterialTheme.colorScheme.error,
                         fontFamily = MonospaceFont,
                         fontSize = 10.sp,
                         modifier = Modifier.padding(top = 4.dp)
@@ -158,7 +164,7 @@ fun ConfigEditorScreen(
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
-                                    .border(1.dp, IndustrialGrey)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline)
                                     .clickable { /* Copy */ },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -173,7 +179,7 @@ fun ConfigEditorScreen(
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
-                                    .border(1.dp, IndustrialGrey)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline)
                                     .clickable { /* Generate */ },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -190,7 +196,7 @@ fun ConfigEditorScreen(
                 uiState.uuidError?.let {
                     Text(
                         text = it,
-                        color = AcidLime,
+                        color = MaterialTheme.colorScheme.error,
                         fontFamily = MonospaceFont,
                         fontSize = 10.sp,
                         modifier = Modifier.padding(top = 4.dp)
@@ -253,7 +259,7 @@ private fun ConfigEditorTopBar(
         
         Text(
             text = "SERVER CONFIG",
-            color = IndustrialWhite,
+            color = MaterialTheme.colorScheme.onSurface,
             fontFamily = MonospaceFont,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
@@ -280,8 +286,8 @@ private fun StatusIndicator(
         // Online status badge
         Box(
             modifier = Modifier
-                .border(1.dp, if (isOnline) AcidLime else IndustrialGrey)
-                .background(IndustrialBlack)
+                .border(1.dp, if (isOnline) AcidLime else MaterialTheme.colorScheme.outline)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -293,7 +299,7 @@ private fun StatusIndicator(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = if (isOnline) "ONLINE" else "OFFLINE",
-                    color = if (isOnline) AcidLime else TextGrey,
+                    color = if (isOnline) MaterialTheme.colorScheme.primary else TextGrey,
                     fontFamily = MonospaceFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 10.sp
@@ -312,7 +318,7 @@ private fun StatusIndicator(
         )
         Text(
             text = ping,
-            color = AcidLime,
+            color = MaterialTheme.colorScheme.primary,
             fontFamily = MonospaceFont,
             fontWeight = FontWeight.Bold,
             fontSize = 11.sp

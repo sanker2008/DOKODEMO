@@ -81,8 +81,7 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    // Seed mock data if empty
-                    serverRepository.seedMockData()
+                    // Do nothing if empty, let user add server
                 }
             }
         }

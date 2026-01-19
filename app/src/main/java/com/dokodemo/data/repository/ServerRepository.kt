@@ -44,62 +44,11 @@ class ServerRepository @Inject constructor(
     /**
      * Seed database with mock data for testing
      */
+    /**
+     * Seed database with mock data for testing
+     * Legacy: Method kept but empty to prevent mock data injection.
+     */
     suspend fun seedMockData() {
-        if (getServerCount() == 0) {
-            val mockServers = listOf(
-                ServerProfile(
-                    name = "TOKYO_CORE_01",
-                    address = "jp1.dokodemo.vpn",
-                    port = 443,
-                    uuid = "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                    protocol = Protocol.VLESS,
-                    countryCode = "JP",
-                    countryName = "Japan",
-                    latency = 12,
-                    isSelected = true
-                ),
-                ServerProfile(
-                    name = "NEW_YORK_EAST",
-                    address = "us1.dokodemo.vpn",
-                    port = 443,
-                    uuid = "b2c3d4e5-f678-9012-3456-7890abcdef12",
-                    protocol = Protocol.VMESS,
-                    countryCode = "US",
-                    countryName = "United States",
-                    latency = 45
-                ),
-                ServerProfile(
-                    name = "FRANKFURT_HUB",
-                    address = "de1.dokodemo.vpn",
-                    port = 443,
-                    uuid = "c3d4e5f6-7890-1234-5678-90abcdef1234",
-                    protocol = Protocol.VLESS,
-                    countryCode = "DE",
-                    countryName = "Germany",
-                    latency = 102
-                ),
-                ServerProfile(
-                    name = "SINGAPORE_DIRECT",
-                    address = "sg1.dokodemo.vpn",
-                    port = 443,
-                    uuid = "d4e5f678-9012-3456-7890-abcdef123456",
-                    protocol = Protocol.VLESS,
-                    countryCode = "SG",
-                    countryName = "Singapore",
-                    latency = 18
-                ),
-                ServerProfile(
-                    name = "LONDON_BRIDGE",
-                    address = "uk1.dokodemo.vpn",
-                    port = 443,
-                    uuid = "e5f67890-1234-5678-90ab-cdef12345678",
-                    protocol = Protocol.TROJAN,
-                    countryCode = "UK",
-                    countryName = "United Kingdom",
-                    latency = 88
-                )
-            )
-            addServers(mockServers)
-        }
+        // Mock data removed for production functionality
     }
 }

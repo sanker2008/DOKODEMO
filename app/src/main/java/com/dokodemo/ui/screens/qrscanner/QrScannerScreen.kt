@@ -1,10 +1,14 @@
 package com.dokodemo.ui.screens.qrscanner
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -43,9 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +61,11 @@ import com.dokodemo.ui.theme.IndustrialGrey
 import com.dokodemo.ui.theme.IndustrialWhite
 import com.dokodemo.ui.theme.MonospaceFont
 import com.dokodemo.ui.theme.TextGrey
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
+import java.io.InputStream
 import java.util.concurrent.Executors
 
 @Composable
@@ -82,6 +88,7 @@ fun QrScannerScreen(
     var isFlashOn by remember { mutableStateOf(false) }
     var scanStatus by remember { mutableStateOf("SCANNING...") }
     var scannedCode by remember { mutableStateOf<String?>(null) }
+    var camera by remember { mutableStateOf<Camera?>(null) }
     
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -89,9 +96,35 @@ fun QrScannerScreen(
         hasCameraPermission = granted
     }
     
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val result = decodeQrFromUri(context, it)
+            if (result != null) {
+                scannedCode = result
+                scanStatus = "TARGET ACQUIRED"
+                onQrCodeScanned(result)
+            } else {
+                scanStatus = "SCAN FAILED" // Or show a toast
+            }
+        }
+    }
+    
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+    
+    // Toggle flashlight when isFlashOn or camera changes
+    LaunchedEffect(isFlashOn, camera) {
+        try {
+            if (hasCameraPermission) {
+                camera?.cameraControl?.enableTorch(isFlashOn)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
     
@@ -110,6 +143,9 @@ fun QrScannerScreen(
                         onQrCodeScanned(code)
                     }
                 },
+                onCameraBound = { boundCamera ->
+                    camera = boundCamera
+                },
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -120,14 +156,36 @@ fun QrScannerScreen(
             isFlashOn = isFlashOn,
             onClose = onNavigateBack,
             onFlashToggle = { isFlashOn = !isFlashOn },
-            onGalleryClick = { /* TODO: Pick from gallery */ }
+            onGalleryClick = { galleryLauncher.launch("image/*") }
         )
+    }
+}
+
+private fun decodeQrFromUri(context: Context, uri: Uri): String? {
+    try {
+        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+        val bitmap = BitmapFactory.decodeStream(inputStream) ?: return null
+        
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+        val reader = MultiFormatReader()
+        
+        return reader.decode(binaryBitmap).text
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
     }
 }
 
 @Composable
 private fun CameraPreview(
     onQrCodeDetected: (String) -> Unit,
+    onCameraBound: (Camera) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -161,17 +219,18 @@ private fun CameraPreview(
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 
-                // Note: Real implementation would use ML Kit or ZXing for QR detection
-                // imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzer(onQrCodeDetected))
+                // Use our new QrCodeAnalyzer
+                imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzer(onQrCodeDetected))
                 
                 try {
                     cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
+                    val camera = cameraProvider.bindToLifecycle(
                         lifecycleOwner,
                         CameraSelector.DEFAULT_BACK_CAMERA,
                         preview,
                         imageAnalysis
                     )
+                    onCameraBound(camera)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,9 +35,9 @@ import com.dokodemo.ui.theme.MonospaceFont
 @Composable
 fun IndustrialCard(
     modifier: Modifier = Modifier,
-    borderColor: Color = IndustrialGrey,
+    borderColor: Color = MaterialTheme.colorScheme.outline,
     borderWidth: Dp = 1.dp,
-    backgroundColor: Color = IndustrialBlack,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentPadding: Dp = 16.dp,
     content: @Composable () -> Unit
 ) {
@@ -97,8 +98,8 @@ fun ServerListItemCard(
     isSelected: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val backgroundColor = if (isSelected) AcidLime else IndustrialBlack
-    val borderColor = if (isSelected) AcidLime else IndustrialGrey
+    val backgroundColor = if (isSelected) AcidLime else MaterialTheme.colorScheme.surface
+    val borderColor = if (isSelected) AcidLime else MaterialTheme.colorScheme.outline
     
     Surface(
         modifier = modifier.fillMaxWidth(),

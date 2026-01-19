@@ -4,160 +4,162 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
-import com.dokodemo.data.repository.ServerRepository
+import com.dokodemo.ui.screens.serverlist.ServerRepository
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
+import java.util.UUID
 import javax.inject.Inject
 
 data class ConfigEditorUiState(
-    val isEditing: Boolean = false,
-    val serverId: Long? = null,
-    
-    // Form fields
+    val id: Long? = null,
     val name: String = "",
     val address: String = "",
     val port: String = "",
     val uuid: String = "",
     val protocol: Protocol = Protocol.VMESS,
-    
-    // TLS settings
-    val useTls: Boolean = true,
+    val security: String = "auto",
+    val network: String = "tcp",
+    val wsPath: String = "",
+    val wsHost: String = "",
+    val useTls: Boolean = false,
     val allowInsecure: Boolean = false,
-    
-    // Status
     val isOnline: Boolean = false,
-    val ping: String = "--ms",
-    
-    // Validation
+    val ping: String = "N/A",
     val addressError: String? = null,
     val portError: String? = null,
-    val uuidError: String? = null,
-    
-    // Actions
-    val isSaving: Boolean = false,
-    val saveSuccess: Boolean = false,
-    val saveError: String? = null
+    val uuidError: String? = null
 )
 
 @HiltViewModel
 class ConfigEditorViewModel @Inject constructor(
     private val serverRepository: ServerRepository
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(ConfigEditorUiState())
     val uiState: StateFlow<ConfigEditorUiState> = _uiState.asStateFlow()
-    
+
     fun loadServer(serverId: Long) {
         viewModelScope.launch {
-            serverRepository.getServerById(serverId).collect { server ->
-                server?.let {
-                    _uiState.update { state ->
-                        state.copy(
-                            isEditing = true,
-                            serverId = server.id,
-                            name = server.name,
-                            address = server.address,
-                            port = server.port.toString(),
-                            uuid = server.uuid,
-                            protocol = server.protocol,
-                            useTls = server.useTls,
-                            allowInsecure = server.allowInsecure,
-                            isOnline = true,
-                            ping = server.latency?.let { "${it}ms" } ?: "--ms"
-                        )
-                    }
+            val server = serverRepository.getServerById(serverId)
+            if (server != null) {
+                _uiState.update {
+                    it.copy(
+                        name = server.name,
+                        address = server.address,
+                        port = server.port.toString(),
+                        uuid = server.uuid,
+                        protocol = server.protocol,
+                        security = server.encryption,
+                        network = server.network,
+                        wsPath = server.wsPath,
+                        wsHost = server.wsHost,
+                        useTls = server.useTls,
+                        allowInsecure = server.allowInsecure,
+                    )
                 }
             }
         }
     }
-    
-    fun updateName(value: String) {
-        _uiState.update { it.copy(name = value) }
+
+    fun parseUri(uri: String) {
+        viewModelScope.launch {
+            val decodedUri = URLDecoder.decode(uri, StandardCharsets.UTF_8.toString())
+            if (decodedUri.startsWith("vmess://")) {
+                val vmessData = decodedUri.substring("vmess://".length)
+                try {
+                    val json = String(android.util.Base64.decode(vmessData, android.util.Base64.DEFAULT))
+                    val vmessProfile = Gson().fromJson(json, VmessProfile::class.java)
+                    _uiState.update {
+                        it.copy(
+                            name = vmessProfile.ps,
+                            address = vmessProfile.add,
+                            port = vmessProfile.port.toString(),
+                            uuid = vmessProfile.id,
+                            protocol = Protocol.VMESS,
+                            security = vmessProfile.scy,
+                            network = vmessProfile.net,
+                            wsPath = vmessProfile.path,
+                            wsHost = vmessProfile.host,
+                            useTls = vmessProfile.tls == "tls",
+                        )
+                    }
+                } catch (e: Exception) {
+                    // Handle parsing error
+                }
+            }
+        }
     }
-    
-    fun updateAddress(value: String) {
-        _uiState.update { it.copy(address = value, addressError = null) }
+
+    fun updateName(name: String) {
+        _uiState.update { it.copy(name = name) }
     }
-    
-    fun updatePort(value: String) {
-        _uiState.update { it.copy(port = value, portError = null) }
+
+    fun updateAddress(address: String) {
+        _uiState.update { it.copy(address = address) }
     }
-    
-    fun updateUuid(value: String) {
-        _uiState.update { it.copy(uuid = value, uuidError = null) }
+
+    fun updatePort(port: String) {
+        _uiState.update { it.copy(port = port) }
     }
-    
+
+    fun updateUuid(uuid: String) {
+        _uiState.update { it.copy(uuid = uuid) }
+    }
+
     fun updateProtocol(protocol: Protocol) {
         _uiState.update { it.copy(protocol = protocol) }
     }
-    
-    fun updateUseTls(value: Boolean) {
-        _uiState.update { it.copy(useTls = value) }
+
+    fun updateAllowInsecure(allowInsecure: Boolean) {
+        _uiState.update { it.copy(allowInsecure = allowInsecure) }
     }
-    
-    fun updateAllowInsecure(value: Boolean) {
-        _uiState.update { it.copy(allowInsecure = value) }
+
+    fun updateUseTls(useTls: Boolean) {
+        _uiState.update { it.copy(useTls = useTls) }
     }
-    
-    fun saveConfig(onSuccess: () -> Unit) {
-        val state = _uiState.value
-        
-        // Validate
-        var hasError = false
-        
-        if (state.address.isBlank()) {
-            _uiState.update { it.copy(addressError = "Address is required") }
-            hasError = true
-        }
-        
-        val portInt = state.port.toIntOrNull()
-        if (portInt == null || portInt < 1 || portInt > 65535) {
-            _uiState.update { it.copy(portError = "Invalid port (1-65535)") }
-            hasError = true
-        }
-        
-        if (state.uuid.isBlank() && state.protocol != Protocol.SHADOWSOCKS) {
-            _uiState.update { it.copy(uuidError = "UUID is required") }
-            hasError = true
-        }
-        
-        if (hasError) return
-        
-        _uiState.update { it.copy(isSaving = true) }
-        
+
+    fun saveConfig(onNavigateBack: () -> Unit) {
         viewModelScope.launch {
-            try {
-                val serverProfile = ServerProfile(
-                    id = state.serverId ?: 0,
-                    name = state.name.ifBlank { "${state.address}:${state.port}" },
-                    address = state.address,
-                    port = portInt!!,
-                    uuid = state.uuid,
-                    protocol = state.protocol,
-                    useTls = state.useTls,
-                    allowInsecure = state.allowInsecure
-                )
-                
-                if (state.isEditing && state.serverId != null) {
-                    serverRepository.updateServer(serverProfile)
-                } else {
-                    serverRepository.addServer(serverProfile)
-                }
-                
-                _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
-                onSuccess()
-            } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(
-                        isSaving = false, 
-                        saveError = e.message ?: "Failed to save"
-                    ) 
-                }
-            }
+            val currentState = _uiState.value
+            val serverProfile = ServerProfile(
+                id = currentState.id ?: 0,
+                name = currentState.name,
+                address = currentState.address,
+                port = currentState.port.toIntOrNull() ?: 0,
+                uuid = currentState.uuid,
+                protocol = currentState.protocol,
+                encryption = currentState.security,
+                network = currentState.network,
+                wsPath = currentState.wsPath,
+                wsHost = currentState.wsHost,
+                useTls = currentState.useTls,
+                allowInsecure = currentState.allowInsecure,
+            )
+            serverRepository.insert(serverProfile)
+            onNavigateBack()
         }
     }
 }
+
+data class VmessProfile(
+    val v: String,
+    val ps: String,
+    val add: String,
+    val port: Int,
+    val id: String,
+    val aid: Int,
+    val scy: String,
+    val net: String,
+    val type: String,
+    val host: String,
+    val path: String,
+    val tls: String,
+    val sni: String
+)

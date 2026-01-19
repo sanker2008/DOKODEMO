@@ -1,7 +1,9 @@
 package com.dokodemo.ui.screens.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dokodemo.core.CoreManager
+import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.ui.components.IndustrialCard
 import com.dokodemo.ui.components.IndustrialToggleRow
 import com.dokodemo.ui.theme.AcidLime
@@ -49,7 +54,7 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     
     Scaffold(
-        containerColor = IndustrialBlack,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             SettingsTopBar(onNavigateBack)
         }
@@ -134,8 +139,8 @@ fun SettingsScreen(
                     ) {
                         IndustrialToggleRow(
                             label = "DARK MODE (ALWAYS)",
-                            checked = true,
-                            onCheckedChange = { /* Lock to dark */ }
+                            checked = uiState.isDarkMode,
+                            onCheckedChange = { viewModel.toggleDarkMode() }
                         )
                         SettingsOption(
                             title = "CORE VERSION",
@@ -159,35 +164,38 @@ private fun SettingsTopBar(onBack: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .height(56.dp),
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Back button
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .background(IndustrialGrey)
+                .border(1.dp, MaterialTheme.colorScheme.outline)
                 .clickable { onBack() },
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "<",
-                color = AcidLime,
-                fontFamily = MonospaceFont,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                text = "←",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 18.sp
             )
         }
         
-        Spacer(modifier = Modifier.weight(1f))
-        
+        // Title
         Text(
             text = "SETTINGS.CONF",
-            color = AcidLime,
+            color = MaterialTheme.colorScheme.onSurface,
             fontFamily = MonospaceFont,
-            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
             letterSpacing = 2.sp
+        )
+        
+        // Placeholder for symmetry (empty box of same size as back button)
+        Box(
+            modifier = Modifier.size(40.dp)
         )
     }
 }
@@ -196,7 +204,7 @@ private fun SettingsTopBar(onBack: () -> Unit) {
 private fun SectionHeader(text: String) {
     Text(
         text = text,
-        color = TextGrey,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontFamily = MonospaceFont,
         fontSize = 12.sp,
         modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
@@ -219,21 +227,21 @@ private fun SettingsOption(
     ) {
         Text(
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontFamily = MonospaceFont,
             fontSize = 14.sp
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = value,
-                color = AcidLime,
+                color = MaterialTheme.colorScheme.primary,
                 fontFamily = MonospaceFont,
                 fontSize = 14.sp
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = ">",
-                color = IndustrialGrey,
+                color = MaterialTheme.colorScheme.outline,
                 fontFamily = MonospaceFont,
                 fontSize = 14.sp
             )
@@ -248,18 +256,33 @@ data class SettingsUiState(
     val udpEnabled: Boolean = true,
     val blockAds: Boolean = false,
     val bypassLan: Boolean = true,
-    val coreVersion: String = "---"
+    val coreVersion: String = "---",
+    val isDarkMode: Boolean = true
 )
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val coreManager: CoreManager
+    private val coreManager: CoreManager,
+    private val appPreferences: AppPreferences
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()
     
     init {
         _uiState.update { it.copy(coreVersion = coreManager.getVersion()) }
+        
+        viewModelScope.launch {
+            appPreferences.isDarkMode.collect { isDark ->
+                _uiState.update { it.copy(isDarkMode = isDark) }
+            }
+        }
+    }
+    
+    fun toggleDarkMode() {
+        val current = uiState.value.isDarkMode
+        viewModelScope.launch {
+            appPreferences.setDarkMode(!current)
+        }
     }
     
     fun toggleMux() {

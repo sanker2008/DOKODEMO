@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,14 +48,14 @@ fun IndustrialToggle(
     val interactionSource = remember { MutableInteractionSource() }
     
     val backgroundColor by animateColorAsState(
-        targetValue = if (checked) AcidLime else IndustrialBlack,
+        targetValue = if (checked) AcidLime else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 100),
         label = "toggleBackground"
     )
     
     val borderColor by animateColorAsState(
         targetValue = when {
-            !enabled -> IndustrialGrey
+            !enabled -> MaterialTheme.colorScheme.outline
             checked -> AcidLime
             else -> AcidLime
         },
@@ -104,7 +105,7 @@ fun IndustrialToggleRow(
         ) {
             Text(
                 text = label,
-                color = IndustrialWhite,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp
             )

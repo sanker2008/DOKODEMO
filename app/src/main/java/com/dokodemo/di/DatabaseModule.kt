@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.dokodemo.data.AppDatabase
 import com.dokodemo.data.dao.ServerDao
-import com.dokodemo.data.dao.SubscriptionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,28 +14,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-    
+
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "dokodemo_database"
-        )
-        .fallbackToDestructiveMigration()
-        .build()
+            "doko_database"
+        ).build()
     }
-    
+
     @Provides
     @Singleton
-    fun provideServerDao(database: AppDatabase): ServerDao {
-        return database.serverDao()
-    }
-    
-    @Provides
-    @Singleton
-    fun provideSubscriptionDao(database: AppDatabase): SubscriptionDao {
-        return database.subscriptionDao()
+    fun provideServerDao(appDatabase: AppDatabase): ServerDao {
+        return appDatabase.serverDao()
     }
 }
