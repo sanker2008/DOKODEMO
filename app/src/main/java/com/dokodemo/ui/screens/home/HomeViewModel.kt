@@ -70,6 +70,12 @@ class HomeViewModel @Inject constructor(
             // Try to get selected server from database
             serverRepository.getSelectedServer().collect { server ->
                 if (server != null) {
+                    val currentState = _uiState.value
+                    // Check if we are connected and the server changed
+                    val needsReconnect = currentState.isConnected && 
+                            currentState.currentServer != null && 
+                            currentState.currentServer.id != server.id
+                    
                     _uiState.update { state ->
                         state.copy(
                             currentServer = server,
@@ -79,6 +85,10 @@ class HomeViewModel @Inject constructor(
                             encryption = if (server.useTls) "TLS" else "NONE",
                             ping = server.latency?.let { "${it}ms" } ?: "--ms"
                         )
+                    }
+                    
+                    if (needsReconnect) {
+                        connect()
                     }
                 } else {
                     // Do nothing if empty, let user add server

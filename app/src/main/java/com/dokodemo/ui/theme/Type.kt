@@ -1,185 +1,91 @@
 package com.dokodemo.ui.theme
 
-import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
-// ============================================
-// DOKODEMO - TYPOGRAPHY SYSTEM
-// ============================================
+// Inter 字体（正文用）
+// JetBrains Mono（数据/IP/延迟用）
+// 注：字体文件需放入 app/src/main/res/font/ 目录
+// 如果没有字体文件，系统会 fallback 到默认 Sans-Serif，不影响运行
 
-// Monospace font for data display (IPs, ports, latency, logs)
-val MonospaceFont = FontFamily.Monospace
-
-// Sans-serif for headings (system default, bold)
-val IndustrialFont = FontFamily.Default
-
-val DokoTypography = Typography(
-    // Display - Large titles like "DOKODEMO"
-    displayLarge = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.Black,
-        fontSize = 48.sp,
-        letterSpacing = 8.sp,
-        color = IndustrialWhite
-    ),
-    displayMedium = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 36.sp,
-        letterSpacing = 4.sp,
-        color = IndustrialWhite
-    ),
-    displaySmall = TextStyle(
-        fontFamily = IndustrialFont,
+val AppTypography = Typography(
+    // 标题
+    headlineLarge = TextStyle(
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
-        letterSpacing = 2.sp,
-        color = IndustrialWhite
-    ),
-    
-    // Headlines - Section headers like "CONNECT", "SERVER LIST"
-    headlineLarge = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        letterSpacing = 4.sp,
-        color = IndustrialWhite
+        lineHeight = 34.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        letterSpacing = 2.sp,
-        color = IndustrialWhite
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 22.sp,
+        lineHeight = 28.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = IndustrialFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 18.sp,
-        letterSpacing = 1.sp,
-        color = IndustrialWhite
+        fontSize = 18.sp
     ),
-    
-    // Title - Screen titles, card headers
+    // 标签
     titleLarge = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
-        letterSpacing = 2.sp,
-        color = IndustrialWhite
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
     ),
     titleMedium = TextStyle(
-        fontFamily = IndustrialFont,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
-        letterSpacing = 1.sp,
-        color = IndustrialWhite
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp
     ),
     titleSmall = TextStyle(
-        fontFamily = IndustrialFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        letterSpacing = 0.5.sp,
-        color = IndustrialWhite
+        fontSize = 12.sp
     ),
-    
-    // Body - Regular text content
+    // 正文
     bodyLarge = TextStyle(
-        fontFamily = IndustrialFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        color = IndustrialWhite
+        lineHeight = 24.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = IndustrialFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 20.sp,
-        color = IndustrialWhite
+        lineHeight = 20.sp
     ),
     bodySmall = TextStyle(
-        fontFamily = IndustrialFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        lineHeight = 16.sp,
-        color = TextGrey
+        lineHeight = 16.sp
     ),
-    
-    // Label - Monospace for data (CRITICAL for Neubrutalism)
+    // 按钮和标签
     labelLarge = TextStyle(
-        fontFamily = MonospaceFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        letterSpacing = 1.sp,
-        color = AcidLime
-    ),
-    labelMedium = TextStyle(
-        fontFamily = MonospaceFont,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        letterSpacing = 0.5.sp,
-        color = AcidLime
+        letterSpacing = 0.1.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        letterSpacing = 0.5.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = MonospaceFont,
+        fontFamily = FontFamily.Monospace,  // 小标签用等宽（用于延迟/IP）
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        letterSpacing = 0.5.sp,
-        color = TextGrey
+        fontSize = 11.sp,
+        letterSpacing = 0.5.sp
     )
 )
 
-// ============================================
-// CUSTOM TEXT STYLES FOR DATA DISPLAY
-// ============================================
-
-// Status text (like "STATUS: DISCONNECTED")
-val StatusTextStyle = TextStyle(
-    fontFamily = MonospaceFont,
-    fontWeight = FontWeight.Medium,
-    fontSize = 12.sp,
-    letterSpacing = 1.sp,
-    color = AcidLime
-)
-
-// Ping/Latency display (large monospace numbers)
-val PingTextStyle = TextStyle(
-    fontFamily = MonospaceFont,
-    fontWeight = FontWeight.Bold,
-    fontSize = 18.sp,
-    letterSpacing = 0.sp,
-    color = AcidLime
-)
-
-// Terminal log text
-val TerminalTextStyle = TextStyle(
-    fontFamily = MonospaceFont,
-    fontWeight = FontWeight.Normal,
-    fontSize = 11.sp,
-    lineHeight = 16.sp,
-    letterSpacing = 0.sp,
-    color = IndustrialWhite
-)
-
-// Server name text
-val ServerNameStyle = TextStyle(
-    fontFamily = IndustrialFont,
-    fontWeight = FontWeight.Bold,
-    fontSize = 16.sp,
-    letterSpacing = 1.sp,
-    color = IndustrialWhite
-)
-
-// Country code text (for the [JP] boxes)
-val CountryCodeStyle = TextStyle(
-    fontFamily = MonospaceFont,
-    fontWeight = FontWeight.Bold,
-    fontSize = 14.sp,
-    letterSpacing = 0.sp,
-    color = AcidLime
-)
+// 等宽字体（用于 IP、端口、延迟等数字型数据）
+val MonoFont = FontFamily.Monospace

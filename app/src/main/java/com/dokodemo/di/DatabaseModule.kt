@@ -3,7 +3,10 @@ package com.dokodemo.di
 import android.content.Context
 import androidx.room.Room
 import com.dokodemo.data.AppDatabase
+import com.dokodemo.data.MIGRATION_1_2
+import com.dokodemo.data.dao.GroupDao
 import com.dokodemo.data.dao.ServerDao
+import com.dokodemo.data.dao.SubscriptionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,12 +25,26 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "doko_database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)  // 注册 v1→v2 迁移脚本
+            .build()
     }
 
     @Provides
     @Singleton
     fun provideServerDao(appDatabase: AppDatabase): ServerDao {
         return appDatabase.serverDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubscriptionDao(appDatabase: AppDatabase): SubscriptionDao {
+        return appDatabase.subscriptionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGroupDao(appDatabase: AppDatabase): GroupDao {
+        return appDatabase.groupDao()
     }
 }

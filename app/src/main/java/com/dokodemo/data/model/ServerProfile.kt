@@ -38,43 +38,56 @@ data class ServerProfile(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     
-    // Basic Info
+    // 基本信息
     val name: String,
     val address: String,
     val port: Int,
     
-    // Authentication
+    // 鉴权信息
     val uuid: String = "",
     val password: String = "",
     
-    // Protocol Configuration
+    // 协议配置
     val protocol: Protocol = Protocol.VLESS,
-    val encryption: String = "none",
-    val flow: String = "",
+    val encryption: String = "none",    // VMess: auto/aes-128-gcm 等；SS: 加密方式
+    val flow: String = "",              // VLESS Reality 用
     
-    // TLS Settings
+    // TLS 设置
     val useTls: Boolean = true,
     val allowInsecure: Boolean = false,
-    val serverName: String = "",
+    val serverName: String = "",        // SNI
     
-    // Network Settings
-    val network: String = "tcp", // tcp, ws, grpc, etc.
-    val wsPath: String = "",
-    val wsHost: String = "",
+    // 网络/传输设置
+    val network: String = "tcp",        // tcp / ws / grpc / kcp
+    val wsPath: String = "",            // WebSocket 路径
+    val wsHost: String = "",            // WebSocket Host 头
     
-    // Location
+    // ─── KCP 专用字段 ─────────────────────────────────────────────────────
+    // KCP 伪装类型：none / dtls / utp / srtp / wechat-video / wireguard
+    // 用户的 SanVPN 节点使用 dtls
+    val kcpHeader: String = "none",
+    // KCP 混淆密钥（可选）
+    val kcpSeed: String = "",
+    
+    // ─── Shadowsocks 专用字段 ─────────────────────────────────────────────
+    // SS 加密方法：aes-256-gcm / chacha20-ietf-poly1305 等
+    val ssMethod: String = "aes-256-gcm",
+    
+    // 位置信息（用于节点列表显示国旗/地区）
     val countryCode: String = "",
     val countryName: String = "",
     
-    // Status
+    // 状态信息
     val latency: Int? = null,
     val isSelected: Boolean = false,
     val lastConnected: Long? = null,
     
-    // Subscription
+    // 所属订阅和分组
     val subscriptionId: Long? = null,
+    val groupId: Long? = null,          // 新增：所属分组 ID
     
-    // Timestamps
+    // 时间戳
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )
+

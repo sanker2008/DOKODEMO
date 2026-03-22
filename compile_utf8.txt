@@ -1,0 +1,40 @@
+﻿Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:kspDebugKotlin
+
+> Task :app:compileDebugKotlin
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/service/DokoDemoVpnService.kt:117:54 'static field CONNECTIVITY_ACTION: String' is deprecated. Deprecated in Java.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/service/DokoDemoVpnService.kt:123:54 'static field CONNECTIVITY_ACTION: String' is deprecated. Deprecated in Java.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/service/DokoDemoVpnService.kt:443:37 'constructor(p0: Int, p1: CharSequence!, p2: PendingIntent?): Notification.Action.Builder' is deprecated. Deprecated in Java.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/configeditor/ConfigEditorScreen.kt:51:79 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/configeditor/ConfigEditorScreen.kt:242:33 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/configeditor/ConfigEditorScreen.kt:266:33 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/qrscanner/QrScannerScreen.kt:73:26 'val LocalLifecycleOwner: ProvidableCompositionLocal<LifecycleOwner>' is deprecated. Moved to lifecycle-runtime-compose library in androidx.lifecycle.compose package.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/qrscanner/QrScannerScreen.kt:190:26 'val LocalLifecycleOwner: ProvidableCompositionLocal<LifecycleOwner>' is deprecated. Moved to lifecycle-runtime-compose library in androidx.lifecycle.compose package.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/qrscanner/QrScannerScreen.kt:216:22 'fun setTargetResolution(p0: Size): ImageAnalysis.Builder' is deprecated. Deprecated in Java.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/serverlist/ServerListScreen.kt:75:44 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/settings/SettingsScreen.kt:41:44 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/settings/SettingsScreen.kt:250:28 'val Icons.Rounded.ArrowForward: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowForward.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/splittunneling/SplitTunnelingScreen.kt:51:79 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/screens/subscription/SubscriptionScreen.kt:51:79 'val Icons.Rounded.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.ArrowBack.
+w: file:///D:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/theme/Theme.kt:68:20 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+
+BUILD SUCCESSFUL in 59s
+17 actionable tasks: 2 executed, 15 up-to-date

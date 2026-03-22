@@ -76,7 +76,17 @@ class ShareLinkParser @Inject constructor() {
      */
     private fun parseVmess(link: String): ServerProfile {
         val base64 = link.removePrefix("vmess://")
-        val json = String(Base64.getDecoder().decode(base64))
+        val decodedBytes = try {
+            Base64.getDecoder().decode(base64)
+        } catch (e: IllegalArgumentException) {
+            try {
+                // fallback to URL-safe decode
+                Base64.getUrlDecoder().decode(base64)
+            } catch (e2: Exception) {
+                android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
+            }
+        }
+        val json = String(decodedBytes)
         
         // Parse JSON manually (simple implementation)
         val fields = parseSimpleJson(json)
@@ -144,18 +154,38 @@ class ShareLinkParser @Inject constructor() {
             .toMap()
     }
     
+    /**
+     * Parse a simple flat JSON object into a case-insensitive map.
+     * Uses Gson for proper parsing of unicode/Chinese characters.
+     */
     private fun parseSimpleJson(json: String): Map<String, String> {
         val result = mutableMapOf<String, String>()
-        val cleaned = json.trim().removeSurrounding("{", "}")
-        
-        // Very simple JSON parser for flat objects
-        val pattern = """"(\w+)"\s*:\s*"?([^",}]*)"?""".toRegex()
-        pattern.findAll(cleaned).forEach { match ->
-            val key = match.groupValues[1]
-            val value = match.groupValues[2].trim().removeSurrounding("\"")
-            result[key] = value
+        return try {
+            val gson = com.google.gson.Gson()
+            @Suppress("UNCHECKED_CAST")
+            val raw = gson.fromJson(json, Map::class.java) as Map<String, Any?>
+            for ((k, v) in raw) {
+                if (v != null) {
+                    // Normalize keys to lowercase; convert values to String
+                    val value = when (v) {
+                        is Double -> if (v == v.toLong().toDouble()) v.toLong().toString() else v.toString()
+                        else -> v.toString()
+                    }
+                    result[k.lowercase()] = value
+                }
+            }
+            result
+        } catch (e: Exception) {
+            android.util.Log.e("ShareLinkParser", "Failed to parse VMess JSON: ${e.message}")
+            // Fallback: regex for backward compatibility
+            val pattern = """"(\w+)"\s*:\s*"([^"]*)"?""".toRegex()
+            val cleaned = json.trim().removeSurrounding("{", "}")
+            pattern.findAll(cleaned).forEach { match ->
+                val key = match.groupValues[1].lowercase()
+                val value = match.groupValues[2].trim()
+                result[key] = value
+            }
+            result
         }
-        
-        return result
     }
 }

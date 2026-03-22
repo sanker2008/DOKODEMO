@@ -1,0 +1,30 @@
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: java.lang.ExceptionInInitializerError
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: og.g1$f.a []
+03-21 21:00:49.803  5035  5121 D OplusShellStartingWindowManager: adjustSuggestedWindowType originType: 1, wi: StartingWindowInfo{taskId=17085 targetActivityInfo=null displayId=0 topActivityType=1 preferredStartingWindowType=8b mainWindowLayoutParams=null splashScreenThemeResId 7f15076f, exi: OplusStartingWindowExtendedInfo{mAppToken=android.os.BinderProxy@3c51169, mSupportSplashScreenPreview=true, mIsSystemApp=true, mIsExceptionListApp=false, mPreviewBitmap=null, mShouldDrawBackground=false, mForceLightMode=false, mForceNightMode=false, mNotSupportNightMode=false, mForcePreview=false, mForceBigIcon=false, mQuickStartingSurface=null, mForceSolidColorSplash=false}
+03-21 21:00:51.944  3102  4955 W ActivityManager: Exception when unbinding service com.android.vending/com.google.frameworks.client.data.android.server.play.BackgroundProcessEndpointService
+03-21 21:00:51.944  3102  4955 W ActivityManager: android.os.DeadObjectException
+03-21 21:00:59.771  5035  5121 D OplusShellStartingWindowManager: adjustSuggestedWindowType originType: 1, wi: StartingWindowInfo{taskId=17084 targetActivityInfo=null displayId=0 topActivityType=1 preferredStartingWindowType=8b mainWindowLayoutParams=null splashScreenThemeResId 7f0e010e, exi: OplusStartingWindowExtendedInfo{mAppToken=android.os.BinderProxy@319260d, mSupportSplashScreenPreview=false, mIsSystemApp=false, mIsExceptionListApp=false, mPreviewBitmap=null, mShouldDrawBackground=false, mForceLightMode=false, mForceNightMode=false, mNotSupportNightMode=false, mForcePreview=false, mForceBigIcon=false, mQuickStartingSurface=null, mForceSolidColorSplash=false}
+03-21 21:02:19.633  3102  3215 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 9
+03-21 21:02:19.633  3102  3215 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 9
+03-21 21:06:08.452  3102  4248 E OplusStorageManagerFeature: FsReserveSpace read data label failed.java.nio.file.NotLinkException: /dev/block/dm-77
+03-21 21:08:08.453  3102 21890 E OplusDexMetadataCompileHelper: runBackgroundDexOpt Exception: 
+03-21 21:08:08.453  3102 21890 E OplusDexMetadataCompileHelper: java.lang.IllegalArgumentException: Invalid compilation reason 15
+03-21 21:08:09.708  3102  3215 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 9
+03-21 21:08:09.708  3102  3215 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 9
+03-21 21:11:41.749  3102  5006 W SoundTriggerMiddlewareLogging: START_RECOGNITION (6, RecognitionConfig{captureRequested: true, phraseRecognitionExtras: [PhraseRecognitionExtra{id: 0, recognitionModes: 3, confidenceLevel: 69, levels: [ConfidenceLevel{userId: 0, levelPercent: 69}]}], audioCapabilities: 0, data: [1, 0, 0, 0]}) -> ERROR: java.lang.IllegalStateException: Model with handle: 6 has invalid state for starting recognition
+03-21 21:11:41.749  3102  5006 W SoundTriggerMiddlewareLogging: java.lang.IllegalStateException: Model with handle: 6 has invalid state for starting recognition
+03-21 21:12:01.359  3102  5011 W SoundTriggerMiddlewareLogging: START_RECOGNITION (6, RecognitionConfig{captureRequested: true, phraseRecognitionExtras: [PhraseRecognitionExtra{id: 0, recognitionModes: 3, confidenceLevel: 69, levels: [ConfidenceLevel{userId: 0, levelPercent: 69}]}], audioCapabilities: 0, data: [1, 0, 0, 0]}) -> ERROR: java.lang.IllegalStateException: Model with handle: 6 has invalid state for starting recognition
+03-21 21:12:01.359  3102  5011 W SoundTriggerMiddlewareLogging: java.lang.IllegalStateException: Model with handle: 6 has invalid state for starting recognition
+03-21 21:13:34.553  3102  3215 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 9
+03-21 21:13:34.553  3102  3215 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 9
+03-21 21:15:51.891  3102 25085 E OplusDexMetadataCompileHelper: runBackgroundDexOpt Exception: 
+03-21 21:15:51.891  3102 25085 E OplusDexMetadataCompileHelper: java.lang.IllegalArgumentException: Invalid compilation reason 15
+03-21 21:15:52.547 19649 19702 E FileStrategy: java.io.IOException: Read-only file system
+03-21 21:15:54.080 25130 25165 E AIUnit-ParseUtil: parseJsonFromFile: java.io.FileNotFoundException: : open failed: ENOENT (No such file or directory)
+03-21 21:15:54.113 26154 26399 E FileStrategy: java.io.IOException: Read-only file system
+03-21 21:16:02.903 25262 25358 E AIUnit-ParseUtil: parseJsonFromFile: java.io.FileNotFoundException: : open failed: ENOENT (No such file or directory)
+03-21 21:16:02.909 25268 25357 E AIUnit-ParseUtil: parseJsonFromFile: java.io.FileNotFoundException: : open failed: ENOENT (No such file or directory)
+03-21 21:16:17.940 23600 23629 E FileStrategy: java.io.IOException: Read-only file system
+03-21 21:17:26.145 12527 12743 E FileStrategy: java.io.IOException: Read-only file system
+03-21 21:17:49.028 26154 26399 E FileStrategy: java.io.IOException: Read-only file system
+03-21 21:17:49.076  1662  1662 W android.hardware.power.stats-impl.oplus: PruneException: Unknown binder exception (2) pruned into EX_TRANSACTION_FAILED

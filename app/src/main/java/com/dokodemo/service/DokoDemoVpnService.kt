@@ -99,25 +99,36 @@ class DokoDemoVpnService : VpnService() {
         instance = this
         createNotificationChannel()
         
-        // Initialize V2Ray environment
-        coreManager.initialize()
-        coreManager.copyAssets()
+        try {
+            // Initialize V2Ray environment - must catch Throwable because
+            // UnsatisfiedLinkError is an Error (not Exception) when native lib is missing
+            coreManager.initialize()
+            coreManager.copyAssets()
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to initialize core manager (native lib may be missing): ${e.message}")
+            // Service continues - mock mode will handle connection attempts
+        }
         
         // Register connectivity receiver
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(
-                connectivityReceiver,
-                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                RECEIVER_NOT_EXPORTED
-            )
-        } else {
-            registerReceiver(
-                connectivityReceiver,
-                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-            )
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(
+                    connectivityReceiver,
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                    RECEIVER_NOT_EXPORTED
+                )
+            } else {
+                registerReceiver(
+                    connectivityReceiver,
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                )
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to register connectivity receiver: ${e.message}")
         }
         
         Log.i(TAG, "VPN Service created, V2Ray version: ${coreManager.getVersion()}")
+
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -127,6 +138,9 @@ class DokoDemoVpnService : VpnService() {
                 val serverName = intent.getStringExtra(EXTRA_SERVER_NAME) ?: "DokoDemo"
                 
                 if (configJson != null) {
+                    // MUST call startForeground immediately on the main thread
+                    // before doing any heavy work, to avoid ForegroundServiceDidNotStartInTimeException
+                    startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
                     startVpn(configJson, serverName)
                 } else {
                     Log.e(TAG, "No configuration provided")
@@ -148,22 +162,34 @@ class DokoDemoVpnService : VpnService() {
     
     private fun startVpn(configJson: String, serverName: String) {
         if (isRunning) {
-            Log.w(TAG, "VPN already running")
-            return
+            Log.w(TAG, "VPN already running, restarting for new node: $serverName")
+            try { coreManager.stopCore() } catch (_: Throwable) {}
+            try { Tun2socks.stop() } catch (_: Throwable) {}
+            try { vpnInterface?.close() } catch (_: Throwable) {}
+            vpnInterface = null
+            trafficJob?.cancel()
+            trafficJob = null
+            isRunning = false
+            // Small delay to let sockets close
+            Thread.sleep(500)
         }
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 Log.i(TAG, "Starting VPN connection to: $serverName")
                 
-                // Start foreground notification
-                startForeground(NOTIFICATION_ID, createNotification("Connecting...", serverName))
-                
                 // 1. Start V2Ray core (SOCKS5 proxy)
-                val coreStarted = coreManager.startCore(configJson)
+                val coreStarted = try {
+                    coreManager.startCore(configJson)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Exception starting V2Ray core: ${e.message}", e)
+                    false
+                }
+                
                 if (!coreStarted) {
                     Log.e(TAG, "Failed to start V2Ray core")
-                    stopVpn()
+                    broadcastDisconnected()
+                    stopSelf()
                     return@launch
                 }
                 Log.i(TAG, "V2Ray core started, SOCKS proxy at ${coreManager.getSocksAddress()}")
@@ -173,17 +199,12 @@ class DokoDemoVpnService : VpnService() {
                 
                 // 2. Establish VPN interface
                 val vpnBuilder = Builder()
-                    .setSession("DokoDemo - $serverName")
+                    .setSession("SanProxy - $serverName")
                     .setMtu(VPN_MTU)
                     .addAddress(VPN_ADDRESS, 24)
                     .addDnsServer(VPN_DNS_1)
                     .addDnsServer(VPN_DNS_2)
                     .addRoute(VPN_ROUTE, 0)
-                
-                // Allow local traffic to bypass VPN
-                vpnBuilder.addRoute("10.0.0.0", 8)
-                vpnBuilder.addRoute("172.16.0.0", 12)
-                vpnBuilder.addRoute("192.168.0.0", 16)
                 
                 // Set as always-on capable
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -193,9 +214,10 @@ class DokoDemoVpnService : VpnService() {
                 vpnInterface = vpnBuilder.establish()
                 
                 if (vpnInterface == null) {
-                    Log.e(TAG, "Failed to establish VPN interface")
+                    Log.e(TAG, "Failed to establish VPN interface - permission may not be granted")
                     coreManager.stopCore()
-                    stopVpn()
+                    broadcastDisconnected()
+                    stopSelf()
                     return@launch
                 }
                 
@@ -210,18 +232,18 @@ class DokoDemoVpnService : VpnService() {
                         VPN_DNS_1,
                         VPN_MTU
                     )
-                } catch (e: UnsatisfiedLinkError) {
-                    Log.w(TAG, "tun2socks native lib not available: ${e.message}")
-                    // In mock mode, we just continue
-                    true
+                } catch (e: Throwable) {
+                    Log.e(TAG, "tun2socks start error (native lib may be missing): ${e.message}", e)
+                    true // Continue anyway in degraded mode
                 }
                 
                 if (!tun2socksStarted) {
                     Log.e(TAG, "Failed to start tun2socks")
                     coreManager.stopCore()
-                    vpnInterface?.close()
+                    try { vpnInterface?.close() } catch (_: Exception) {}
                     vpnInterface = null
-                    stopVpn()
+                    broadcastDisconnected()
+                    stopSelf()
                     return@launch
                 }
                 
@@ -231,21 +253,30 @@ class DokoDemoVpnService : VpnService() {
                 isRunning = true
                 
                 // Update notification
-                updateNotification("Connected", serverName)
+                updateNotification("已连接", serverName)
                 
                 // Broadcast connection status
-                sendBroadcast(Intent(ACTION_VPN_CONNECTED))
+                sendBroadcast(Intent(ACTION_VPN_CONNECTED).apply { setPackage(packageName) })
                 
                 // Start traffic monitoring
                 startTrafficMonitor()
                 
                 Log.i(TAG, "VPN connection established successfully!")
                 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting VPN: ${e.message}", e)
-                stopVpn()
+            } catch (e: Throwable) {
+                Log.e(TAG, "Fatal error starting VPN: ${e.message}", e)
+                isRunning = false
+                try { coreManager.stopCore() } catch (_: Exception) {}
+                try { vpnInterface?.close() } catch (_: Exception) {}
+                vpnInterface = null
+                broadcastDisconnected()
+                stopSelf()
             }
         }
+    }
+    
+    private fun broadcastDisconnected() {
+        try { sendBroadcast(Intent(ACTION_VPN_DISCONNECTED).apply { setPackage(packageName) }) } catch (_: Exception) {}
     }
     
     private fun stopVpn() {
@@ -261,8 +292,8 @@ class DokoDemoVpnService : VpnService() {
         try {
             Tun2socks.stop()
             Log.i(TAG, "tun2socks stopped")
-        } catch (e: Exception) {
-            Log.w(TAG, "Error stopping tun2socks: ${e.message}")
+        } catch (e: Throwable) {
+            Log.w(TAG, "Error stopping tun2socks (native lib missing?): ${e.message}")
         }
         
         // Stop V2Ray core
@@ -279,7 +310,7 @@ class DokoDemoVpnService : VpnService() {
         }
         
         // Broadcast disconnection
-        sendBroadcast(Intent(ACTION_VPN_DISCONNECTED))
+        sendBroadcast(Intent(ACTION_VPN_DISCONNECTED).apply { setPackage(packageName) })
         
         // Stop foreground service
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -304,6 +335,7 @@ class DokoDemoVpnService : VpnService() {
                     
                     // Broadcast traffic update
                     val trafficIntent = Intent(ACTION_TRAFFIC_UPDATE).apply {
+                        setPackage(packageName)
                         putExtra(EXTRA_UPLOAD_SPEED, uploadSpeed)
                         putExtra(EXTRA_DOWNLOAD_SPEED, downloadSpeed)
                         putExtra(EXTRA_TOTAL_UPLOAD, currentUpload)

@@ -1,56 +1,59 @@
 package go.tun2socks
 
-/**
- * Tun2socks JNI Interface
- * 
- * This interface bridges Android VpnService TUN interface with V2Ray SOCKS proxy.
- * The implementation is provided by the native library built from go-tun2socks.
- */
+import com.v2ray.ang.service.TProxyService
+import java.io.File
+import android.util.Log
+
 object Tun2socks {
+    private var proxyService: TProxyService? = null
     
-    /**
-     * Start tun2socks with the given parameters
-     * 
-     * @param tunFd File descriptor from VpnService.Builder.establish()
-     * @param socksAddr SOCKS5 proxy address (e.g., "127.0.0.1:10808")
-     * @param dnsAddr DNS server address (e.g., "8.8.8.8")
-     * @param mtu MTU value (typically 1500)
-     * @return true if started successfully
-     */
     @JvmStatic
-    external fun start(tunFd: Int, socksAddr: String, dnsAddr: String, mtu: Int): Boolean
-    
-    /**
-     * Stop tun2socks
-     */
-    @JvmStatic
-    external fun stop()
-    
-    /**
-     * Check if tun2socks is running
-     */
-    @JvmStatic
-    external fun isRunning(): Boolean
-    
-    /**
-     * Get traffic statistics
-     * @return upload bytes
-     */
-    @JvmStatic
-    external fun getUploadBytes(): Long
-    
-    /**
-     * Get traffic statistics
-     * @return download bytes
-     */
-    @JvmStatic
-    external fun getDownloadBytes(): Long
-    
-    init {
+    fun start(tunFd: Int, socksAddr: String, dnsAddr: String, mtu: Int): Boolean {
         try {
-            System.loadLibrary("tun2socks")
-        } catch (e: UnsatisfiedLinkError) {
-            // Library not found
+            val parts = socksAddr.split(":")
+            val addr = parts.getOrNull(0) ?: "127.0.0.1"
+            val port = parts.getOrNull(1)?.toIntOrNull() ?: 10808
+            
+            val config = """
+                tunnel:
+                  mtu: $mtu
+                socks5:
+                  address: $addr
+                  port: $port
+                  udp: 'udp'
+            """.trimIndent()
+            
+            val cacheDir = "/data/data/com.dokodemo/cache"
+            val file = File(cacheDir, "hev.yml")
+            file.parentFile?.mkdirs()
+            file.writeText(config)
+            
+            if (proxyService == null) {
+                proxyService = TProxyService()
+            }
+            proxyService?.TProxyStartService(file.absolutePath, tunFd)
+            return true
+        } catch (e: Throwable) {
+            Log.e("Tun2socks", "Failed to start tunnel", e)
+            return false
         }
+    }
+    
+    @JvmStatic
+    fun stop() {
+        try { proxyService?.TProxyStopService() } catch (_: Throwable) {}
+    }
+    
+    @JvmStatic
+    fun isRunning(): Boolean = proxyService != null
+    
+    @JvmStatic
+    fun getUploadBytes(): Long {
+        return try { proxyService?.TProxyGetStats()?.get(1) ?: 0L } catch (_: Throwable) { 0L }
+    }
+    
+    @JvmStatic
+    fun getDownloadBytes(): Long {
+        return try { proxyService?.TProxyGetStats()?.get(3) ?: 0L } catch (_: Throwable) { 0L }
     }
 }

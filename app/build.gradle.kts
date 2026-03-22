@@ -106,4 +106,7 @@ dependencies {
     
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+    
+    // OkHttp
+    implementation(libs.okhttp)
 }

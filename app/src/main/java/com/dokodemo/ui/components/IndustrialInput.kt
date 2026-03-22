@@ -1,235 +1,83 @@
 package com.dokodemo.ui.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.dokodemo.ui.theme.AcidLime
-import com.dokodemo.ui.theme.IndustrialBlack
-import com.dokodemo.ui.theme.IndustrialGrey
-import com.dokodemo.ui.theme.IndustrialWhite
-import com.dokodemo.ui.theme.MonospaceFont
-import com.dokodemo.ui.theme.TextGrey
-import androidx.compose.material3.MaterialTheme
 
 /**
- * Industrial Input - Neubrutalism style text field
- * 
- * Features:
- * - Label above input (not inside)
- * - Black rectangular background
- * - Acid lime underline on focus
- * - Monospace font for input text
+ * 通用输入框（替代旧 IndustrialInput）
+ * Material3 OutlinedTextField，圆角12dp
  */
 @Composable
 fun IndustrialInput(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
     modifier: Modifier = Modifier,
+    label: String = "",
     placeholder: String = "",
-    enabled: Boolean = true,
-    isPassword: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {},
-    trailingContent: @Composable (() -> Unit)? = null
+    singleLine: Boolean = true,
+    trailingContent: (@Composable () -> Unit)? = null,
+    // 兼容旧调用形式的多余参数
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-    
-    val underlineColor by animateColorAsState(
-        targetValue = if (isFocused) AcidLime else MaterialTheme.colorScheme.outline,
-        animationSpec = tween(durationMillis = 150),
-        label = "underlineColor"
-    )
-    
-    val isLight = MaterialTheme.colorScheme.background == IndustrialWhite
-    val targetBg = if (isLight && isFocused) Color(0x33CCFF00) else MaterialTheme.colorScheme.surface
-    
-    val containerColor by animateColorAsState(
-        targetValue = targetBg,
-        animationSpec = tween(durationMillis = 150),
-        label = "containerColor"
-    )
-    
-    Column(modifier = modifier) {
-        // Label above input
-        Text(
-            text = label.uppercase(),
-            color = TextGrey,
-            fontFamily = MonospaceFont,
-            fontWeight = FontWeight.Normal,
-            fontSize = 11.sp,
-            letterSpacing = 1.sp,
-            modifier = Modifier.padding(bottom = 6.dp)
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = if (label.isNotEmpty()) ({ Text(label.trimEnd(':')) }) else null,
+        placeholder = if (placeholder.isNotEmpty()) ({ Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) }) else null,
+        singleLine = singleLine,
+        enabled = enabled,
+        trailingIcon = trailingContent,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            imeAction = imeAction
+        ),
+        isError = isError || errorMessage != null,
+        supportingText = if (errorMessage != null) ({ Text(errorMessage, color = MaterialTheme.colorScheme.error) }) else null,
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
         )
-        
-        // Input field
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline, RectangleShape)
-                .background(containerColor)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                BasicTextField(
-                    value = value,
-                    onValueChange = onValueChange,
-                    enabled = enabled,
-                    singleLine = true,
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontFamily = MonospaceFont,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    cursorBrush = SolidColor(AcidLime),
-                    visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = keyboardType,
-                        imeAction = imeAction
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { onImeAction() },
-                        onNext = { onImeAction() }
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .onFocusChanged { isFocused = it.isFocused },
-                    decorationBox = { innerTextField ->
-                        Box {
-                            if (value.isEmpty()) {
-                                Text(
-                                    text = placeholder,
-                                    color = TextGrey.copy(alpha = 0.5f),
-                                    fontFamily = MonospaceFont,
-                                    fontSize = 14.sp
-                                )
-                            }
-                            innerTextField()
-                        }
-                    }
-                )
-                
-                if (trailingContent != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    trailingContent()
-                }
-            }
-        }
-        
-        // Focus underline
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(underlineColor)
-        )
-    }
+    )
 }
 
 /**
- * Industrial Search Input - For search functionality
+ * 搜索输入框（替代旧 IndustrialSearchInput）
  */
 @Composable
 fun IndustrialSearchInput(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "SEARCH_LOCALE..."
+    placeholder: String = "搜索..."
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-    
-    val borderColor by animateColorAsState(
-        targetValue = if (isFocused) AcidLime else MaterialTheme.colorScheme.outline,
-        animationSpec = tween(durationMillis = 150),
-        label = "borderColor"
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     )
-    
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, borderColor, RectangleShape)
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 12.dp, vertical = 12.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Search icon representation
-            Text(
-                text = "Q",
-                color = AcidLime,
-                fontFamily = MonospaceFont,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                textStyle = TextStyle(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontFamily = MonospaceFont,
-                    fontSize = 14.sp
-                ),
-                cursorBrush = SolidColor(AcidLime),
-                modifier = Modifier
-                    .weight(1f)
-                    .onFocusChanged { isFocused = it.isFocused },
-                decorationBox = { innerTextField ->
-                    Box {
-                        if (value.isEmpty()) {
-                            Text(
-                                text = placeholder,
-                                color = TextGrey.copy(alpha = 0.5f),
-                                fontFamily = MonospaceFont,
-                                fontSize = 14.sp
-                            )
-                        }
-                        innerTextField()
-                    }
-                }
-            )
-        }
-    }
 }

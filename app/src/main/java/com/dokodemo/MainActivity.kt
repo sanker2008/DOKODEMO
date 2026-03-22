@@ -12,8 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.navigation.DokoNavHost
-import com.dokodemo.ui.theme.DokoTheme
-import com.dokodemo.ui.theme.IndustrialBlack
+import com.dokodemo.ui.theme.SanProxyTheme
 import javax.inject.Inject
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isDarkTheme by appPreferences.isDarkMode.collectAsState(initial = true)
 
-            DokoTheme(darkTheme = isDarkTheme) {
+            SanProxyTheme(darkTheme = isDarkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

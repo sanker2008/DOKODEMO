@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dokodemo.ui.theme.MonospaceFont
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.material3.MaterialTheme
 import kotlinx.coroutines.delay
 
@@ -105,7 +105,7 @@ fun SplashScreen(
             Text(
                 text = "V.1.0.4-ALPHA // DOKO_CLIENT",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = MonospaceFont,
+                fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp,
                 letterSpacing = 1.sp,
                 modifier = Modifier.padding(top = 16.dp)
@@ -127,7 +127,7 @@ fun SplashScreen(
                 Text(
                     text = "DOKODEMO",
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontFamily = MonospaceFont,
+                    fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp,
                     letterSpacing = 8.sp,
@@ -158,7 +158,7 @@ fun SplashScreen(
                     Text(
                         text = "SYSTEM INITIALIZING...",
                         color = primaryColor,
-                        fontFamily = MonospaceFont,
+                        fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Medium,
                         fontSize = 12.sp,
                         letterSpacing = 1.sp
@@ -168,7 +168,7 @@ fun SplashScreen(
                     Text(
                         text = "_",
                         color = primaryColor,
-                        fontFamily = MonospaceFont,
+                        fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
                         modifier = Modifier.alpha(cursorAlpha)
@@ -192,7 +192,7 @@ fun SplashScreen(
                 Text(
                     text = "SECURE CONNECTION PROTOCOL",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = MonospaceFont,
+                    fontFamily = FontFamily.Monospace,
                     fontSize = 10.sp,
                     letterSpacing = 1.sp
                 )

@@ -1,0 +1,488 @@
+﻿
+03-22 17:06:34.484 17403 17403 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:34.484 17403 17403 E DokoDemoVpnS
+ervice: Failed to initialize core manager (na
+tive lib may be missing): No implementation f
+ound for void libv2ray.Libv2ray.initV2Env(jav
+a.lang.String) (tried Java_libv2ray_Libv2ray_
+initV2Env and Java_libv2ray_Libv2ray_initV2En
+v__Ljava_lang_String_2) - is the library load
+ed, e.g. System.loadLibrary?
+03-22 17:06:34.484 17403 17403 E com.dokodemo
+: No implementation found for java.lang.Strin
+g libv2ray.Libv2ray.version() (tried Java_lib
+v2ray_Libv2ray_version and Java_libv2ray_Libv
+2ray_version__) - is the library loaded, e.g.
+ System.loadLibrary?
+03-22 17:06:34.487 17403 17476 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: Fatal error starting VPN: No implemen
+tation found for void libv2ray.Libv2ray.initV
+2Env(java.lang.String) (tried Java_libv2ray_L
+ibv2ray_initV2Env and Java_libv2ray_Libv2ray_
+initV2Env__Ljava_lang_String_2) - is the libr
+ary loaded, e.g. System.loadLibrary?
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: java.lang.UnsatisfiedLinkError: No im
+plementation found for void libv2ray.Libv2ray
+.initV2Env(java.lang.String) (tried Java_libv
+2ray_Libv2ray_initV2Env and Java_libv2ray_Lib
+v2ray_initV2Env__Ljava_lang_String_2) - is th
+e library loaded, e.g. System.loadLibrary?
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at libv2ray.Libv2ray.initV2Env(Nativ
+e Method)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.ini
+tialize(CoreManager.kt:49)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.sta
+rtCore(CoreManager.kt:375)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.service.DokoDemoVpnS
+ervice$startVpn$1.invokeSuspend(DokoDemoVpnSe
+rvice.kt:183)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlin.coroutines.jvm.internal.Ba
+seContinuationImpl.resumeWith(ContinuationImp
+l.kt:33)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.DispatchedTask
+.run(DispatchedTask.kt:101)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.internal.Limit
+edDispatcher$Worker.run(LimitedDispatcher.kt:
+113)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Tas
+kImpl.run(Tasks.kt:89)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler.runSafely(CoroutineScheduler.
+kt:589)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.executeTask(CoroutineS
+cheduler.kt:823)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.runWorker(CoroutineSch
+eduler.kt:720)
+03-22 17:06:34.488 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.run(CoroutineScheduler
+.kt:707)
+03-22 17:06:34.488 17403 17476 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:34.496 17403 17403 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:34.730 17403 17403 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:34.730 17403 17403 E DokoDemoVpnS
+ervice: Failed to initialize core manager (na
+tive lib may be missing): No implementation f
+ound for void libv2ray.Libv2ray.initV2Env(jav
+a.lang.String) (tried Java_libv2ray_Libv2ray_
+initV2Env and Java_libv2ray_Libv2ray_initV2En
+v__Ljava_lang_String_2) - is the library load
+ed, e.g. System.loadLibrary?
+03-22 17:06:34.731 17403 17403 E com.dokodemo
+: No implementation found for java.lang.Strin
+g libv2ray.Libv2ray.version() (tried Java_lib
+v2ray_Libv2ray_version and Java_libv2ray_Libv
+2ray_version__) - is the library loaded, e.g.
+ System.loadLibrary?
+03-22 17:06:34.737 17403 17476 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: Fatal error starting VPN: No implemen
+tation found for void libv2ray.Libv2ray.initV
+2Env(java.lang.String) (tried Java_libv2ray_L
+ibv2ray_initV2Env and Java_libv2ray_Libv2ray_
+initV2Env__Ljava_lang_String_2) - is the libr
+ary loaded, e.g. System.loadLibrary?
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: java.lang.UnsatisfiedLinkError: No im
+plementation found for void libv2ray.Libv2ray
+.initV2Env(java.lang.String) (tried Java_libv
+2ray_Libv2ray_initV2Env and Java_libv2ray_Lib
+v2ray_initV2Env__Ljava_lang_String_2) - is th
+e library loaded, e.g. System.loadLibrary?
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at libv2ray.Libv2ray.initV2Env(Nativ
+e Method)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.ini
+tialize(CoreManager.kt:49)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.sta
+rtCore(CoreManager.kt:375)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.service.DokoDemoVpnS
+ervice$startVpn$1.invokeSuspend(DokoDemoVpnSe
+rvice.kt:183)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlin.coroutines.jvm.internal.Ba
+seContinuationImpl.resumeWith(ContinuationImp
+l.kt:33)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.DispatchedTask
+.run(DispatchedTask.kt:101)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.internal.Limit
+edDispatcher$Worker.run(LimitedDispatcher.kt:
+113)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Tas
+kImpl.run(Tasks.kt:89)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler.runSafely(CoroutineScheduler.
+kt:589)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.executeTask(CoroutineS
+cheduler.kt:823)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.runWorker(CoroutineSch
+eduler.kt:720)
+03-22 17:06:34.737 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.run(CoroutineScheduler
+.kt:707)
+03-22 17:06:34.737 17403 17476 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:34.741 17403 17403 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.196 17403 17403 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.196 17403 17403 E DokoDemoVpnS
+ervice: Failed to initialize core manager (na
+tive lib may be missing): No implementation f
+ound for void libv2ray.Libv2ray.initV2Env(jav
+a.lang.String) (tried Java_libv2ray_Libv2ray_
+initV2Env and Java_libv2ray_Libv2ray_initV2En
+v__Ljava_lang_String_2) - is the library load
+ed, e.g. System.loadLibrary?
+03-22 17:06:35.197 17403 17403 E com.dokodemo
+: No implementation found for java.lang.Strin
+g libv2ray.Libv2ray.version() (tried Java_lib
+v2ray_Libv2ray_version and Java_libv2ray_Libv
+2ray_version__) - is the library loaded, e.g.
+ System.loadLibrary?
+03-22 17:06:35.203 17403 17476 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: Fatal error starting VPN: No implemen
+tation found for void libv2ray.Libv2ray.initV
+2Env(java.lang.String) (tried Java_libv2ray_L
+ibv2ray_initV2Env and Java_libv2ray_Libv2ray_
+initV2Env__Ljava_lang_String_2) - is the libr
+ary loaded, e.g. System.loadLibrary?
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: java.lang.UnsatisfiedLinkError: No im
+plementation found for void libv2ray.Libv2ray
+.initV2Env(java.lang.String) (tried Java_libv
+2ray_Libv2ray_initV2Env and Java_libv2ray_Lib
+v2ray_initV2Env__Ljava_lang_String_2) - is th
+e library loaded, e.g. System.loadLibrary?
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at libv2ray.Libv2ray.initV2Env(Nativ
+e Method)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.ini
+tialize(CoreManager.kt:49)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.sta
+rtCore(CoreManager.kt:375)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.service.DokoDemoVpnS
+ervice$startVpn$1.invokeSuspend(DokoDemoVpnSe
+rvice.kt:183)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlin.coroutines.jvm.internal.Ba
+seContinuationImpl.resumeWith(ContinuationImp
+l.kt:33)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.DispatchedTask
+.run(DispatchedTask.kt:101)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.internal.Limit
+edDispatcher$Worker.run(LimitedDispatcher.kt:
+113)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Tas
+kImpl.run(Tasks.kt:89)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler.runSafely(CoroutineScheduler.
+kt:589)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.executeTask(CoroutineS
+cheduler.kt:823)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.runWorker(CoroutineSch
+eduler.kt:720)
+03-22 17:06:35.203 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.run(CoroutineScheduler
+.kt:707)
+03-22 17:06:35.204 17403 17476 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.224 17403 17403 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.395 17403 17403 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.395 17403 17403 E DokoDemoVpnS
+ervice: Failed to initialize core manager (na
+tive lib may be missing): No implementation f
+ound for void libv2ray.Libv2ray.initV2Env(jav
+a.lang.String) (tried Java_libv2ray_Libv2ray_
+initV2Env and Java_libv2ray_Libv2ray_initV2En
+v__Ljava_lang_String_2) - is the library load
+ed, e.g. System.loadLibrary?
+03-22 17:06:35.396 17403 17403 E com.dokodemo
+: No implementation found for java.lang.Strin
+g libv2ray.Libv2ray.version() (tried Java_lib
+v2ray_Libv2ray_version and Java_libv2ray_Libv
+2ray_version__) - is the library loaded, e.g.
+ System.loadLibrary?
+03-22 17:06:35.401 17403 17476 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: Fatal error starting VPN: No implemen
+tation found for void libv2ray.Libv2ray.initV
+2Env(java.lang.String) (tried Java_libv2ray_L
+ibv2ray_initV2Env and Java_libv2ray_Libv2ray_
+initV2Env__Ljava_lang_String_2) - is the libr
+ary loaded, e.g. System.loadLibrary?
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: java.lang.UnsatisfiedLinkError: No im
+plementation found for void libv2ray.Libv2ray
+.initV2Env(java.lang.String) (tried Java_libv
+2ray_Libv2ray_initV2Env and Java_libv2ray_Lib
+v2ray_initV2Env__Ljava_lang_String_2) - is th
+e library loaded, e.g. System.loadLibrary?
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at libv2ray.Libv2ray.initV2Env(Nativ
+e Method)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.ini
+tialize(CoreManager.kt:49)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.sta
+rtCore(CoreManager.kt:375)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at com.dokodemo.service.DokoDemoVpnS
+ervice$startVpn$1.invokeSuspend(DokoDemoVpnSe
+rvice.kt:183)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlin.coroutines.jvm.internal.Ba
+seContinuationImpl.resumeWith(ContinuationImp
+l.kt:33)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.DispatchedTask
+.run(DispatchedTask.kt:101)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.internal.Limit
+edDispatcher$Worker.run(LimitedDispatcher.kt:
+113)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Tas
+kImpl.run(Tasks.kt:89)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler.runSafely(CoroutineScheduler.
+kt:589)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.executeTask(CoroutineS
+cheduler.kt:823)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.runWorker(CoroutineSch
+eduler.kt:720)
+03-22 17:06:35.401 17403 17476 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.run(CoroutineScheduler
+.kt:707)
+03-22 17:06:35.402 17403 17476 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.406 17403 17403 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.536 17403 17403 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.536 17403 17403 E DokoDemoVpnS
+ervice: Failed to initialize core manager (na
+tive lib may be missing): No implementation f
+ound for void libv2ray.Libv2ray.initV2Env(jav
+a.lang.String) (tried Java_libv2ray_Libv2ray_
+initV2Env and Java_libv2ray_Libv2ray_initV2En
+v__Ljava_lang_String_2) - is the library load
+ed, e.g. System.loadLibrary?
+03-22 17:06:35.536 17403 17403 E com.dokodemo
+: No implementation found for java.lang.Strin
+g libv2ray.Libv2ray.version() (tried Java_lib
+v2ray_Libv2ray_version and Java_libv2ray_Libv
+2ray_version__) - is the library loaded, e.g.
+ System.loadLibrary?
+03-22 17:06:35.540 17403 17475 E com.dokodemo
+: No implementation found for void libv2ray.L
+ibv2ray.initV2Env(java.lang.String) (tried Ja
+va_libv2ray_Libv2ray_initV2Env and Java_libv2
+ray_Libv2ray_initV2Env__Ljava_lang_String_2) 
+- is the library loaded, e.g. System.loadLibr
+ary?
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: Fatal error starting VPN: No implemen
+tation found for void libv2ray.Libv2ray.initV
+2Env(java.lang.String) (tried Java_libv2ray_L
+ibv2ray_initV2Env and Java_libv2ray_Libv2ray_
+initV2Env__Ljava_lang_String_2) - is the libr
+ary loaded, e.g. System.loadLibrary?
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: java.lang.UnsatisfiedLinkError: No im
+plementation found for void libv2ray.Libv2ray
+.initV2Env(java.lang.String) (tried Java_libv
+2ray_Libv2ray_initV2Env and Java_libv2ray_Lib
+v2ray_initV2Env__Ljava_lang_String_2) - is th
+e library loaded, e.g. System.loadLibrary?
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at libv2ray.Libv2ray.initV2Env(Nativ
+e Method)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.ini
+tialize(CoreManager.kt:49)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at com.dokodemo.core.CoreManager.sta
+rtCore(CoreManager.kt:375)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at com.dokodemo.service.DokoDemoVpnS
+ervice$startVpn$1.invokeSuspend(DokoDemoVpnSe
+rvice.kt:183)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlin.coroutines.jvm.internal.Ba
+seContinuationImpl.resumeWith(ContinuationImp
+l.kt:33)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.DispatchedTask
+.run(DispatchedTask.kt:101)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.internal.Limit
+edDispatcher$Worker.run(LimitedDispatcher.kt:
+113)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Tas
+kImpl.run(Tasks.kt:89)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler.runSafely(CoroutineScheduler.
+kt:589)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.executeTask(CoroutineS
+cheduler.kt:823)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.runWorker(CoroutineSch
+eduler.kt:720)
+03-22 17:06:35.540 17403 17475 E DokoDemoVpnS
+ervice: 	at kotlinx.coroutines.scheduling.Cor
+outineScheduler$Worker.run(CoroutineScheduler
+.kt:707)
+03-22 17:06:35.540 17403 17475 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+03-22 17:06:35.547 17403 17403 E com.dokodemo
+: No implementation found for boolean libv2ra
+y.Libv2ray.stopV2Ray() (tried Java_libv2ray_L
+ibv2ray_stopV2Ray and Java_libv2ray_Libv2ray_
+stopV2Ray__) - is the library loaded, e.g. Sy
+stem.loadLibrary?
+
+

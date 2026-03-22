@@ -1,0 +1,703 @@
+﻿
+03-22 02:22:23.936 V/WindowManager( 3102): Re
+layout Window{2c75b9f u0 com.dokodemo/com.dok
+odemo.MainActivity}: viewVisibility=0, oldvis
+=8, req=1116x2484 , apr = 0, vsysui=, x=0, y=
+0
+03-22 02:22:23.936 I/WindowManager( 3102): Wi
+ndow{2c75b9f u0 com.dokodemo/com.dokodemo.Mai
+nActivity} state from NO_SURFACE to DRAW_PEND
+ING; reason: resetDrawState
+03-22 02:22:23.938 D/WindowManagerShell( 5035
+): onActivityRestartAttempt: topActivity=Comp
+onentInfo{com.dokodemo/com.dokodemo.MainActiv
+ity}, wasVisible=false
+03-22 02:22:23.938 D/ShellTaskOrganizer( 5035
+): dispatchTaskEventToClientIfNeed, eventType
+:2, taskInfo:TaskInfo{userId=0 taskId=17119 e
+ffectiveUid=10471 displayId=0 isRunning=true 
+baseIntent=Intent { act=android.intent.action
+.MAIN cat=[android.intent.category.LAUNCHER] 
+flg=0x10200000 cmp=com.dokodemo/.MainActivity
+ mCallingUid=10222 } baseActivity=ComponentIn
+fo{com.dokodemo/com.dokodemo.MainActivity} to
+pActivity=ComponentInfo{com.dokodemo/com.doko
+demo.MainActivity} origActivity=null realActi
+vity=ComponentInfo{com.dokodemo/com.dokodemo.
+MainActivity}
+03-22 02:22:23.938 D/ShellTaskOrganizer( 5035
+):  topActivityInfo=ActivityInfo{259d897 com.
+dokodemo.MainActivity} launchCookies=[android
+.os.BinderProxy@efe2946] positionInParent=Poi
+nt(0, 0) parentTaskId=-1 isFocused=true isVis
+ible=true isVisibleRequested=true isTopActivi
+tyNoDisplay=false isSleeping=false locusId=nu
+ll displayAreaFeatureId=1 isTopActivityTransp
+arent=false isActivityStackTransparent=false 
+lastNonFullscreenBounds=Rect(289, 724 - 827, 
+1840) capturedLink=null capturedLinkTimestamp
+=0 requestedVisibleTypes=-9 topActivityReques
+tOpenInBrowserEducationTimestamp=0
+03-22 02:22:23.938 D/ShellTaskOrganizer( 5035
+):  mOplusExtraBundle = Bundle[{androidx.flex
+ible.taskFrame=Supplier{VAL_PARCELABLE@64+72}
+, topOpaqueSystemBarsAppearance=0, androidx.f
+lexible.Alpha=1.0, androidx.activity.task.att
+ach.blur=0, androidx.activity.LaunchInsensibl
+e=0, androidx.activity.LaunchCornerRadius=0, 
+key_flexible_task_state=0, topActivitySupport
+AppInnerSplit=false, key_flexible_task_animat
+ing_type=-1, key_flexible_task_root_activity_
+processname=com.dokodemo, androidx.activity.L
+aunchScenario=0, is_oplus_clone_task=false, f
+lexible_super_mini_state=false, topRunningAct
+ivityHash=130224028, androidx.activity.Launch
+Scale=1.0, androidx.activity.LaunchShadowRadi
+us=0, is_transient_hide_for_task_info=false, 
+key_flexible_task_root_activity_pid=25976, ke
+y_flexible_task_root_activity_uid=10471}]}, l
+eash:null
+03-22 02:22:23.940 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:null
+03-22 02:22:23.940 V/WindowManager( 3102): Ch
+anging focus from null to Window{2c75b9f u0 c
+om.dokodemo/com.dokodemo.MainActivity},diplay
+id=0
+03-22 02:22:23.947 D/OplusEapManager( 3102): 
+mTargetEnterName :com.dokodemo
+03-22 02:22:23.947 D/VRR [OPlusRefreshRateSer
+vice]( 3102): handleFrontAppChange pkgName: c
+om.dokodemo
+03-22 02:22:23.961 I/WindowManager( 3102): Wi
+ndow{2c75b9f u0 com.dokodemo/com.dokodemo.Mai
+nActivity} state from DRAW_PENDING to COMMIT_
+DRAW_PENDING; reason: finishDrawingLocked
+03-22 02:22:23.962 I/WindowManager( 3102): Wi
+ndow{2c75b9f u0 com.dokodemo/com.dokodemo.Mai
+nActivity} state from COMMIT_DRAW_PENDING to 
+READY_TO_SHOW; reason: commitFinishDrawingLoc
+ked
+03-22 02:22:23.962 D/ActivityTaskManager( 310
+2): Clearing startingData for activity=Activi
+tyRecord{130224028 u0 com.dokodemo/.MainActiv
+ity t17119} mStartingData=null mStartingSurfa
+ce=null
+03-22 02:22:23.963 D/QuickBackInputPolicy( 31
+02): setAppLaunchEndTime update timePair=Pair
+{ActivityRecord{130224028 u0 com.dokodemo/.Ma
+inActivity t17119} 266069874}
+03-22 02:22:23.963 I/WindowManager( 3102): Wi
+ndow{2c75b9f u0 com.dokodemo/com.dokodemo.Mai
+nActivity} state from READY_TO_SHOW to HAS_DR
+AWN; reason: performShowLocked
+03-22 02:22:23.971 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:22:24.029 D/ActivityTaskManager( 310
+2): after skip size:5,pre-Filtered:com.dokode
+mo # com.heytap.browser # com.android.setting
+s # com.tencent.mm # com.phoenix.read # 
+03-22 02:22:24.031 D/NotificationService--Opl
+usNotificationFixHelper( 3102): fixAppIcon: p
+kg=com.dokodemo
+03-22 02:22:24.031 D/NotificationService--Opl
+usNotificationFixHelper( 3102): fixAppIcon: a
+ppIcon = null, pkg = com.dokodemo
+03-22 02:22:24.034 D/ActivityTaskManager( 310
+2): after skip size:5,pre-Filtered:com.dokode
+mo # com.heytap.browser # com.android.setting
+s # com.tencent.mm # com.phoenix.read # 
+03-22 02:22:24.065 D/InputMethodManagerServic
+e( 3102): isSecurity: attribute.packageName =
+ com.dokodemo mCurMethodId = com.baidu.input/
+.ImeService isSecurity = false ( enable = tru
+e needShow = false inBlackList = false isExis
+t = true )
+03-22 02:22:24.066 D/OplusStartingWindowManag
+er( 3102): isLayerMatchToStartingWindow , act
+ivityHasSurfaceView:false, isLayerMatchToReco
+rd:false, isSurfaceViewLayer:false, layerName
+:com.dokodemo/com.dokodemo.MainActivity#88247
+, mStartingRecords:[UniqueWeakReference@5e587
+0b[null], ActivityRecord{135477321 u0 com.ss.
+android.ugc.aweme/.splash.SplashActivity t-1 
+f}}, UniqueWeakReference@4176496[null], Uniqu
+eWeakReference@dcb3521[null], UniqueWeakRefer
+ence@f6c5da5[null], UniqueWeakReference@300b8
+48[null], UniqueWeakReference@6a3ad2f[null], 
+UniqueWeakReference@fd456d[null], UniqueWeakR
+eference@e776709[null], UniqueWeakReference@2
+9882a4[null], UniqueWeakReference@ba7625d[nul
+l], UniqueWeakReference@1c76548[null], Unique
+WeakReference@f9f3394[null], UniqueWeakRefere
+nce@c8e548f[null], UniqueWeakReference@2024c9
+3[null], UniqueWeakReference@65a5fcd[null], U
+niqueWeakReference@dd58aff[null], UniqueWeakR
+eference@3933f1f[null], UniqueWeakReference@f
+26bb25[null], UniqueWeakReference@89c0401[nul
+l], UniqueWeakReference@11fe0b3[null], Unique
+WeakReference@4acb0f2[null], UniqueWeakRefere
+nce@2a2608c[null], UniqueWeakReference@b93354
+7[null], UniqueWeakReference@37eece6[null], U
+niqueWeakReference@91e2141[null], UniqueWeakR
+eference@8def2fe[null], UniqueWeakReference@a
+114fc9[null], UniqueWeakReference@e67c2b5[nul
+l], UniqueWeakReference@a551e8b[null], Unique
+WeakReference@bf5dd1f[null], UniqueWeakRefere
+nce@709755b[null], UniqueWeakReference@208a77
+d[null], UniqueWeakReference@2002b58[null], A
+ctivityRecord{264034721 u0 com.taobao.taobao/
+com.taobao.tao.TBMainActivity t-1 f}}]
+03-22 02:22:24.465 D/Transition( 3102): finis
+hTransition ar ActivityRecord{121016974 u0 co
+m.android.launcher/.Launcher t5}, isVisibleRe
+quested=false, state=PAUSED, visibleAtTransit
+ionEndTokens={ActivityRecord{130224028 u0 com
+.dokodemo/.MainActivity t17119}, WallpaperWin
+dowToken{9825093 showWhenLocked=false}}, this
+=TransitionRecord{7778a78 id=5271 track=0 typ
+e=TO_FRONT flags=0x0 state=2 c=[
+03-22 02:22:24.465 D/Transition( 3102):    Ch
+angeInfo{c939342 container=ActivityRecord{130
+224028 u0 com.dokodemo/.MainActivity t17119} 
+flags=0x0}
+03-22 02:22:24.465 D/Transition( 3102):    Ch
+angeInfo{8bfff53 container=Task{8a52f21 #1711
+9 type=standard A=10471:com.dokodemo} flags=0
+x30}
+03-22 02:22:24.466 D/Transition( 3102): finis
+hTransition ar ActivityRecord{130224028 u0 co
+m.dokodemo/.MainActivity t17119}, isVisibleRe
+quested=true, state=RESUMED, visibleAtTransit
+ionEndTokens={ActivityRecord{130224028 u0 com
+.dokodemo/.MainActivity t17119}, WallpaperWin
+dowToken{9825093 showWhenLocked=false}}, this
+=TransitionRecord{7778a78 id=5271 track=0 typ
+e=TO_FRONT flags=0x0 state=2 c=[
+03-22 02:22:24.466 D/Transition( 3102):    Ch
+angeInfo{c939342 container=ActivityRecord{130
+224028 u0 com.dokodemo/.MainActivity t17119} 
+flags=0x0}
+03-22 02:22:24.466 D/Transition( 3102):    Ch
+angeInfo{8bfff53 container=Task{8a52f21 #1711
+9 type=standard A=10471:com.dokodemo} flags=0
+x30}
+03-22 02:22:24.467 I/OplusAppSwitchManagerSer
+vice( 3102):  handleAppVisible , r = Activity
+Record{130224028 u0 com.dokodemo/.MainActivit
+y t17119}
+03-22 02:22:24.468 D/OplusTransitionControlle
+r( 3102):    ChangeInfo{c939342 container=Act
+ivityRecord{130224028 u0 com.dokodemo/.MainAc
+tivity t17119} flags=0x0}
+03-22 02:22:24.468 D/OplusTransitionControlle
+r( 3102):    ChangeInfo{8bfff53 container=Tas
+k{8a52f21 #17119 type=standard A=10471:com.do
+kodemo} flags=0x30}
+03-22 02:22:24.468 D/FlexibleTaskTransitionCo
+ntroller( 3102):    ChangeInfo{c939342 contai
+ner=ActivityRecord{130224028 u0 com.dokodemo/
+.MainActivity t17119} flags=0x0}
+03-22 02:22:24.468 D/FlexibleTaskTransitionCo
+ntroller( 3102):    ChangeInfo{8bfff53 contai
+ner=Task{8a52f21 #17119 type=standard A=10471
+:com.dokodemo} flags=0x30}
+03-22 02:22:24.471 D/RefreshRate( 3102):     
+| COURSE[; Win preferred rateId=0, appReqFirs
+t=false, data= RateData{} ;win name:com.dokod
+emo/com.dokodemo.MainActivity]
+03-22 02:22:24.474 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:22:24.580 D/VRR [OPlusGameStatusMana
+ger]( 3102): updateGameAccelerationStatus pkg
+Name: com.dokodemo mOSyncFeatureSwitch: false
+ mIsGamePolicy: false mHeartStop: false mHasF
+lickerRisk: false mForceAcceleration: false m
+ToastReady: false enable: false
+03-22 02:22:24.984 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:22:31.107 D/OplusBatteryServiceFeatu
+re( 3102): setSmartCoolDown: coolDown = 0, no
+rmalCoolDown = 0, pkgName = com.dokodemo
+03-22 02:23:40.966 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{a626f62 u0
+ NotificationShade} mCurrentFocus:Window{2c75
+b9f u0 com.dokodemo/com.dokodemo.MainActivity
+}
+03-22 02:23:40.966 V/WindowManager( 3102): Ch
+anging focus from Window{2c75b9f u0 com.dokod
+emo/com.dokodemo.MainActivity} to Window{a626
+f62 u0 NotificationShade},diplayid=0
+03-22 02:23:41.113 D/VRR [OPlusGameStatusMana
+ger]( 3102): updateGameAccelerationStatus pkg
+Name: com.dokodemo mOSyncFeatureSwitch: false
+ mIsGamePolicy: false mHeartStop: false mHasF
+lickerRisk: false mForceAcceleration: false m
+ToastReady: false enable: false
+03-22 02:23:42.909 D/RefreshRate( 3102):     
+| COURSE[; Win preferred rateId=0, appReqFirs
+t=false, data= RateData{} ;win name:com.dokod
+emo/com.dokodemo.MainActivity]
+03-22 02:23:42.910 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{a626f62 u0 NotificationShade
+}
+03-22 02:23:42.910 V/WindowManager( 3102): Ch
+anging focus from Window{a626f62 u0 Notificat
+ionShade} to Window{2c75b9f u0 com.dokodemo/c
+om.dokodemo.MainActivity},diplayid=0
+03-22 02:23:42.929 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:23:42.986 D/VRR [OPlusGameStatusMana
+ger]( 3102): updateGameAccelerationStatus pkg
+Name: com.dokodemo mOSyncFeatureSwitch: false
+ mIsGamePolicy: false mHeartStop: false mHasF
+lickerRisk: false mForceAcceleration: false m
+ToastReady: false enable: false
+03-22 02:23:45.927 I/UserAwareMgr( 3102): han
+dleTopAppChanged: com.dokodemo, pid: 25976, u
+id: 10471
+03-22 02:23:49.405 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:23:49.406 D/QuickBackInputPolicy( 31
+02): canInterceptKeyEventToHome Window:Window
+{2c75b9f u0 com.dokodemo/com.dokodemo.MainAct
+ivity}, do nothing!
+03-22 02:23:49.433 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:23:49.434 D/CoreBackPreview( 3102): 
+startBackNavigation currentTask=Task{8a52f21 
+#17119 type=standard A=10471:com.dokodemo}, t
+opRunningActivity=ActivityRecord{130224028 u0
+ com.dokodemo/.MainActivity t17119}, callback
+Info=OnBackInvokedCallbackInfo{mCallback=andr
+oid.window.IOnBackInvokedCallback$Stub$Proxy@
+3d012bb, mPriority=0, mIsAnimationCallback=fa
+lse, mOverrideBehavior=0}, currentFocus=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}
+03-22 02:23:49.441 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:23:49.644 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:24.062 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{be77819 u0
+ 寮瑰嚭寮忕獥鍙 mCurrentFocus:Window{2c75b9f u0 com
+.dokodemo/com.dokodemo.MainActivity}
+03-22 02:25:24.062 V/WindowManager( 3102): Ch
+anging focus from Window{2c75b9f u0 com.dokod
+emo/com.dokodemo.MainActivity} to Window{be77
+819 u0 寮瑰嚭寮忕獥鍙,diplayid=0
+03-22 02:25:24.114 D/ActivityTaskManager( 310
+2): Clearing startingData for activity=Activi
+tyRecord{130224028 u0 com.dokodemo/.MainActiv
+ity t17119} mStartingData=null mStartingSurfa
+ce=null
+03-22 02:25:24.135 D/InputMethodManagerServic
+e( 3102): isSecurity: attribute.packageName =
+ com.dokodemo mCurMethodId = com.baidu.input/
+.ImeService isSecurity = false ( enable = tru
+e needShow = false inBlackList = false isExis
+t = true )
+03-22 02:25:27.537 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{be77819 u0 寮瑰嚭寮忕獥鍙
+03-22 02:25:27.539 V/WindowManager( 3102): Ch
+anging focus from Window{be77819 u0 寮瑰嚭寮忕獥鍙 
+to Window{2c75b9f u0 com.dokodemo/com.dokodem
+o.MainActivity},diplayid=0
+03-22 02:25:27.551 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:27.581 D/InputMethodManagerServic
+e( 3102): isSecurity: attribute.packageName =
+ com.dokodemo mCurMethodId = com.baidu.input/
+.ImeService isSecurity = false ( enable = tru
+e needShow = false inBlackList = false isExis
+t = true )
+03-22 02:25:28.678 D/InputMethodManagerServic
+e( 3102): isSecurity: attribute.packageName =
+ com.dokodemo mCurMethodId = com.baidu.input/
+.ImeService isSecurity = false ( enable = tru
+e needShow = false inBlackList = false isExis
+t = true )
+03-22 02:25:28.680 D/InputMethodManagerServic
+e( 3102): isSecurity: attribute.packageName =
+ com.dokodemo mCurMethodId = com.baidu.input/
+.ImeService isSecurity = false ( enable = tru
+e needShow = false inBlackList = false isExis
+t = true )
+03-22 02:25:28.691 D/ShellTaskOrganizer( 5035
+): dispatchTaskEventToClientIfNeed, eventType
+:2, taskInfo:TaskInfo{userId=0 taskId=17119 e
+ffectiveUid=10471 displayId=0 isRunning=true 
+baseIntent=Intent { act=android.intent.action
+.MAIN cat=[android.intent.category.LAUNCHER] 
+flg=0x10200000 cmp=com.dokodemo/.MainActivity
+ mCallingUid=10222 } baseActivity=ComponentIn
+fo{com.dokodemo/com.dokodemo.MainActivity} to
+pActivity=ComponentInfo{com.dokodemo/com.doko
+demo.MainActivity} origActivity=null realActi
+vity=ComponentInfo{com.dokodemo/com.dokodemo.
+MainActivity}
+03-22 02:25:28.691 D/ShellTaskOrganizer( 5035
+):  topActivityInfo=ActivityInfo{2609c02 com.
+dokodemo.MainActivity} launchCookies=[android
+.os.BinderProxy@efe2946] positionInParent=Poi
+nt(0, 0) parentTaskId=-1 isFocused=true isVis
+ible=true isVisibleRequested=true isTopActivi
+tyNoDisplay=false isSleeping=false locusId=nu
+ll displayAreaFeatureId=1 isTopActivityTransp
+arent=false isActivityStackTransparent=false 
+lastNonFullscreenBounds=Rect(289, 724 - 827, 
+1840) capturedLink=null capturedLinkTimestamp
+=0 requestedVisibleTypes=-1 topActivityReques
+tOpenInBrowserEducationTimestamp=0
+03-22 02:25:28.691 D/ShellTaskOrganizer( 5035
+):  mOplusExtraBundle = Bundle[{androidx.flex
+ible.taskFrame=Supplier{VAL_PARCELABLE@64+72}
+, topOpaqueSystemBarsAppearance=0, androidx.f
+lexible.Alpha=1.0, androidx.activity.task.att
+ach.blur=0, androidx.activity.LaunchInsensibl
+e=0, androidx.activity.LaunchCornerRadius=0, 
+key_flexible_task_state=0, topActivitySupport
+AppInnerSplit=false, key_flexible_task_animat
+ing_type=-1, key_flexible_task_root_activity_
+processname=com.dokodemo, androidx.activity.L
+aunchScenario=0, is_oplus_clone_task=false, f
+lexible_super_mini_state=false, topRunningAct
+ivityHash=130224028, androidx.activity.Launch
+Scale=1.0, androidx.activity.LaunchShadowRadi
+us=0, is_transient_hide_for_task_info=false, 
+key_flexible_task_root_activity_pid=25976, ke
+y_flexible_task_root_activity_uid=10471}]}, l
+eash:null
+03-22 02:25:28.747 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:28.748 D/CoreBackPreview( 3102): 
+Window{2c75b9f u0 com.dokodemo/com.dokodemo.M
+ainActivity}: Setting back callback OnBackInv
+okedCallbackInfo{mCallback=android.window.IOn
+BackInvokedCallback$Stub$Proxy@eee3d14, mPrio
+rity=0, mIsAnimationCallback=true, mOverrideB
+ehavior=0}
+03-22 02:25:36.569 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:25:36.569 D/QuickBackInputPolicy( 31
+02): canInterceptKeyEventToHome Window:Window
+{2c75b9f u0 com.dokodemo/com.dokodemo.MainAct
+ivity}, do nothing!
+03-22 02:25:36.625 D/CoreBackPreview( 3102): 
+Window{2c75b9f u0 com.dokodemo/com.dokodemo.M
+ainActivity}: Setting back callback OnBackInv
+okedCallbackInfo{mCallback=android.window.IOn
+BackInvokedCallback$Stub$Proxy@bb19961, mPrio
+rity=0, mIsAnimationCallback=false, mOverride
+Behavior=0}
+03-22 02:25:36.638 D/ShellTaskOrganizer( 5035
+): dispatchTaskEventToClientIfNeed, eventType
+:2, taskInfo:TaskInfo{userId=0 taskId=17119 e
+ffectiveUid=10471 displayId=0 isRunning=true 
+baseIntent=Intent { act=android.intent.action
+.MAIN cat=[android.intent.category.LAUNCHER] 
+flg=0x10200000 cmp=com.dokodemo/.MainActivity
+ mCallingUid=10222 } baseActivity=ComponentIn
+fo{com.dokodemo/com.dokodemo.MainActivity} to
+pActivity=ComponentInfo{com.dokodemo/com.doko
+demo.MainActivity} origActivity=null realActi
+vity=ComponentInfo{com.dokodemo/com.dokodemo.
+MainActivity}
+03-22 02:25:36.638 D/ShellTaskOrganizer( 5035
+):  topActivityInfo=ActivityInfo{8994750 com.
+dokodemo.MainActivity} launchCookies=[android
+.os.BinderProxy@efe2946] positionInParent=Poi
+nt(0, 0) parentTaskId=-1 isFocused=true isVis
+ible=true isVisibleRequested=true isTopActivi
+tyNoDisplay=false isSleeping=false locusId=nu
+ll displayAreaFeatureId=1 isTopActivityTransp
+arent=false isActivityStackTransparent=false 
+lastNonFullscreenBounds=Rect(289, 724 - 827, 
+1840) capturedLink=null capturedLinkTimestamp
+=0 requestedVisibleTypes=-9 topActivityReques
+tOpenInBrowserEducationTimestamp=0
+03-22 02:25:36.638 D/ShellTaskOrganizer( 5035
+):  mOplusExtraBundle = Bundle[{androidx.flex
+ible.taskFrame=Supplier{VAL_PARCELABLE@64+72}
+, topOpaqueSystemBarsAppearance=0, androidx.f
+lexible.Alpha=1.0, androidx.activity.task.att
+ach.blur=0, androidx.activity.LaunchInsensibl
+e=0, androidx.activity.LaunchCornerRadius=0, 
+key_flexible_task_state=0, topActivitySupport
+AppInnerSplit=false, key_flexible_task_animat
+ing_type=-1, key_flexible_task_root_activity_
+processname=com.dokodemo, androidx.activity.L
+aunchScenario=0, is_oplus_clone_task=false, f
+lexible_super_mini_state=false, topRunningAct
+ivityHash=130224028, androidx.activity.Launch
+Scale=1.0, androidx.activity.LaunchShadowRadi
+us=0, is_transient_hide_for_task_info=false, 
+key_flexible_task_root_activity_pid=25976, ke
+y_flexible_task_root_activity_uid=10471}]}, l
+eash:null
+03-22 02:25:36.991 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:37.015 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:39.644 D/ShellTaskOrganizer( 5035
+): dispatchTaskEventToClientIfNeed, eventType
+:2, taskInfo:TaskInfo{userId=0 taskId=17119 e
+ffectiveUid=10471 displayId=0 isRunning=true 
+baseIntent=Intent { act=android.intent.action
+.MAIN cat=[android.intent.category.LAUNCHER] 
+flg=0x10200000 cmp=com.dokodemo/.MainActivity
+ mCallingUid=10222 } baseActivity=ComponentIn
+fo{com.dokodemo/com.dokodemo.MainActivity} to
+pActivity=ComponentInfo{com.dokodemo/com.doko
+demo.MainActivity} origActivity=null realActi
+vity=ComponentInfo{com.dokodemo/com.dokodemo.
+MainActivity}
+03-22 02:25:39.644 D/ShellTaskOrganizer( 5035
+):  topActivityInfo=ActivityInfo{ed3887c com.
+dokodemo.MainActivity} launchCookies=[android
+.os.BinderProxy@efe2946] positionInParent=Poi
+nt(0, 0) parentTaskId=-1 isFocused=true isVis
+ible=true isVisibleRequested=true isTopActivi
+tyNoDisplay=false isSleeping=false locusId=nu
+ll displayAreaFeatureId=1 isTopActivityTransp
+arent=false isActivityStackTransparent=false 
+lastNonFullscreenBounds=Rect(289, 724 - 827, 
+1840) capturedLink=null capturedLinkTimestamp
+=0 requestedVisibleTypes=-1 topActivityReques
+tOpenInBrowserEducationTimestamp=0
+03-22 02:25:39.644 D/ShellTaskOrganizer( 5035
+):  mOplusExtraBundle = Bundle[{androidx.flex
+ible.taskFrame=Supplier{VAL_PARCELABLE@64+72}
+, topOpaqueSystemBarsAppearance=0, androidx.f
+lexible.Alpha=1.0, androidx.activity.task.att
+ach.blur=0, androidx.activity.LaunchInsensibl
+e=0, androidx.activity.LaunchCornerRadius=0, 
+key_flexible_task_state=0, topActivitySupport
+AppInnerSplit=false, key_flexible_task_animat
+ing_type=-1, key_flexible_task_root_activity_
+processname=com.dokodemo, androidx.activity.L
+aunchScenario=0, is_oplus_clone_task=false, f
+lexible_super_mini_state=false, topRunningAct
+ivityHash=130224028, androidx.activity.Launch
+Scale=1.0, androidx.activity.LaunchShadowRadi
+us=0, is_transient_hide_for_task_info=false, 
+key_flexible_task_root_activity_pid=25976, ke
+y_flexible_task_root_activity_uid=10471}]}, l
+eash:null
+03-22 02:25:39.671 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:39.682 D/ActivityTaskManager( 310
+2): Clearing startingData for activity=Activi
+tyRecord{130224028 u0 com.dokodemo/.MainActiv
+ity t17119} mStartingData=null mStartingSurfa
+ce=null
+03-22 02:25:39.695 D/CoreBackPreview( 3102): 
+Window{2c75b9f u0 com.dokodemo/com.dokodemo.M
+ainActivity}: Setting back callback OnBackInv
+okedCallbackInfo{mCallback=android.window.IOn
+BackInvokedCallback$Stub$Proxy@973cbe9, mPrio
+rity=0, mIsAnimationCallback=true, mOverrideB
+ehavior=0}
+03-22 02:25:39.699 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:40.760 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:41.238 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:25:41.238 D/QuickBackInputPolicy( 31
+02): canInterceptKeyEventToHome Window:Window
+{2c75b9f u0 com.dokodemo/com.dokodemo.MainAct
+ivity}, do nothing!
+03-22 02:25:41.668 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:25:41.668 D/QuickBackInputPolicy( 31
+02): canInterceptKeyEventToHome Window:Window
+{2c75b9f u0 com.dokodemo/com.dokodemo.MainAct
+ivity}, do nothing!
+03-22 02:25:41.729 D/CoreBackPreview( 3102): 
+Window{2c75b9f u0 com.dokodemo/com.dokodemo.M
+ainActivity}: Setting back callback OnBackInv
+okedCallbackInfo{mCallback=android.window.IOn
+BackInvokedCallback$Stub$Proxy@4477464, mPrio
+rity=0, mIsAnimationCallback=false, mOverride
+Behavior=0}
+03-22 02:25:41.739 D/ShellTaskOrganizer( 5035
+): dispatchTaskEventToClientIfNeed, eventType
+:2, taskInfo:TaskInfo{userId=0 taskId=17119 e
+ffectiveUid=10471 displayId=0 isRunning=true 
+baseIntent=Intent { act=android.intent.action
+.MAIN cat=[android.intent.category.LAUNCHER] 
+flg=0x10200000 cmp=com.dokodemo/.MainActivity
+ mCallingUid=10222 } baseActivity=ComponentIn
+fo{com.dokodemo/com.dokodemo.MainActivity} to
+pActivity=ComponentInfo{com.dokodemo/com.doko
+demo.MainActivity} origActivity=null realActi
+vity=ComponentInfo{com.dokodemo/com.dokodemo.
+MainActivity}
+03-22 02:25:41.739 D/ShellTaskOrganizer( 5035
+):  topActivityInfo=ActivityInfo{e0eb068 com.
+dokodemo.MainActivity} launchCookies=[android
+.os.BinderProxy@efe2946] positionInParent=Poi
+nt(0, 0) parentTaskId=-1 isFocused=true isVis
+ible=true isVisibleRequested=true isTopActivi
+tyNoDisplay=false isSleeping=false locusId=nu
+ll displayAreaFeatureId=1 isTopActivityTransp
+arent=false isActivityStackTransparent=false 
+lastNonFullscreenBounds=Rect(289, 724 - 827, 
+1840) capturedLink=null capturedLinkTimestamp
+=0 requestedVisibleTypes=-9 topActivityReques
+tOpenInBrowserEducationTimestamp=0
+03-22 02:25:41.739 D/ShellTaskOrganizer( 5035
+):  mOplusExtraBundle = Bundle[{androidx.flex
+ible.taskFrame=Supplier{VAL_PARCELABLE@64+72}
+, topOpaqueSystemBarsAppearance=0, androidx.f
+lexible.Alpha=1.0, androidx.activity.task.att
+ach.blur=0, androidx.activity.LaunchInsensibl
+e=0, androidx.activity.LaunchCornerRadius=0, 
+key_flexible_task_state=0, topActivitySupport
+AppInnerSplit=false, key_flexible_task_animat
+ing_type=-1, key_flexible_task_root_activity_
+processname=com.dokodemo, androidx.activity.L
+aunchScenario=0, is_oplus_clone_task=false, f
+lexible_super_mini_state=false, topRunningAct
+ivityHash=130224028, androidx.activity.Launch
+Scale=1.0, androidx.activity.LaunchShadowRadi
+us=0, is_transient_hide_for_task_info=false, 
+key_flexible_task_root_activity_pid=25976, ke
+y_flexible_task_root_activity_uid=10471}]}, l
+eash:null
+03-22 02:25:42.083 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:42.109 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:42.274 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:25:42.274 D/QuickBackInputPolicy( 31
+02): canInterceptKeyEventToHome Window:Window
+{2c75b9f u0 com.dokodemo/com.dokodemo.MainAct
+ivity}, do nothing!
+03-22 02:25:42.292 D/QuickBackInputPolicy( 31
+02): shouldTriggerBackKeyEvent focusWin=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}, topFullscreenOpaqueWindow=Window{2c7
+5b9f u0 com.dokodemo/com.dokodemo.MainActivit
+y}, mLaunchEndTimePair=Pair{ActivityRecord{13
+0224028 u0 com.dokodemo/.MainActivity t17119}
+ 266069874}, processRunning=true, timeThresho
+ld is: 0, lastRemoteFromAssistant = false
+03-22 02:25:42.292 D/CoreBackPreview( 3102): 
+startBackNavigation currentTask=Task{8a52f21 
+#17119 type=standard A=10471:com.dokodemo}, t
+opRunningActivity=ActivityRecord{130224028 u0
+ com.dokodemo/.MainActivity t17119}, callback
+Info=OnBackInvokedCallbackInfo{mCallback=andr
+oid.window.IOnBackInvokedCallback$Stub$Proxy@
+4477464, mPriority=0, mIsAnimationCallback=fa
+lse, mOverrideBehavior=0}, currentFocus=Windo
+w{2c75b9f u0 com.dokodemo/com.dokodemo.MainAc
+tivity}
+03-22 02:25:42.309 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+03-22 02:25:42.501 D/WindowManager( 3102): NF
+W_findFocusedWindowIfNeeded:Window{2c75b9f u0
+ com.dokodemo/com.dokodemo.MainActivity} mCur
+rentFocus:Window{2c75b9f u0 com.dokodemo/com.
+dokodemo.MainActivity}
+
+

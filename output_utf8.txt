@@ -1,0 +1,21 @@
+﻿Methods in libv2ray.Libv2ray:
+  public static native java.lang.String libv2ray.Libv2ray.checkVersionX()
+  public static native libv2ray.CoreController libv2ray.Libv2ray.newCoreController(libv2ray.CoreCallbackHandler)
+  public static native void libv2ray.Libv2ray.initCoreEnv(java.lang.String,java.lang.String)
+  public static native long libv2ray.Libv2ray.measureOutboundDelay(java.lang.String,java.lang.String) throws java.lang.Exception
+  public static void libv2ray.Libv2ray.touch()
+  private static native void libv2ray.Libv2ray._init()
+Methods in libv2ray.CoreController:
+  public native long libv2ray.CoreController.measureDelay(java.lang.String) throws java.lang.Exception
+  public final native boolean libv2ray.CoreController.getIsRunning()
+  public final native libv2ray.CoreCallbackHandler libv2ray.CoreController.getCallbackHandler()
+  public final native void libv2ray.CoreController.setCallbackHandler(libv2ray.CoreCallbackHandler)
+  public final native void libv2ray.CoreController.setIsRunning(boolean)
+  private static native int libv2ray.CoreController.__NewCoreController(libv2ray.CoreCallbackHandler)
+  public final int libv2ray.CoreController.incRefnum()
+  public native void libv2ray.CoreController.stopLoop() throws java.lang.Exception
+  public native void libv2ray.CoreController.startLoop(java.lang.String) throws java.lang.Exception
+  public native long libv2ray.CoreController.queryStats(java.lang.String,java.lang.String)
+  public boolean libv2ray.CoreController.equals(java.lang.Object)
+  public java.lang.String libv2ray.CoreController.toString()
+  public int libv2ray.CoreController.hashCode()

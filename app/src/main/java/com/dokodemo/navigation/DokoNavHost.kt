@@ -77,9 +77,15 @@ fun DokoNavHost(
             )
         ) { backStackEntry ->
             val uri = backStackEntry.arguments?.getString("uri")
+            val scannedUri = navController.previousBackStackEntry?.savedStateHandle?.get<String>("scannedUri")
+            val finalUri = uri ?: scannedUri
+            
+            // Clean up to prevent re-triggering
+            navController.previousBackStackEntry?.savedStateHandle?.remove<String>("scannedUri")
+
             ConfigEditorScreen(
                 serverId = null,
-                uri = uri,
+                uri = finalUri,
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -109,8 +115,11 @@ fun DokoNavHost(
                     navController.popBackStack()
                 },
                 onQrCodeScanned = { code ->
-                    val encodedUri = URLEncoder.encode(code, StandardCharsets.UTF_8.toString())
-                    navController.navigate("${Route.ConfigEditor.path}?uri=$encodedUri")
+                    // Get the ServerList back stack entry (which becomes previousBackStackEntry for ConfigEditor)
+                    navController.previousBackStackEntry?.savedStateHandle?.set("scannedUri", code)
+                    navController.navigate(Route.ConfigEditor.path) {
+                        popUpTo(Route.QrScanner.path) { inclusive = true }
+                    }
                 }
             )
         }
@@ -123,6 +132,9 @@ fun DokoNavHost(
                 },
                 onNavigateToSplitTunneling = {
                     navController.navigate(Route.SplitTunneling.path)
+                },
+                onNavigateToSubscriptions = {
+                    navController.navigate(Route.Subscriptions.path)
                 }
             )
         }
@@ -130,6 +142,15 @@ fun DokoNavHost(
         // Split Tunneling
         composable(Route.SplitTunneling.path) {
             com.dokodemo.ui.screens.splittunneling.SplitTunnelingScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Subscriptions
+        composable(Route.Subscriptions.path) {
+            com.dokodemo.ui.screens.subscription.SubscriptionScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

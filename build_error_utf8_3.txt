@@ -1,0 +1,360 @@
+﻿> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:kspDebugKotlin
+
+> Task :app:compileDebugKotlin FAILED
+.\gradlew : e: file:///D:/aidev/DOKODEMO/app/
+src/main/java/com/dokodemo/ui/screens/confige
+ditor/ConfigEditorScreen.kt:12:48 Unresolved 
+reference 'Save'.
+所在位置 行:1 字符: 1
++ .\gradlew assembleDebug --console=plain > b
+uild_error_3.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified:  
+   (e: file:///D:/a...ference 'Save'.:Strin  
+  g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandE 
+   rror
+ 
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/configeditor/Config
+EditorScreen.kt:55:44 Unresolved reference 'S
+ave'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/configeditor/Config
+EditorScreen.kt:97:17 'when' expression must 
+be exhaustive. Add the 'WIREGUARD' branch or 
+an 'else' branch.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:58:30 Unresolved reference 'AcidLim
+e'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:59:30 Unresolved reference 'Industr
+ialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:60:30 Unresolved reference 'Industr
+ialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:61:30 Unresolved reference 'Industr
+ialWhite'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:62:30 Unresolved reference 'Monospa
+ceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:63:30 Unresolved reference 'TextGre
+y'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:134:25 Unresolved reference 'Indust
+rialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:269:29 Unresolved reference 'Indust
+rialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:279:41 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:284:33 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:285:38 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:292:29 Unresolved reference 'TextGr
+ey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:293:34 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:303:35 Unresolved reference 'Indust
+rialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:309:29 Unresolved reference 'Indust
+rialWhite'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:324:25 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:325:30 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:330:25 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:331:30 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:356:29 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:363:29 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:380:35 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:385:29 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:386:34 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:398:29 Unresolved reference 'Indust
+rialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:408:33 Unresolved reference 'TextGr
+ey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:409:38 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:414:33 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:415:38 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:423:29 Unresolved reference 'TextGr
+ey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:424:34 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:454:25 Unresolved reference 'TextGr
+ey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:455:30 Unresolved reference 'Monosp
+aceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:498:25 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/qrscanner/QrScanner
+Screen.kt:508:21 Unresolved reference 'AcidLi
+me'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/serverlist/ServerLi
+stScreen.kt:51:44 Unresolved reference 'Speed
+'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/settings/SettingsSc
+reen.kt:10:48 Unresolved reference 'ChevronRi
+ght'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/settings/SettingsSc
+reen.kt:250:28 Unresolved reference 'ChevronR
+ight'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/settings/SettingsVi
+ewModel.kt:5:21 Unresolved reference 'BuildCo
+nfig'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/settings/SettingsVi
+ewModel.kt:23:30 Unresolved reference 'BuildC
+onfig'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:40:30 Unresolved reference 'MonospaceFont
+'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:108:30 Unresolved reference 'MonospaceFon
+t'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:130:34 Unresolved reference 'MonospaceFon
+t'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:161:38 Unresolved reference 'MonospaceFon
+t'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:171:38 Unresolved reference 'MonospaceFon
+t'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splash/SplashScreen
+.kt:195:34 Unresolved reference 'MonospaceFon
+t'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:38:30 Unresolved referenc
+e 'AcidLime'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:39:30 Unresolved referenc
+e 'IndustrialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:40:30 Unresolved referenc
+e 'IndustrialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:41:30 Unresolved referenc
+e 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:42:30 Unresolved referenc
+e 'TextGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:83:33 Unresolved referenc
+e 'TextGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:84:38 Unresolved referenc
+e 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:129:38 Unresolved referen
+ce 'IndustrialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:130:43 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:158:33 Unresolved referen
+ce 'IndustrialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:159:38 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:178:39 Unresolved referen
+ce 'AcidLime'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:191:34 Unresolved referen
+ce 'IndustrialGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:193:34 Unresolved referen
+ce 'IndustrialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:199:35 Unresolved referen
+ce 'IndustrialBlack'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:200:26 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:223:34 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:230:56 Unresolved referen
+ce 'AcidLime'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:236:25 Unresolved referen
+ce 'TextGrey'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:237:30 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:263:30 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/splittunneling/Spli
+tTunnelingScreen.kt:274:26 Unresolved referen
+ce 'MonospaceFont'.
+e: file:///D:/aidev/DOKODEMO/app/src/main/jav
+a/com/dokodemo/ui/screens/subscription/Subscr
+iptionScreen.kt:200:41 Unresolved reference '
+CloudDownload'.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugK
+otlin'.
+> A failure occurred while executing org.jetb
+rains.kotlin.compilerRunner.GradleCompilerRun
+nerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more deta
+ils
+
+* Try:
+> Run with --stacktrace option to get the sta
+ck trace.
+> Run with --info or --debug option to get mo
+re log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 11s
+31 actionable tasks: 2 executed, 29 up-to-date

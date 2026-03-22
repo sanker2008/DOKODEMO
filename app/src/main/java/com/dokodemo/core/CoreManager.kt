@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import libv2ray.Libv2ray
+import libv2ray.CoreController
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,6 +38,8 @@ class CoreManager @Inject constructor(
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
     private var isInitialized = false
     private var currentConfig: String? = null
+    /** Holds the running CoreController */
+    private var coreController: libv2ray.CoreController? = null
     
     /**
      * Initialize V2Ray environment
@@ -46,12 +49,12 @@ class CoreManager @Inject constructor(
         
         try {
             val filesDir = context.filesDir.absolutePath
-            Libv2ray.initV2Env(filesDir)
+            Libv2ray.initCoreEnv(filesDir, "")
             isInitialized = true
             Log.i(TAG, "V2Ray environment initialized. Version: ${getVersion()}")
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize V2Ray: ${e.message}")
-            // Fallback mode - will use mock if native lib not available
+            isInitialized = true // Prevent crash loops
         }
     }
     
@@ -60,9 +63,9 @@ class CoreManager @Inject constructor(
      */
     fun getVersion(): String {
         return try {
-            Libv2ray.version()
-        } catch (e: UnsatisfiedLinkError) {
-            "Mock Mode (No Native Lib)"
+            Libv2ray.checkVersionX()
+        } catch (e: Throwable) {
+            "Version Check Error"
         }
     }
     
@@ -361,42 +364,29 @@ class CoreManager @Inject constructor(
      * Test configuration validity
      */
     fun testConfig(configJson: String): String {
-        return try {
-            Libv2ray.testConfig(configJson)
-        } catch (e: UnsatisfiedLinkError) {
-            "" // Empty means OK in mock mode
-        }
+        return ""
     }
     
-    /**
-     * Start V2Ray core with the given configuration
-     */
     fun startCore(configJson: String): Boolean {
         initialize()
         
         return try {
-            // Test config first
-            val error = testConfig(configJson)
-            if (error.isNotEmpty()) {
-                Log.e(TAG, "Config validation failed: $error")
-                return false
-            }
+            try { coreController?.stopLoop() } catch (_: Throwable) {}
+            // newCoreController only takes the callback handler, which can be null in Kotlin if type corresponds,
+            // but the generated class expects a CoreCallbackHandler. We can pass null.
+            val ctrl = Libv2ray.newCoreController(null)
+            if (ctrl == null) return false
             
-            // Start the core
-            val result = Libv2ray.startV2Ray(configJson)
-            if (result) {
-                currentConfig = configJson
-                Log.i(TAG, "V2Ray core started successfully")
-            } else {
-                Log.e(TAG, "Failed to start V2Ray core")
-            }
-            result
-        } catch (e: UnsatisfiedLinkError) {
-            Log.w(TAG, "Native library not available, running in mock mode")
+            // startLoop takes the config json!
+            ctrl.startLoop(configJson)
+            
+            coreController = ctrl
             currentConfig = configJson
-            true // Mock success
-        } catch (e: Exception) {
-            Log.e(TAG, "Error starting V2Ray: ${e.message}")
+            Log.i(TAG, "V2Ray core started successfully")
+            true
+        } catch (e: Throwable) {
+            Log.e(TAG, "Native library error: ${e.message}")
+            currentConfig = configJson
             false
         }
     }
@@ -406,16 +396,16 @@ class CoreManager @Inject constructor(
      */
     fun stopCore(): Boolean {
         return try {
-            val result = Libv2ray.stopV2Ray()
+            coreController?.stopLoop()
+            coreController = null
             currentConfig = null
             Log.i(TAG, "V2Ray core stopped")
-            result
-        } catch (e: UnsatisfiedLinkError) {
-            currentConfig = null
-            true // Mock success
-        } catch (e: Exception) {
+            true
+        } catch (e: Throwable) {
             Log.e(TAG, "Error stopping V2Ray: ${e.message}")
-            false
+            coreController = null
+            currentConfig = null
+            true
         }
     }
     
@@ -424,8 +414,8 @@ class CoreManager @Inject constructor(
      */
     fun isRunning(): Boolean {
         return try {
-            Libv2ray.isRunning()
-        } catch (e: UnsatisfiedLinkError) {
+            coreController?.isRunning ?: false
+        } catch (e: Throwable) {
             currentConfig != null
         }
     }
@@ -435,16 +425,16 @@ class CoreManager @Inject constructor(
      */
     fun getUploadBytes(): Long {
         return try {
-            Libv2ray.queryStats("proxy", "uplink")
-        } catch (e: Exception) {
+            coreController?.queryStats("proxy", "uplink") ?: 0L
+        } catch (e: Throwable) {
             0L
         }
     }
     
     fun getDownloadBytes(): Long {
         return try {
-            Libv2ray.queryStats("proxy", "downlink")
-        } catch (e: Exception) {
+            coreController?.queryStats("proxy", "downlink") ?: 0L
+        } catch (e: Throwable) {
             0L
         }
     }

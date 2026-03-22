@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Transaction
 import androidx.room.Query
 import androidx.room.Update
 import com.dokodemo.data.model.ServerProfile
@@ -55,7 +56,13 @@ interface ServerDao {
     suspend fun clearSelection()
     
     @Query("UPDATE server_profiles SET isSelected = 1 WHERE id = :id")
-    suspend fun selectServer(id: Long)
+    suspend fun markSelected(id: Long)
+    
+    @Transaction
+    suspend fun selectServer(id: Long) {
+        clearSelection()
+        markSelected(id)
+    }
     
     @Query("UPDATE server_profiles SET latency = :latency, updatedAt = :updatedAt WHERE id = :id")
     suspend fun updateLatency(id: Long, latency: Int?, updatedAt: Long = System.currentTimeMillis())

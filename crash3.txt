@@ -1,0 +1,1464 @@
+--------- beginning of crash
+11-21 02:06:46.630   639   639 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 639 (init), pid 639 (init)
+11-21 02:06:46.692   639   639 F libc    : Crash due to signal: crash_dump helper failed to exec, or was killed
+03-17 03:58:48.203  6638  6638 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 6638 (init), pid 6638 (init)
+03-17 03:58:48.262  6638  6638 F libc    : Crash due to signal: crash_dump helper failed to exec, or was killed
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: FATAL EXCEPTION: mm-c#1
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: Process: com.cupidapp.live, PID: 30126
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: java.lang.ExceptionInInitializerError
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at og.i1.<clinit>(HiddenApiBypass.java:61)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at com.wangmai.appsdkdex.WMAdSdk.J(WMAdSdk.java:3)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at com.wangmai.appsdkdex.WMAdSdk.I(Unknown Source:0)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at com.wangmai.appsdkdex.WMAdSdk$a.run(WMAdSdk.java:5)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1119)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: og.g1$f.a []
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at java.lang.Class.getMethod(Class.java:2940)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at java.lang.Class.getDeclaredMethod(Class.java:2919)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	at og.i1.<clinit>(HiddenApiBypass.java:18)
+03-18 12:57:52.208 30126 30461 E AndroidRuntime: 	... 6 more
+03-18 12:59:40.331  2016  2016 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x7c28400000 in tid 2016 (aud.IServiceImp), pid 2016 (aud.IServiceImp)
+03-18 13:51:14.054 17522 17522 F libc    : Unwind request: crash_dump helper failed to exec, or was killed
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: Process: com.dokodemo, PID: 18119
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:28.652 18119 18119 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: Process: com.dokodemo, PID: 18560
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:30.146 18560 18560 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: Process: com.dokodemo, PID: 18621
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:37.674 18621 18621 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: Process: com.dokodemo, PID: 18711
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:39.134 18711 18711 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: Process: com.dokodemo, PID: 18763
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:40.527 18763 18763 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: Process: com.dokodemo, PID: 29525
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:36:57.679 29525 29525 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: FATAL EXCEPTION: main
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: Process: com.dokodemo, PID: 29959
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:36:59.136 29959 29959 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: Process: com.dokodemo, PID: 31734
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:47.160 31734 31734 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: Process: com.dokodemo, PID: 17532
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:48.601 17532 17532 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: Process: com.dokodemo, PID: 17576
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:55.751 17576 17576 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: Process: com.dokodemo, PID: 22526
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:41:01.281 22526 22526 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: Process: com.dokodemo, PID: 22883
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:41:02.768 22883 22883 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: FATAL EXCEPTION: DefaultDispatcher-worker-10
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: Process: com.dokodemo, PID: 28243
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 00:59:20.536 28243 28371 E AndroidRuntime: 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@7d8683, Dispatchers.IO]
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: FATAL EXCEPTION: DefaultDispatcher-worker-1
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: Process: com.dokodemo, PID: 28836
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 00:59:31.734 28836 28864 E AndroidRuntime: 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@4e4b83e, Dispatchers.IO]
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: FATAL EXCEPTION: DefaultDispatcher-worker-7
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: Process: com.dokodemo, PID: 29047
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 01:00:26.482 29047 29179 E AndroidRuntime: 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@9fe756a, Dispatchers.IO]
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: FATAL EXCEPTION: DefaultDispatcher-worker-8
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: Process: com.dokodemo, PID: 29839
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 01:01:18.676 29839 29948 E AndroidRuntime: 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@eb0d84b, Dispatchers.IO]
+--------- beginning of system
+03-22 01:18:45.538  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:45.543  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:45.547  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:45.547  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:18:45.561  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:18:45.880  8204  8204 E OplusCustomizePackageManager: mIOplusCustomizePackageManagerService is null
+03-22 01:18:45.880  8204  8204 E OplusCustomizePackageManager: mIOplusCustomizePackageManagerService is null
+03-22 01:18:45.880  8204  8204 E OplusCustomizePackageManager: isOplusCertificatePackage Errorjava.lang.NullPointerException: Attempt to invoke interface method 'boolean android.os.customize.IOplusCustomizePackageManagerService.isOplusCertificatePackage(java.lang.String)' on a null object reference
+03-22 01:18:45.946  7891  8327 E ActivityThread: Failed to find provider info for com.webview.browser.webview.fileprovider
+03-22 01:18:45.954  7891  8327 E ActivityThread: Failed to find provider info for com.android.browser.webview.fileprovider
+03-22 01:18:45.955  7891  8327 E ActivityThread: Failed to find provider info for com.coloros.browser.webview.fileprovider
+03-22 01:18:45.956  7891  8327 E ActivityThread: Failed to find provider info for com.nearme.browser.webview.fileprovider
+03-22 01:18:45.959  7891  8327 E ActivityThread: Failed to find provider info for org.chromium.android_webview.shell.webview.fileprovider
+03-22 01:18:45.960  7891  8327 E ActivityThread: Failed to find provider info for com.heytap.heymediatool.webview.fileprovider
+03-22 01:18:45.976  7891  8327 E ActivityThread: Failed to find provider info for com.heytap.heymediatool.browser.webview.fileprovider
+03-22 01:18:46.286  3102  8929 E WallpaperManagerServiceExt: not granted android.permission.READ_EXTERNAL_STORAGE
+03-22 01:18:46.620  3102  3188 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:48.021  7452  5936 E ActivityThread: Failed to find provider info for com.platform.usercenter.vip
+03-22 01:18:48.022  7452  7592 E ActivityThread: Failed to find provider info for com.platform.usercenter.vip
+03-22 01:18:52.495  3102  3168 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:52.512  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:52.532  3102  4367 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:18:59.599  3102  4427 E UAH-Framework: invalid window type -1
+03-22 01:19:05.119  3102  8929 E OplusAppQuickStart_AppQuickStartController: not start from launcher transition:5215
+03-22 01:19:05.121  3102  3215 E OplusThermalStats: Error getting package info: com.android.launcher
+03-22 01:19:05.124  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:05.124  3102  8929 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:05.129  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:05.146  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:05.147  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:05.182  3102  4240 E HandwritingModeController: Cannot get requestId: Handwriting was not initialized.
+03-22 01:19:06.054  3102  4018 E TransitionChain: Can't collect into a chain with no transition
+03-22 01:19:06.073  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:06.779  3102  5617 E OplusSplitScreenManagerService: checkCallingFromSystemUI, caller is not SystemUI, callerUid=10222, SystemUI uid=10228
+03-22 01:19:06.783  3102  5617 E OplusAppQuickStart_AppQuickStartController: notifyStartActivityFromRecents task:Task{9ae4a3 #17111 type=standard A=1000:com.android.settings.root} mStartFromRecents:true mStartFromSlide:false callingUid:10222
+03-22 01:19:06.797  3102  5617 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:06.797  3102  5617 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:06.802  3102  3215 E OplusThermalStats: Error getting package info: com.android.settings
+03-22 01:19:06.808  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:06.941  3102  5780 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.941  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.941  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.942  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.942  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.942  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.943  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.943  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.943  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.943  3102  5011 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.944  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.944  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.944  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.944  3102  8931 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.961  3102  4614 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.961  3102  4614 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:06.961  3102  4614 E OplusCustomizeRestrictionManagerService: getUnlockByFacePolicies fail, return default value.
+03-22 01:19:06.969  3102  4614 E OplusCustomizeRestrictionManagerService: isUSBOtgDisabled start
+03-22 01:19:07.442  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:07.449  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:07.450  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:08.114  3102  4367 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:08.115  3102  4367 E OplusCustomizeRestrictionManagerService: isBiometricDisabled start
+03-22 01:19:08.892  3102  4367 E OplusAppQuickStart_AppQuickStartController: not start from launcher transition:5217
+03-22 01:19:08.898  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:08.899  3102  4367 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:08.900  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:08.902  3102  3215 E OplusThermalStats: Error getting package info: com.android.launcher
+03-22 01:19:08.934  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:08.935  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:08.937  3102  4240 E HandwritingModeController: Cannot get requestId: Handwriting was not initialized.
+03-22 01:19:09.828  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:12.509  3102  4367 E OplusAppQuickStart_AppQuickStartController: notifyStartActivity intent:Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 xflg=0x4 cmp=com.dokodemo/.MainActivity bnds=[833,1136][1002,1305] (has extras) oflg=0x800 }
+03-22 01:19:12.532  3102  4367 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:12.532  3102  4367 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:12.539  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:12.540  3102  3215 E OplusThermalStats: Error getting package info: com.dokodemo
+03-22 01:19:13.214  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:13.224  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:13.226  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:14.799  3102  3215 E BatteryStatsImplExtImpl: get RefreshCounts failed
+03-22 01:19:25.816  3102  3215 E BatteryStatsImplExtImpl: get RefreshCounts failed
+03-22 01:19:26.688  3102  4614 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: Process: com.dokodemo, PID: 4115
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void go.tun2socks.Tun2socks.stop() (tried Java_go_tun2socks_Tun2socks_stop and Java_go_tun2socks_Tun2socks_stop__) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at go.tun2socks.Tun2socks.stop(Native Method)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.stopVpn(DokoDemoVpnService.kt:285)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onStartCommand(DokoDemoVpnService.kt:151)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.app.ActivityThread.handleServiceArgs(ActivityThread.java:5868)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleServiceArgs(Unknown Source:0)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2924)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 01:19:43.103  4115  4115 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 01:19:43.140  3102  5780 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:43.140  3102  5780 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:43.154  3102  3215 E OplusThermalStats: Error getting package info: com.android.launcher
+03-22 01:19:43.161  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:43.165  5285  8840 E ActivityThread: Failed to find provider info for com.android.launcher.EventContentProvider
+03-22 01:19:43.324  3102  3189 E OplusAppQuickStart_AppQuickStartController: not start from launcher transition:5219
+03-22 01:19:43.332  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:43.903  3102  4784 E AppOps  : attributionTag OplusLBS not declared in manifest of android
+03-22 01:19:43.906  3102  4784 E AppOps  : attributionTag OplusLBS not declared in manifest of android
+03-22 01:19:44.021  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'INTERFACE' not found
+03-22 01:19:44.021  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'STATE' not found
+03-22 01:19:44.021  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'TIME_NS' not found
+03-22 01:19:44.021  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'UID' not found
+03-22 01:19:44.187  3102  4953 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.221  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'INTERFACE' not found
+03-22 01:19:44.221  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'STATE' not found
+03-22 01:19:44.221  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'TIME_NS' not found
+03-22 01:19:44.221  1509  1543 E NetlinkEvent: NetlinkEvent::FindParam(): Parameter 'UID' not found
+03-22 01:19:44.261  3102  4614 E OplusAppQuickStart_AppQuickStartController: notifyStartActivity intent:Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 xflg=0x4 cmp=com.dokodemo/.MainActivity bnds=[833,1136][1002,1305] (has extras) oflg=0x800 }
+03-22 01:19:44.288  3102  4614 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.293  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.381  3102  5867 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.385  3102  3215 E OplusThermalStats: Error getting package info: com.dokodemo
+03-22 01:19:44.952  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.952  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.963  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: FATAL EXCEPTION: main
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: Process: com.dokodemo, PID: 9891
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void go.tun2socks.Tun2socks.stop() (tried Java_go_tun2socks_Tun2socks_stop and Java_go_tun2socks_Tun2socks_stop__) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at go.tun2socks.Tun2socks.stop(Native Method)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.stopVpn(DokoDemoVpnService.kt:285)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at com.dokodemo.service.DokoDemoVpnService.onStartCommand(DokoDemoVpnService.kt:151)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.app.ActivityThread.handleServiceArgs(ActivityThread.java:5868)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleServiceArgs(Unknown Source:0)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2924)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:408)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 01:19:44.982  9891  9891 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 01:19:45.000  3102  4953 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:45.000  3102  4953 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:45.005  3102  5867 E OplusAppQuickStart_AppQuickStartController: not start from launcher transition:5221
+03-22 01:19:45.024  3102  3215 E OplusThermalStats: Error getting package info: com.android.launcher
+--------- beginning of main
+03-22 01:19:45.026  5285  5285 E TransientTaskbarIconAlignmentRunner[u0]: onAnimatorStart is not TaskbarPresent!
+03-22 01:19:45.027  3102  3189 E FlexibleWindowManagerService: notifyTaskObserverToAttachController not need to notify!
+03-22 01:19:45.035  5285  5285 E [OPLUS_AFS_CONFIG]: Failed to open AFS config file: /proc/oplus_afs_config/afs_config
+03-22 01:19:45.035  5285  5285 E AFS_CONFIG: Failed to get scene config
+03-22 01:19:45.035  5285  5285 E OplusAfsManager: afsConfigSceneConfigGet sceneType is null
+03-22 01:19:45.044 12112 12112 E sug_noti: osi
+03-22 01:19:45.044 12112 12112 E sug_noti: !r_!G_c_!i: true_true_true_true
+03-22 01:19:45.044 12112 12112 E sug_noti: !KM: true
+03-22 01:19:45.044 12112 12112 E sug_noti: t: 1774113585044_1774113344904_false
+03-22 01:19:45.045 12112 12112 E sug_info: loadPref sugFlag : true
+03-22 01:19:45.045 12112 12112 E sug_info: SR : true
+03-22 01:19:45.045 12112 12112 E sug_info: TS : false
+03-22 01:19:45.046 12112 12112 E sug_info: FLAG_SUG_SWITCH: true_xG: 4_FLAG_SUG_MIN_NET_LEVEL: 0
+03-22 01:19:45.046 12112 12112 E sug_info: checkMatch:com.android.launcher_0_0_null
+03-22 01:19:45.046 12112 12112 E sug_info: true_true_true_true_false_true_false_true
+03-22 01:19:45.046 12112 12112 E sug_info: sug core setting: false
+03-22 01:19:45.046  2294  9995 E gaia:qseetzlogtask: [collect:42]node(oemLogEncrypt)  exist, but have error, Error accessing the node : Permission denied
+03-22 01:19:45.046  2294  9995 E gaia:qseetzlogtask: [collect:44]Permission denied while accessing the path
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: iptables error:
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: ------- COMMAND -------
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: *nat
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: -X sla_lte_snat
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: COMMIT
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: -------  ERROR -------
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: iptables-restore: line 6 failed
+03-22 01:19:45.051  1509 30575 E IptablesRestoreController: ----------------------
+03-22 01:19:45.056  1509 30575 E         : modifyIpRule,uid=-1,table=0,priority=21003,action=33
+03-22 01:19:45.056  1509 30575 E         : Error deleting IPv4 rule: No such file or directory
+03-22 01:19:45.056  1509 30575 E         : modifyIpRule,uid=-1,table=0,priority=21013,action=33
+03-22 01:19:45.056  1509 30575 E         : Error deleting IPv4 rule: No such file or directory
+03-22 01:19:45.058  1509 17480 E         : [OplusLimitSpeedController] handleLimitCmd enable
+03-22 01:19:45.058  1509 17480 E         : [OplusLimitSpeedController] dataLimitEnableCmd rmnet_data4
+03-22 01:19:45.058  1509 17480 E         : [OplusLimitSpeedController] get ifbid 1 for rmnet_data4
+03-22 01:19:45.081  1511  1532 E statsd  : Stats puller failed for tag: 150134 at 422593537383891
+03-22 01:19:45.081  1511  1532 E statsd  : Gauge Stats puller failed for tag: 150119 at 422593537383891
+03-22 01:19:45.089   634   634 E lowmemorykiller: device memory 843761 free 122776 file 681795
+03-22 01:19:45.109  1511  1532 E statsd  : Stats puller failed for tag: 150134 at 422593607992172
+03-22 01:19:45.116  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 125: Resource with major=16, minor=0 not supported
+03-22 01:19:45.126  1623  2277 E SDM     : DRMConnector::Perform: Connector 90: Setting Qsync min fps 12616124
+03-22 01:19:45.135  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 1ff
+03-22 01:19:45.144  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 200
+03-22 01:19:45.153  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 201
+03-22 01:19:45.161  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 202
+03-22 01:19:45.170  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 203
+03-22 01:19:45.170  1509 17480 E         : [OplusLimitSpeedController] getNextId succ 204
+03-22 01:19:45.187   634   634 E lowmemorykiller: device memory 856115 free 130570 file 681625
+03-22 01:19:45.199  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=218 hdr_size=8 payload len=5119
+03-22 01:19:45.249  1333  1357 E RCS_Service: RegisterModule: parseIccResult, iccAuthResultBytes = -37, 8, -32, -99, -118, -115, -91, -124, -19, 23, 16, -44, -30, 86, -124, -39, -80, 2, 85, -106, 35, -67, -21, -120, -90, -87, -39, 16, -9, 75, 109, 121, 13, -113, -47, 12, 54, 87, 89, -37, 26, -91, -78, -85, 8, -125, -35, -33, -51, 70, 60, -56, 43
+03-22 01:19:45.304  1509 17480 E         : [OplusLimitSpeedController] bindNewInterface succ! rmnet_data4-ifb1
+03-22 01:19:45.304  1509 30575 E         : modifyIpRule,uid=-1,table=1024,priority=21013,action=32
+03-22 01:19:45.325  5220  7415 E OplusNetlinkConnect: parse rsp msg failed!Message missing required fields: header
+03-22 01:19:45.382  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:45.382  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 33.50 MB/s, Write: 1.50 MB/s
+03-22 01:19:45.382  3102 14216 E OplusStorageUFSBandwidth: Task time: 0ms
+03-22 01:19:45.385  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:45.396  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=38912
+03-22 01:19:45.470  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0d went down
+03-22 01:19:45.470  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0d went down
+03-22 01:19:45.470  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:45.471  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0e went down
+03-22 01:19:45.471  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0e went down
+03-22 01:19:45.472  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:45.473  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0f went down
+03-22 01:19:45.473  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0f went down
+03-22 01:19:45.473  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:45.475  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a10 went down
+03-22 01:19:45.475  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:45.476  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a10 went down
+03-22 01:19:45.498  1511  1532 E statsd  : Gauge Stats puller failed for tag: 150146 at 422593997754151
+03-22 01:19:45.504 29355 29387 E metis_v2_JenaHandlerManager: local thread match
+03-22 01:19:45.505 29355 29387 E metis_v2_JenaHandlerManager: local thread match
+03-22 01:19:45.508 29355 29366 E metis_v2_FactManager: There is no subModel: com.oplus.linker
+03-22 01:19:45.517  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:19:45.632  1623  2277 E SDM     : DRMConnector::Perform: Connector 90: Setting Qsync min fps 12616124
+03-22 01:19:45.668  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a08 went down
+03-22 01:19:45.668  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a08 went down
+03-22 01:19:45.668  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0c went down
+03-22 01:19:45.668  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a0c went down
+03-22 01:19:45.668  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:45.763  5285  5285 E OplusDisplayModeManager: has been initialized.
+03-22 01:19:45.827 29355 29446 E ContextAware_SortAlgorithmManager.ReorderProcessor.GuaranteedIntentManager: getListWithGuaranteedPolicy, queryList is empty, do not query ums
+03-22 01:19:45.840 29355 29446 E metis_v2_AppDiedObserver: panta-sugg-createAndUpdateAppDiedFence com.coloros.weather2 main process is not alive!
+03-22 01:19:45.852 29355 29446 E ContextAware_SortAlgorithmManager.IntentSendProcessor: disable direct send intent mode, clear
+03-22 01:19:45.856 29355 29446 E ContextAware_SortAlgorithmManager.IntentSendProcessor: sendIntentMessage: skip
+03-22 01:19:45.880  5285  5285 E [OPLUS_AFS_CONFIG]: Failed to open AFS config file: /proc/oplus_afs_config/afs_config
+03-22 01:19:45.880  5285  5285 E AFS_CONFIG: Failed to get scene config
+03-22 01:19:45.880  5285  5285 E OplusAfsManager: afsConfigSceneConfigGet sceneType is null
+03-22 01:19:45.880  5285  5285 E IJankManager: latencySceneEnd unknown scene 2 mScene:-1
+03-22 01:19:46.046  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:19:46.116  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 125: Resource with major=16, minor=0 not supported
+03-22 01:19:46.135  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:19:46.254  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.254  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.254  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.255  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.256  5285 19784 E JsConsole: breeno2X2-launcher(ojNSnbY6jiNJ)::Settings: getLauncherLimitApp error ""
+03-22 01:19:46.284  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.284  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.284  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.284  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.285  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.285  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.288  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.292  5285  4534 E AppIconLoader: getAppIconBitmap: appicon://app/com.xunmeng.pinduoduo and targetW :195 targetH :195
+03-22 01:19:46.297  5285  7716 E AppIconLoader: getAppIconBitmap: appicon://app/com.twitter.android and targetW :195 targetH :195
+03-22 01:19:46.300  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.302  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.304  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.306  5285 19784 E UnionPermissionController: com.oppoopen.apptipcard pass featureAble
+03-22 01:19:46.313  5285  5285 E FlexImageView: dv0@0xdba1973, ref:70, p:69,  appicon://app/com.xunmeng.pinduoduo , onFinalImageSet 195 , 195
+03-22 01:19:46.313  5285  5285 E FlexImageView: dv0@0xdba1973, ref:70, p:69,  appicon://app/com.xunmeng.pinduoduo , onFinalImageSet 195 , 195
+03-22 01:19:46.335  5285  5285 E FlexImageView: dv0@0xc7dff5c, ref:72, p:71,  appicon://app/com.twitter.android , onFinalImageSet 195 , 195
+03-22 01:19:46.559  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=747 hdr_size=8 payload len=1024
+03-22 01:19:46.574  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a11 went down
+03-22 01:19:46.574  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a11 went down
+03-22 01:19:46.576  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:46.577  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a12 went down
+03-22 01:19:46.578  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:46.578  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a12 went down
+03-22 01:19:46.579  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a13 went down
+03-22 01:19:46.579  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:46.580  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a13 went down
+03-22 01:19:46.581  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a14 went down
+03-22 01:19:46.582  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:46.582  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a14 went down
+03-22 01:19:46.732  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=210 hdr_size=8 payload len=14592
+03-22 01:19:46.952  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:19:47.056 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:19:47.057 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:19:47.057 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:19:47.058 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_011947_16394_01.txt
+03-22 01:19:47.058 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:19:47.118  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 125: Resource with major=16, minor=0 not supported
+03-22 01:19:47.237  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:19:47.304  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=38912
+03-22 01:19:47.383  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:47.385  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 39.94 MB/s, Write: 0.50 MB/s
+03-22 01:19:47.385  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:19:47.388  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:47.601 26052 29048 E SQLiteLog: (1) incomplete input in "insert into log"
+03-22 01:19:47.672  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a15 went down
+03-22 01:19:47.673  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a15 went down
+03-22 01:19:47.673  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:47.674  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a16 went down
+03-22 01:19:47.675  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a16 went down
+03-22 01:19:47.675  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:47.675  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a17 went down
+03-22 01:19:47.676  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a17 went down
+03-22 01:19:47.676  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:47.677  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a18 went down
+03-22 01:19:47.677  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a18 went down
+03-22 01:19:47.677  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:19:47.752  2793  2793 E BSP_KEVENT_RECORD: oplus_kevent Receive message from kernel, event_type=1
+03-22 01:19:47.752  2793  2793 E BSP_KEVENT_RECORD: OPLUS_KEVENT payload:charge_monitor$$track_ver@@3.7$$type_reason@@general_record$$flag_reason@@MmiChgInfo$$time@@[2026-03-22 01:19:47]$$mmi_chg@@0$$power_mode@@wired$$adapter_t@@pd_sdp$$power@@10000$$match_power@@0$$soc@@92$$smooth_soc@@95$$uisoc@@95$$batt_temp@@282$$shell_temp@@304$$subboard_temp@@-2740$$batt_vol@@4404$$batt_curr@@-511$$action@@wired
+03-22 01:19:47.863  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:19:47.904  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:19:48.121  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 125: Resource with major=16, minor=0 not supported
+03-22 01:19:48.158  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:19:48.294  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_LOG - possible buffer over access, length=1468 count=202 hdr_size=12 payload len=25824
+03-22 01:19:48.331  1509 30575 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:19:48.511  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ATOM_DATA_REQ_MSG_V01 ret 0
+03-22 01:19:48.513  5274  5274 E MetricsAction: stopMetricsCollect no metrics data id 54502
+03-22 01:19:48.523  3102  4953 E AppOps  : attributionTag OplusLBS not declared in manifest of android
+03-22 01:19:48.531  3102  4953 E AppOps  : attributionTag OplusLBS not declared in manifest of android
+03-22 01:19:48.811  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:19:48.812  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:19:48.856  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:19:49.063  8643  8808 E aiboost : wrong model type: 2
+03-22 01:19:49.388  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:49.391  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.50 MB/s, Write: 0.50 MB/s
+03-22 01:19:49.391  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:19:49.401  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:50.025  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:19:50.097  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393068
+03-22 01:19:50.252  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:19:50.452  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:19:50.494  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:19:50.729  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:19:50.832  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=14592
+03-22 01:19:50.883  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:19:50.920  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:19:51.327  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:19:51.392  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:51.394  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 1.00 MB/s
+03-22 01:19:51.394  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:19:51.395  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:51.869  1607 14921 E sensors-hal: handle_sns_client_event:95, pedometer_minute: report_ts=6960,counter=17347.000000 move_status =[SNS_CMC_STATIONARY] time_gap = 0 run_counter=563.000000 walk_counter=14286.000000
+03-22 01:19:52.060 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:19:52.060 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:19:52.062 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:19:52.064 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_011952_16394_01.txt
+03-22 01:19:52.064 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:19:52.374  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:19:52.376  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=226 hdr_size=8 payload len=1792
+03-22 01:19:52.684  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1436 count=218 hdr_size=8 payload len=1792
+03-22 01:19:52.724  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=218 hdr_size=8 payload len=5376
+03-22 01:19:53.397  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:53.400  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:19:53.400  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:19:53.404  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:53.903  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:19:53.926  9114  8547 E Battery : BatteryCardUtil: widgetCodes is empty !
+03-22 01:19:53.926  9114  9186 E Battery : ChargeProtectionUtils: First Alarm is Sat Mar 21 08:15:00 GMT+08:00 2026, nowRtc  = Sun Mar 22 01:19:53 GMT+08:00 2026, too close , ignore it.
+03-22 01:19:53.926  9114  9186 E Battery : ChargeProtectionUtils: mCanlendarTmp.isEmpty()!
+03-22 01:19:54.115  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=218 hdr_size=8 payload len=1792
+03-22 01:19:54.165 17273 26815 E 17273PAS[16002124][f66278d].PolicyManager: acceptHandleResult, hanleResult is null
+03-22 01:19:54.347  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1476 count=194 hdr_size=12 payload len=19666
+03-22 01:19:54.415  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:19:54.870  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:19:55.094  5175  5175 E SatelliteController: registerForSatelliteModemStateChanged: mSatelliteSessionController is not initialized yet
+03-22 01:19:55.380  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=194 hdr_size=8 payload len=1792
+03-22 01:19:55.404  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:55.407  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 4.49 MB/s, Write: 1.00 MB/s
+03-22 01:19:55.407  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:19:55.414  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:56.219  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=218 hdr_size=8 payload len=5117
+03-22 01:19:57.064 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:19:57.064 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:19:57.065 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:19:57.065 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_011957_16394_01.txt
+03-22 01:19:57.065 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:19:57.347  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=194 hdr_size=8 payload len=1792
+03-22 01:19:57.408  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:57.410  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 1.00 MB/s
+03-22 01:19:57.410  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:19:57.413  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:58.263  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:19:58.416  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:19:58.801  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:19:58.844  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:19:59.126  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:19:59.233  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=226 hdr_size=8 payload len=38912
+03-22 01:19:59.233  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=210 hdr_size=8 payload len=4864
+03-22 01:19:59.413  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:19:59.416  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:19:59.416  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:19:59.417  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:19:59.786  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:00.446  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393080
+03-22 01:20:00.454  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393080
+03-22 01:20:01.008  7891  8199 E .heytap.browser: hiddenapi: Accessing hidden method Lcom/android/org/conscrypt/OpenSSLSocketImpl;->setAlpnProtocols([B)V (runtime_flags=CorePlatformApi, domain=core-platform, api=max-target-q,core-platform-api) from Lcom/bytedance/sdk/component/kv/vu/nw/d/ar; (domain=app) using reflection: denied
+03-22 01:20:01.008  7891  8199 E .heytap.browser: hiddenapi: Accessing hidden method Lcom/android/org/conscrypt/AbstractConscryptSocket;->setAlpnProtocols([B)V (runtime_flags=0, domain=core-platform, api=max-target-q) from Lcom/bytedance/sdk/component/kv/vu/nw/d/ar; (domain=app) using reflection: denied
+03-22 01:20:01.039  7891  8199 E .heytap.browser: hiddenapi: Accessing hidden method Lcom/android/org/conscrypt/OpenSSLSocketImpl;->getAlpnSelectedProtocol()[B (runtime_flags=CorePlatformApi, domain=core-platform, api=max-target-q,core-platform-api) from Lcom/bytedance/sdk/component/kv/vu/nw/d/ar; (domain=app) using reflection: denied
+03-22 01:20:01.039  7891  8199 E .heytap.browser: hiddenapi: Accessing hidden method Lcom/android/org/conscrypt/AbstractConscryptSocket;->getAlpnSelectedProtocol()[B (runtime_flags=0, domain=core-platform, api=max-target-q) from Lcom/bytedance/sdk/component/kv/vu/nw/d/ar; (domain=app) using reflection: denied
+03-22 01:20:01.046  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:20:01.047  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1468 count=387 hdr_size=8 payload len=49152
+03-22 01:20:01.187  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1436 count=194 hdr_size=8 payload len=38912
+03-22 01:20:01.248  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:20:01.412  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1480 count=202 hdr_size=12 payload len=19666
+03-22 01:20:01.419  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:01.422  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.50 MB/s
+03-22 01:20:01.422  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:01.425  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:02.065 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:02.065 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:02.066 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:02.066 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012002_16394_01.txt
+03-22 01:20:02.066 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:02.261  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=214 hdr_size=8 payload len=1792
+03-22 01:20:02.933  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:20:02.934  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:20:03.159  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:20:03.426  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:03.428  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:03.428  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:03.431  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:03.437  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=210 hdr_size=8 payload len=1792
+03-22 01:20:04.147  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:20:04.149  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:20:04.872  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:04.906  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:04.943 26052 29048 E SQLiteLog: (1) incomplete input in "insert into data_block"
+03-22 01:20:04.984  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=210 hdr_size=8 payload len=1792
+03-22 01:20:05.433  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:05.435  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:05.435  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:05.437  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:05.585  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:05.690  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=266 hdr_size=8 payload len=1792
+03-22 01:20:06.366  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=218 hdr_size=8 payload len=5376
+03-22 01:20:07.063  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=218 hdr_size=8 payload len=5376
+03-22 01:20:07.064  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:20:07.066 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:07.066 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:07.066 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:07.066 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012007_16394_01.txt
+03-22 01:20:07.066 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:07.438  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:20:07.440  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:07.441  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:07.442  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:07.443  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:08.353  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=258 hdr_size=8 payload len=1792
+03-22 01:20:09.443  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:09.444  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.50 MB/s, Write: 0.00 MB/s
+03-22 01:20:09.444  3102 14216 E OplusStorageUFSBandwidth: Task time: 1ms
+03-22 01:20:09.447  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:09.591  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=258 hdr_size=8 payload len=1792
+03-22 01:20:10.342  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 167: Failed to apply optimization [10, 9]
+03-22 01:20:10.369  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:10.433  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=210 hdr_size=8 payload len=1792
+03-22 01:20:10.805  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:11.447  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:11.449  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:11.449  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:11.452  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:11.620  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:12.068 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:12.068 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:12.068 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:12.069 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012012_16394_01.txt
+03-22 01:20:12.069 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:12.336  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=218 hdr_size=8 payload len=1792
+03-22 01:20:13.364  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:13.364  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:13.453  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:13.456  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:13.456  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:13.459  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:13.653  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=5376
+03-22 01:20:13.792  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:20:13.942  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=234 hdr_size=8 payload len=1792
+03-22 01:20:14.266  1509  1544 E TetherController:  addInterface rmnet_data4->24 succ
+03-22 01:20:14.268  3102  4321 E WifiDataStall: onDataConnectionStateChanged unexpected State: 4
+03-22 01:20:14.389  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:20:14.390  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:14.424  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79ec went down
+03-22 01:20:14.427  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79fc went down
+03-22 01:20:14.427  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79f0 went down
+03-22 01:20:14.428  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79ec went down
+03-22 01:20:14.428  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a00 went down
+03-22 01:20:14.428  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79fc went down
+03-22 01:20:14.428  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79f0 went down
+03-22 01:20:14.428  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a00 went down
+03-22 01:20:14.428  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.430  1509  1544 E TetherController:  addInterface rmnet_data4->24 succ
+03-22 01:20:14.430  1509  1544 E TetherController:  addInterface rmnet_data4->24 succ
+03-22 01:20:14.430  1509  1544 E TetherController:  addInterface rmnet_data4->24 succ
+03-22 01:20:14.437  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a04 went down
+03-22 01:20:14.438  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.438  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a04 went down
+03-22 01:20:14.440  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79f4 went down
+03-22 01:20:14.440  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.440  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79f4 went down
+03-22 01:20:14.473  1509 30575 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:20:14.505  1509 17480 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] handleLimitCmd disable
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] mUpSocketMatchMap total 0, del 0
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] clearLimitRule rmnet_data4 
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] clearUpMatchBpfMap rmnet_data4-24
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] mDownSocketMatchMap total 0, del 0
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] clearLimitRule ifb1 
+03-22 01:20:14.528  1509 30575 E         : [OplusLimitSpeedController] clearDownMatchBpfMap rmnet_data4-24
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] mUpSocketMatchMap total 0, del 0
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] clearLimitRule rmnet_data4 
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] clearUpMatchBpfMap rmnet_data4-24
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] mDownSocketMatchMap total 0, del 0
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] clearLimitRule ifb1 
+03-22 01:20:14.529  1509 30575 E         : [OplusLimitSpeedController] clearDownMatchBpfMap rmnet_data4-24
+03-22 01:20:14.529  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79dc went down
+03-22 01:20:14.529  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79dc went down
+03-22 01:20:14.529  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79e0 went down
+03-22 01:20:14.529  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79e0 went down
+03-22 01:20:14.529  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.531  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.531  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79e4 went down
+03-22 01:20:14.531  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 79e4 went down
+03-22 01:20:14.552  1509 30575 E         : [OplusLimitSpeedController] unbindInterface succ! rmnet_data4
+03-22 01:20:14.646  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=218 hdr_size=8 payload len=1792
+03-22 01:20:14.773  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a19 went down
+03-22 01:20:14.773  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a19 went down
+03-22 01:20:14.775  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1a went down
+03-22 01:20:14.776  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1a went down
+03-22 01:20:14.776  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.780  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1b went down
+03-22 01:20:14.780  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1c went down
+03-22 01:20:14.780  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1b went down
+03-22 01:20:14.780  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 1 port 7a1c went down
+03-22 01:20:14.780  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:14.872  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: iptables error:
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: ------- COMMAND -------
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: *nat
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: -F sla_lte_dns_dnat
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: COMMIT
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: -------  ERROR -------
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: iptables-restore: line 229 failed
+03-22 01:20:14.889  1509 30575 E IptablesRestoreController: ----------------------
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: iptables error:
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: ------- COMMAND -------
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: *nat
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: -D OUTPUT -j sla_lte_dns_dnat
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: COMMIT
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: -------  ERROR -------
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: iptables-restore v1.8.11 (legacy): Couldn't find target `sla_lte_dns_dnat'
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: 
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: Error occurred at line: 2
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: Try `iptables-restore -h' or 'iptables-restore --help' for more information.
+03-22 01:20:15.018  1509 30575 E IptablesRestoreController: ----------------------
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: iptables error:
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: ------- COMMAND -------
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: *nat
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: -X sla_lte_dns_dnat
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: COMMIT
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: -------  ERROR -------
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: iptables-restore: line 2 failed
+03-22 01:20:15.146  1509 30575 E IptablesRestoreController: ----------------------
+03-22 01:20:15.193  1509 30575 E         : modifyIpRule,uid=-1,table=0,priority=21003,action=33
+03-22 01:20:15.194  1509 30575 E         : Error deleting IPv6 rule: No such file or directory
+03-22 01:20:15.195  1509 30575 E         : modifyIpRule,uid=-1,table=0,priority=21013,action=33
+03-22 01:20:15.459  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:15.463  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:20:15.463  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:20:15.471  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:15.534  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:15.719  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=234 hdr_size=8 payload len=1792
+03-22 01:20:15.931  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:17.070 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:17.070 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:17.071 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:17.072 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012017_16394_01.txt
+03-22 01:20:17.072 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:17.467  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:17.472  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:17.472  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:20:17.475  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:17.489  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:18.136 12157 12310 E WeatherS_PrivacyStatementExport: isAgreed1
+03-22 01:20:18.478  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=5376
+03-22 01:20:19.365  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:20:19.474  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:19.479  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.49 MB/s, Write: 0.50 MB/s
+03-22 01:20:19.479  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:20:19.482  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:19.581  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:20:20.455  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393104
+03-22 01:20:21.081  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=226 hdr_size=8 payload len=5117
+03-22 01:20:21.083  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=194 hdr_size=8 payload len=1792
+03-22 01:20:21.485  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:21.489  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:20:21.489  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:20:21.491  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:21.745  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=210 hdr_size=8 payload len=1792
+03-22 01:20:21.825  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:22.073 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:22.073 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:22.073 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:22.073 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012022_16394_01.txt
+03-22 01:20:22.073 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:22.380  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:22.381  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1460 count=194 hdr_size=12 payload len=16970
+03-22 01:20:23.029  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:20:23.496  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:23.500  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:20:23.500  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:20:23.508  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:24.529  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=250 hdr_size=8 payload len=1792
+03-22 01:20:24.876  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:25.507  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:25.509  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:25.509  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:25.512  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:25.856  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1464 count=202 hdr_size=12 payload len=1792
+03-22 01:20:25.857  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=226 hdr_size=8 payload len=1792
+03-22 01:20:26.418  5641  5754 E FileStrategy: java.io.IOException: Read-only file system
+03-22 01:20:26.497  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:20:27.075 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:27.075 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:27.077 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:27.078 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012027_16394_01.txt
+03-22 01:20:27.078 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:27.489  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:27.515  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:27.518  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:27.518  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:27.520  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:27.718  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:28.479  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:29.520  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:29.523  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:29.523  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:29.525  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:29.863  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:29.973  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=258 hdr_size=8 payload len=1792
+03-22 01:20:30.416  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=202 hdr_size=8 payload len=1792
+03-22 01:20:30.416  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=210 hdr_size=8 payload len=1792
+03-22 01:20:31.221  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:20:31.443  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=202 hdr_size=8 payload len=1792
+03-22 01:20:31.507  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:20:31.529  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:31.532  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:31.532  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:31.536  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:32.080 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:32.081 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:32.081 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:32.081 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012032_16394_01.txt
+03-22 01:20:32.081 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:32.828  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=226 hdr_size=8 payload len=5117
+03-22 01:20:32.837  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:33.531  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:33.536  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:33.540  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:20:33.540  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:20:33.542  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:34.028  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:20:34.193  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=466 hdr_size=8 payload len=1792
+03-22 01:20:34.504  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:20:34.507  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1476 count=202 hdr_size=12 payload len=22322
+03-22 01:20:34.721  6760  6760 E XiaoBu.KillProcessUtils: killSelf Runnable source = killSelfRunnable , shouldKillSelf = true , shouldDoubleCheck = true
+03-22 01:20:34.722  6760  7042 E XiaoBu.KillProcessUtils: killSelfReal shouldKillSelf = true
+03-22 01:20:34.725  6760  6760 E XiaoBu.KillProcessUtils: killSelf Runnable source = onReceiveAlarm , shouldKillSelf = true , shouldDoubleCheck = true
+03-22 01:20:34.797  6760  7042 E XiaoBu.KillProcessUtils: killSelfReal shouldKillSelf = true
+03-22 01:20:34.802  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:13,flags:0
+03-22 01:20:34.811  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:6,flags:0
+03-22 01:20:34.811  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:7,flags:0
+03-22 01:20:34.811  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:24,flags:0
+03-22 01:20:34.831  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:13,flags:0
+03-22 01:20:34.836  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:6,flags:0
+03-22 01:20:34.836  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:7,flags:0
+03-22 01:20:34.836  3102  5682 E OplusAthenaAm: AthenaAmManagerInternal transact code hello:24,flags:0
+03-22 01:20:34.877  3102  3205 E libprocessgroup: Failed to write 1 to /sys/fs/cgroup/apps/uid_10117/pid_6760/cgroup.kill: No such file or directory
+03-22 01:20:34.877  3102  3205 E libprocessgroup: Failed to open /sys/fs/cgroup/apps/uid_10117/pid_6760/cgroup.procs: No such file or directory
+03-22 01:20:34.877  3102  5678 E libprocessgroup: Failed to write 1 to /sys/fs/cgroup/apps/uid_10117/pid_6760/cgroup.kill: No such file or directory
+03-22 01:20:34.877  3102  5678 E libprocessgroup: Failed to open /sys/fs/cgroup/apps/uid_10117/pid_6760/cgroup.procs: No such file or directory
+03-22 01:20:34.879  3102  4982 E WindowProcessControllerExtImpl: shouldMakeAbnormalActivityFinishing, list may empty, mHasActivities: false
+03-22 01:20:34.882  3102  5678 E Athena  : athena_optimize: pkg: com.heytap.speechassist, processName: com.heytap.speechassistgetPercentage: 16
+03-22 01:20:34.889  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:34.993  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:20:34.994  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=226 hdr_size=8 payload len=1792
+03-22 01:20:35.188  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:20:35.192  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:20:35.543  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:35.545  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 5.49 MB/s, Write: 0.00 MB/s
+03-22 01:20:35.545  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:35.546  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:36.299  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=250 hdr_size=8 payload len=1792
+03-22 01:20:36.653  3102  4955 E WindowProcessControllerExtImpl: shouldMakeAbnormalActivityFinishing, list may empty, mHasActivities: false
+03-22 01:20:36.658  3102  5678 E Athena  : athena_optimize: pkg: com.oplus.aiunit, processName: com.oplus.aiunit:worker40getPercentage: 5
+03-22 01:20:37.061  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1440 count=218 hdr_size=8 payload len=1792
+03-22 01:20:37.083 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:37.083 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:37.083 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:37.084 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012037_16394_01.txt
+03-22 01:20:37.084 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:37.528  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=1119 hdr_size=8 payload len=15111
+03-22 01:20:37.549  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:37.552  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:37.553  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:20:37.559  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:38.719  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:39.335  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:20:39.439  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=14592
+03-22 01:20:39.556  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:39.559  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.50 MB/s
+03-22 01:20:39.559  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:39.562  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:40.106  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=210 hdr_size=8 payload len=1792
+03-22 01:20:40.456  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393129
+03-22 01:20:41.182  1509 30575 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:20:41.563  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:41.566  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:41.566  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:41.569  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:41.969  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:20:41.970  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:42.036  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:20:42.085 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:42.085 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:42.085 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:42.085 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012042_16394_01.txt
+03-22 01:20:42.086 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:43.036  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:43.092  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=202 hdr_size=8 payload len=5376
+03-22 01:20:43.207  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=226 hdr_size=8 payload len=38912
+03-22 01:20:43.294  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=218 hdr_size=8 payload len=5117
+03-22 01:20:43.316  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_LOG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=32770
+03-22 01:20:43.346 26154 26399 E FileStrategy: java.io.IOException: Read-only file system
+03-22 01:20:43.414  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:43.461  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1436 count=202 hdr_size=8 payload len=1792
+03-22 01:20:43.563  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=210 hdr_size=8 payload len=1792
+03-22 01:20:43.566  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:43.567  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 12.99 MB/s, Write: 0.50 MB/s
+03-22 01:20:43.567  3102 14216 E OplusStorageUFSBandwidth: Task time: 1ms
+03-22 01:20:43.569  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:43.797  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=38912
+03-22 01:20:43.824  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:43.980  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=210 hdr_size=8 payload len=1792
+03-22 01:20:44.437  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:20:44.533  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:44.577  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=194 hdr_size=8 payload len=1792
+03-22 01:20:44.828  6686  6701 E horae   : Entering notifyAmbientTemp, binder clients size 11
+03-22 01:20:44.881  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:45.272  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:20:45.297  7891  8077 E FileStrategy: java.io.IOException: Read-only file system
+03-22 01:20:45.322  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=1792
+03-22 01:20:45.479  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=258 hdr_size=8 payload len=1792
+03-22 01:20:45.569  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:45.571  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:45.571  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:20:45.575  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:45.604  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=194 hdr_size=8 payload len=1792
+03-22 01:20:47.086 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:47.086 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:47.087 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:47.088 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012047_16394_01.txt
+03-22 01:20:47.088 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:47.574  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:47.577  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:47.577  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:47.581  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:47.895  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=218 hdr_size=8 payload len=1792
+03-22 01:20:48.164  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:20:48.208  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:20:48.450  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:20:49.013  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:20:49.493  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:49.579  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:49.582  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:49.582  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:49.587  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:49.724  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:50.223  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:20:50.530  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=206 hdr_size=8 payload len=1792
+03-22 01:20:50.578  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:50.578  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:50.612  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:50.612  3102  4556 E LinkPower: [JudgeMonitorProcess] failed to deleteLastRecord, mMonitorRecordAccumulate is empty!
+03-22 01:20:51.137  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:51.587  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:51.591  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:51.592  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:20:51.594  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:51.870  1607 14921 E sensors-hal: handle_sns_client_event:95, pedometer_minute: report_ts=6961,counter=17347.000000 move_status =[SNS_CMC_STATIONARY] time_gap = 0 run_counter=563.000000 walk_counter=14286.000000
+03-22 01:20:52.040  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:52.041  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:20:52.089 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:52.089 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:52.089 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:52.089 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012052_16394_01.txt
+03-22 01:20:52.089 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:52.261  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:20:52.848  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:53.595  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:53.598  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:53.598  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:53.601  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:54.067  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=210 hdr_size=8 payload len=1792
+03-22 01:20:54.760  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:20:54.834  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:20:54.882  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:20:55.381  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=5376
+03-22 01:20:55.382  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:20:55.600  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:55.603  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:55.603  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:55.604  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:56.097  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=210 hdr_size=8 payload len=1792
+03-22 01:20:56.635  1586  1709 E minksocket: MinkIPC_QRTR_Service: client with node 0 port 12c7 went down
+03-22 01:20:56.636  1586  1728 E minksocket: MinkIPC_QRTR_Service: client with node 0 port 12c7 went down
+03-22 01:20:56.636  3723  3733 E Diag_Lib: [IMS_AP]"ims-rtp-daemon ims_rtp_qmi_handler_thread_func waiting on select thread>"
+03-22 01:20:56.916  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:20:57.090 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:20:57.090 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:20:57.090 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:20:57.091 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012057_16394_01.txt
+03-22 01:20:57.091 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:20:57.605  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:57.610  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 1.49 MB/s
+03-22 01:20:57.610  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:20:57.612  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:20:58.721  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:20:58.793  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=202 hdr_size=8 payload len=1792
+03-22 01:20:59.256  3102  4572 E LinkPower: [NetlinkLinkPower] failed to handle netlink msg, recevice netlink NLMSG_ERROR msg!
+03-22 01:20:59.359  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:20:59.612  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:20:59.615  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:20:59.615  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:20:59.619  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:00.261  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1448 count=194 hdr_size=8 payload len=1792
+03-22 01:21:00.456  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393157
+03-22 01:21:00.669  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=218 hdr_size=8 payload len=1792
+03-22 01:21:00.670  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=218 hdr_size=8 payload len=5376
+03-22 01:21:00.732  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:01.319  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:21:01.619  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:01.622  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:01.622  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:21:01.631  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:02.092 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:02.092 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:02.092 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:02.093 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012102_16394_01.txt
+03-22 01:21:02.093 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:02.203  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1472 count=194 hdr_size=12 payload len=19666
+03-22 01:21:02.204  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:21:03.449  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:21:03.628  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:03.633  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:03.633  3102 14216 E OplusStorageUFSBandwidth: Task time: 5ms
+03-22 01:21:03.636  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:04.236  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1480 count=202 hdr_size=12 payload len=19666
+03-22 01:21:04.883  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:21:05.248  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=210 hdr_size=8 payload len=1792
+03-22 01:21:05.376  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:05.527  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=202 hdr_size=8 payload len=1792
+03-22 01:21:05.528  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:05.568  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:05.644  1509 30575 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:21:05.657  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:05.668  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:05.669  3102 14216 E OplusStorageUFSBandwidth: Task time: 12ms
+03-22 01:21:05.670  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:05.948  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:06.092  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=218 hdr_size=8 payload len=1792
+03-22 01:21:06.227  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:21:06.231  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:21:06.273  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=282 hdr_size=8 payload len=1792
+03-22 01:21:06.467  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:06.502  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:21:07.093 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:07.093 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:07.094 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:07.094 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012107_16394_01.txt
+03-22 01:21:07.094 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:07.672  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:07.675  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 2.99 MB/s, Write: 0.50 MB/s
+03-22 01:21:07.675  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:21:07.677  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:08.306  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:21:08.307  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=210 hdr_size=8 payload len=1792
+03-22 01:21:08.562  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=4866
+03-22 01:21:09.169  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:21:09.677  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:09.681  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:09.681  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:21:09.685  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:09.833  6686  6703 E horae   : 0: back:29764,frame:29882,front:29385, 24 1, +(1023), 1 ,33009,32507,32934,30905,31212,28600, target_temp:29882, algo:0
+03-22 01:21:10.198  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:10.286  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:10.318  1509 30575 E TetherController: property_get sys.radio.data.modem_share_flag return 0, 1!
+03-22 01:21:10.496  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:21:10.527  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=202 hdr_size=8 payload len=1792
+03-22 01:21:10.696  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1472 count=194 hdr_size=12 payload len=23034
+03-22 01:21:10.829  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:21:10.876  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:11.405  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=218 hdr_size=8 payload len=5117
+03-22 01:21:11.684  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:11.686  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 3.49 MB/s, Write: 0.00 MB/s
+03-22 01:21:11.686  3102 14216 E OplusStorageUFSBandwidth: Task time: 3ms
+03-22 01:21:11.690  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:11.744  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:12.096 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:12.096 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:12.098 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:12.100 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012112_16394_01.txt
+03-22 01:21:12.100 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:12.361  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1456 count=194 hdr_size=12 payload len=20293
+03-22 01:21:12.445  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:12.588 15323 15372 E FileStrategy: java.io.IOException: Read-only file system
+03-22 01:21:12.597  7891  7932 E .heytap.browser: hiddenapi: Accessing hidden field Landroid/net/NetworkCapabilities;->mNetworkCapabilities:J (runtime_flags=0, domain=platform, api=max-target-r) from Lcom/heytap/browser/base/util/g0; (domain=app) using reflection: denied
+03-22 01:21:12.598  8139  8263 E owser:downloads: hiddenapi: Accessing hidden field Landroid/net/NetworkCapabilities;->mNetworkCapabilities:J (runtime_flags=0, domain=platform, api=max-target-r) from Lcom/heytap/browser/base/util/g0; (domain=app) using reflection: denied
+03-22 01:21:12.612 16719 16813 E FileStrategy: java.io.IOException: Read-only file system
+03-22 01:21:12.707  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:21:12.707  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:21:13.547  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=210 hdr_size=8 payload len=1792
+03-22 01:21:13.690  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:13.694  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.99 MB/s, Write: 0.00 MB/s
+03-22 01:21:13.694  3102 14216 E OplusStorageUFSBandwidth: Task time: 4ms
+03-22 01:21:13.700  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:14.884  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:21:15.248  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:15.248  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:21:15.528  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=210 hdr_size=8 payload len=1792
+03-22 01:21:15.530  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:15.696  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:15.698  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:15.698  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:15.699  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:16.405  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:16.846  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:17.101 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:17.101 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:17.102 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:17.102 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012117_16394_01.txt
+03-22 01:21:17.102 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:17.702  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:17.704  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:17.704  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:17.706  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:18.152 12157 12310 E WeatherS_PrivacyStatementExport: isAgreed1
+03-22 01:21:18.482  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:21:18.588  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:21:18.659  8139  8263 E owser:downloads: hiddenapi: Accessing hidden field Landroid/net/NetworkCapabilities;->mNetworkCapabilities:J (runtime_flags=0, domain=platform, api=max-target-r) from Lcom/heytap/browser/base/util/g0; (domain=app) using reflection: denied
+03-22 01:21:18.663  7891  7932 E .heytap.browser: hiddenapi: Accessing hidden field Landroid/net/NetworkCapabilities;->mNetworkCapabilities:J (runtime_flags=0, domain=platform, api=max-target-r) from Lcom/heytap/browser/base/util/g0; (domain=app) using reflection: denied
+03-22 01:21:19.566  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=202 hdr_size=8 payload len=1792
+03-22 01:21:19.709  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:19.711  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:19.711  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:19.713  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:20.327  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1440 count=226 hdr_size=8 payload len=4866
+03-22 01:21:20.391  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=202 hdr_size=8 payload len=1792
+03-22 01:21:20.455  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393182
+03-22 01:21:20.536  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=210 hdr_size=8 payload len=4864
+03-22 01:21:21.266  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1440 count=218 hdr_size=8 payload len=1792
+03-22 01:21:21.548  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:21.617  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:21:21.717  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:21.719  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:21.719  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:21.721  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:22.104 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:22.104 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:22.104 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:22.105 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012122_16394_01.txt
+03-22 01:21:22.105 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:22.475  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=258 hdr_size=8 payload len=1792
+03-22 01:21:22.489  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:22.684  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=194 hdr_size=8 payload len=1792
+03-22 01:21:22.737  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:23.095  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=203 hdr_size=8 payload len=9216
+03-22 01:21:23.722  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:23.724  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:21:23.724  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:23.726  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:23.820  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:23.941  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=202 hdr_size=8 payload len=1792
+03-22 01:21:23.942  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:21:23.999  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=194 hdr_size=8 payload len=1792
+03-22 01:21:24.536  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=1792
+03-22 01:21:24.536  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_LOG - possible buffer over access, length=1468 count=202 hdr_size=12 payload len=21143
+03-22 01:21:24.884  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:21:24.956  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=330 hdr_size=8 payload len=1792
+03-22 01:21:25.524  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:21:25.525  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:21:25.548  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=202 hdr_size=8 payload len=1792
+03-22 01:21:25.628  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=14592
+03-22 01:21:25.639  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=1792
+03-22 01:21:25.639  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:21:25.683  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=1792
+03-22 01:21:25.723  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=298 hdr_size=8 payload len=1792
+03-22 01:21:25.727  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:25.729  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.50 MB/s, Write: 0.00 MB/s
+03-22 01:21:25.729  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:25.731  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:25.735  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=210 hdr_size=8 payload len=1792
+03-22 01:21:25.781  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_LOG - possible buffer over access, length=1472 count=194 hdr_size=12 payload len=29695
+03-22 01:21:25.788  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:21:25.818  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1452 count=202 hdr_size=8 payload len=1792
+03-22 01:21:25.819  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=234 hdr_size=8 payload len=1792
+03-22 01:21:26.357  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:21:26.358  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:21:26.668  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=38912
+03-22 01:21:26.715  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:27.106 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:27.106 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:27.106 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:27.107 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012127_16394_01.txt
+03-22 01:21:27.107 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:27.189  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:21:27.189  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:21:27.556  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:21:27.622  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:27.733  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:27.735  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 1.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:27.735  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:27.736  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:27.858  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:28.154  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1440 count=226 hdr_size=8 payload len=4866
+03-22 01:21:29.739  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:29.741  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:29.741  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:29.746  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:30.564  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=202 hdr_size=8 payload len=5376
+03-22 01:21:30.565  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=1792
+03-22 01:21:30.578  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=202 hdr_size=8 payload len=1792
+03-22 01:21:30.782  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=194 hdr_size=8 payload len=4224
+03-22 01:21:31.743  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:31.745  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:31.745  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:31.747  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:32.108 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:32.108 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:32.108 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:32.108 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012132_16394_01.txt
+03-22 01:21:32.108 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:32.593  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=218 hdr_size=8 payload len=1792
+03-22 01:21:32.595  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=202 hdr_size=8 payload len=1792
+03-22 01:21:32.620  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=202 hdr_size=8 payload len=1792
+03-22 01:21:32.620  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1456 count=194 hdr_size=8 payload len=1792
+03-22 01:21:33.311  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:21:33.748  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:33.749  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 5.99 MB/s, Write: 0.00 MB/s
+03-22 01:21:33.749  3102 14216 E OplusStorageUFSBandwidth: Task time: 1ms
+03-22 01:21:33.751  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:33.754  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:34.884  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_GET_ALL_CELLULAR_CELL_INFO_REQ_MSG_V01 ret 0
+03-22 01:21:35.423  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1444 count=218 hdr_size=8 payload len=1792
+03-22 01:21:35.607  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=226 hdr_size=8 payload len=38912
+03-22 01:21:35.717  2539  2539 E vendor.oplus.hardware.rpmh-V1-service: get data from /sys/module/soc_sleep_stats/rpmh_stats/oplus_rpmh_master_stats failed! res=-1
+03-22 01:21:35.717  2539  2539 E vendor.oplus.hardware.rpmh-V1-service: get data from /sys/module/soc_sleep_stats/rpmh_stats/oplus_rpmh_master_stats failed! res=-1
+03-22 01:21:35.718  2539  2539 E vendor.oplus.hardware.rpmh-V1-service: get data from /sys/module/soc_sleep_stats/rpmh_stats/oplus_rpmh_master_stats failed! res=-1
+03-22 01:21:35.721  5220  5692 E AMC     : [P-lowpower_vowifi/0] execute failed in triggers[0]:[mpsleept:205][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.721  5220  5692 E AMC     : [P-lowpower_vowifi/1] execute failed in triggers[0]:[mpsleept:205][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.722  5220  5692 E AMC     : [P-lowpower_vowifi/0] execute failed in triggers[0]:[apsleept:13][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.722  5220  5692 E AMC     : [P-lowpower_vowifi/1] execute failed in triggers[0]:[apsleept:13][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.732  5229  5675 E ModemAciBatteryHidlUtils: CatchException init():java.lang.ClassNotFoundException: vendor.oplus.hardware.charger.V1_0.ICharger
+03-22 01:21:35.734  5220  5692 E AMC     : [P-lowpower_vowifi/0] execute failed in triggers[0]:[bcc:0][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.734  5220  5692 E AMC     : [P-lowpower_vowifi/1] execute failed in triggers[0]:[bcc:0][bcc:0, deepsleep:false, mpsleept:1352]
+03-22 01:21:35.741  2243  2368 E QmiVsClient: sendAsyncRequest QMI_VS_SET_SYNC_WITH_AP_REQ_MSG_V01 ret 0
+03-22 01:21:35.749  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:35.751  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:35.751  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:35.752  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:35.754  5220  5692 E AMC     : [P-ooslimited_deep/0] execute failed in triggers[0]:[nwsrcht:0][nwsrcht:0]
+03-22 01:21:35.755  5220  5692 E AMC     : [P-ooslimited_deep/1] execute failed in triggers[0]:[nwsrcht:0][nwsrcht:0]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[0]:[cschgc:0][cschgc:0, pschgc:0]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[1]:[cschgc:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed mult in triggers!
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[0]:[cschgc:0][cschgc:0, pschgc:0]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[1]:[cschgc:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed mult in triggers!
+03-22 01:21:35.756  5220  5692 E AMC     : [P-mpss_reset/0] execute failed in triggers[0]:[sleept:190][sleept:1357]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-mpss_reset/1] execute failed in triggers[0]:[sleept:190][sleept:1357]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-pidnetdisable_recovery] execute failed in triggers[0]:[sleept:190][sleept:1357, pidnetdisable:false]
+03-22 01:21:35.756  5220  5692 E AMC     : [P-standby_5gbackoff/0] execute failed in triggers[0]:[sleept:190][inactive:false, sleept:659]
+03-22 01:21:35.757  5220  5692 E AMC     : [P-standby_5gbackoff/1] execute failed in triggers[0]:[sleept:190][inactive:false, sleept:659]
+03-22 01:21:35.758  5220  5692 E AMC     : [P-qc_oos_qrxlv/0] execute failed check triggers[0]:[sleept:190][deepsleep:false, csnoregt:0, screen:true]
+03-22 01:21:35.760  5220  5692 E AMC     : [P-qc_oos_qrxlv/1] execute failed check triggers[0]:[sleept:190][deepsleep:false, csnoregt:0, screen:true]
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[0]:[psnoregt:0][cschgc:0, pschgc:0]
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[1]:[psnoregt:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed mult in triggers!
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[0]:[psnoregt:0][cschgc:0, pschgc:0]
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[1]:[psnoregt:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed mult in triggers!
+03-22 01:21:35.761  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[0]:[pschgc:0][cschgc:0, pschgc:0]
+03-22 01:21:35.762  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[1]:[pschgc:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.762  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed mult in triggers!
+03-22 01:21:35.762  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[0]:[pschgc:0][cschgc:0, pschgc:0]
+03-22 01:21:35.762  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[1]:[pschgc:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.763  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed mult in triggers!
+03-22 01:21:35.763  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[0]:[csnoregt:0][cschgc:0, pschgc:0]
+03-22 01:21:35.763  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed in triggers[1]:[csnoregt:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.763  5220  5692 E AMC     : [P-idle_cs_ps_change/0] execute failed mult in triggers!
+03-22 01:21:35.764  5220  5692 E AMC     : [P-qc_oos_qrxlv/0] execute failed check triggers[0]:[csnoregt:0][deepsleep:false, csnoregt:0, screen:true]
+03-22 01:21:35.764  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[0]:[csnoregt:0][cschgc:0, pschgc:0]
+03-22 01:21:35.765  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed in triggers[1]:[csnoregt:0][psnoregt:0, csnoregt:0]
+03-22 01:21:35.765  5220  5692 E AMC     : [P-idle_cs_ps_change/1] execute failed mult in triggers!
+03-22 01:21:35.766  5220  5692 E AMC     : [P-qc_oos_qrxlv/1] execute failed check triggers[0]:[csnoregt:0][deepsleep:false, csnoregt:0, screen:true]
+03-22 01:21:36.819  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=194 hdr_size=8 payload len=1792
+03-22 01:21:37.109 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:37.109 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:37.109 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:37.109 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012137_16394_01.txt
+03-22 01:21:37.109 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:37.268  3102  4473 E OplusArpPeer_euclid_psw: ARP read failure: android.system.ErrnoException: read failed: EAGAIN (Try again)
+03-22 01:21:37.270  3102  4473 E OplusArpPeer_euclid_psw:  OplusArpPeer close
+03-22 01:21:37.472  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=194 hdr_size=8 payload len=1792
+03-22 01:21:37.753  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:37.755  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:37.755  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:37.759  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:38.638  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_EVENT - possible buffer over access, length=1480 count=202 hdr_size=12 payload len=22951
+03-22 01:21:38.842  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=210 hdr_size=8 payload len=1792
+03-22 01:21:38.860  1756  1807 E ChargerInfo: SingleHyperPath not found
+03-22 01:21:39.757  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:39.759  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.50 MB/s
+03-22 01:21:39.759  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:39.761  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:40.000  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=210 hdr_size=8 payload len=1792
+03-22 01:21:40.455  6691 18831 E midasd  : getTotalFlipsFromSf mCurFrameCount: 7393209
+03-22 01:21:40.668  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=194 hdr_size=8 payload len=1792
+03-22 01:21:40.669  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1476 count=202 hdr_size=8 payload len=1792
+03-22 01:21:40.709  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1480 count=226 hdr_size=8 payload len=1792
+03-22 01:21:41.760  3102 14216 E OplusStorageUFSBandwidth: storage_io_metrics_path is /proc/oplus_storage/io_metrics/forever/
+03-22 01:21:41.762  3102 14216 E OplusStorageUFSBandwidth: Bandwidth - Read: 0.00 MB/s, Write: 0.00 MB/s
+03-22 01:21:41.762  3102 14216 E OplusStorageUFSBandwidth: Task time: 2ms
+03-22 01:21:41.764  3102 14216 E OplusStorageUFSBandwidth: Alarm set to trigger in 10 seconds
+03-22 01:21:42.095  1594  1705 E AHAL: AudioDevice: adev_open_input_stream: 958: unsupported input format 4, fallback format 1 input source 1999
+03-22 01:21:42.099  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.101  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.101  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.103  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.103  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.104  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.104  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.105  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.105  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.106  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.106  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.107  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.108  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.109  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.109 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! mFd -1
+03-22 01:21:42.109 16394 16425 E APS_ALOG: CAM_ALOG_LIMIT,Fatal Err! FilePath nullptr!
+03-22 01:21:42.110 16394 16425 E APS_ALOG: Failed to open directory
+03-22 01:21:42.110  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.110 16394 16425 E APS_ALOG: FileALogWriter: file open failed /data/vendor/cam_alog_2026_0322_012142_16394_01.txt
+03-22 01:21:42.110 16394 16425 E APS_ALOG: Unable to open file. Please disable SELinux and restart camerahalserver. !!!
+03-22 01:21:42.111  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.112  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.112  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.113  1628  1760 E ANDR-PERF-RESOURCEQS: ANDR-PERF-RESOURCEQS: AddAndApply() 125: Resource with major=16, minor=0 not supported
+03-22 01:21:42.113  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.113  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.114  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.115  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.115  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.115  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.116  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.119  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.119  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.120  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.122  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.123  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.124  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.124  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.403  1871 21969 E AudioBoost: id 5010 not boost.
+03-22 01:21:42.417  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.418  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.419  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.420  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.427  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.428  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.429  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.429  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.430  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.431  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.432  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.433  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.434  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.435  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.437  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.437  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.439  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.440  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.441  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.442  3102  5241 E OplusSceneManager: focusStackInfo is empty
+03-22 01:21:42.641 27915 10784 E OVMS-a  : restartRecognition: STM restartRecognition fail
+03-22 01:21:42.699  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1460 count=194 hdr_size=8 payload len=1792
+03-22 01:21:42.700  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=202 hdr_size=8 payload len=1792
+03-22 01:21:42.900  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1464 count=258 hdr_size=8 payload len=1792
+03-22 01:21:43.370  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1472 count=194 hdr_size=8 payload len=1792
+03-22 01:21:43.576  1610 29063 E WifiHAL : WLAN_DIAG_TYPE_CONFIG - possible buffer over access, length=1468 count=210 hdr_size=8 payload len=1792

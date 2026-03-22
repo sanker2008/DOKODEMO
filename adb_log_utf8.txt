@@ -1,0 +1,300 @@
+﻿--------- beginning of crash
+03-18 12:57:52.208 E/AndroidRuntime(30126): FATAL EXCEPTION: mm-c#1
+03-18 12:57:52.208 E/AndroidRuntime(30126): Process: com.cupidapp.live, PID: 30126
+03-18 12:57:52.208 E/AndroidRuntime(30126): java.lang.ExceptionInInitializerError
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at og.i1.<clinit>(HiddenApiBypass.java:61)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at com.wangmai.appsdkdex.WMAdSdk.J(WMAdSdk.java:3)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at com.wangmai.appsdkdex.WMAdSdk.I(Unknown Source:0)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at com.wangmai.appsdkdex.WMAdSdk$a.run(WMAdSdk.java:5)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at java.lang.Thread.run(Thread.java:1119)
+03-18 12:57:52.208 E/AndroidRuntime(30126): Caused by: java.lang.NoSuchMethodException: og.g1$f.a []
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at java.lang.Class.getMethod(Class.java:2940)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at java.lang.Class.getDeclaredMethod(Class.java:2919)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	at og.i1.<clinit>(HiddenApiBypass.java:18)
+03-18 12:57:52.208 E/AndroidRuntime(30126): 	... 6 more
+03-21 21:00:28.652 E/AndroidRuntime(18119): FATAL EXCEPTION: main
+03-21 21:00:28.652 E/AndroidRuntime(18119): Process: com.dokodemo, PID: 18119
+03-21 21:00:28.652 E/AndroidRuntime(18119): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:28.652 E/AndroidRuntime(18119): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:30.146 E/AndroidRuntime(18560): FATAL EXCEPTION: main
+03-21 21:00:30.146 E/AndroidRuntime(18560): Process: com.dokodemo, PID: 18560
+03-21 21:00:30.146 E/AndroidRuntime(18560): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:30.146 E/AndroidRuntime(18560): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:37.674 E/AndroidRuntime(18621): FATAL EXCEPTION: main
+03-21 21:00:37.674 E/AndroidRuntime(18621): Process: com.dokodemo, PID: 18621
+03-21 21:00:37.674 E/AndroidRuntime(18621): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:37.674 E/AndroidRuntime(18621): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:39.134 E/AndroidRuntime(18711): FATAL EXCEPTION: main
+03-21 21:00:39.134 E/AndroidRuntime(18711): Process: com.dokodemo, PID: 18711
+03-21 21:00:39.134 E/AndroidRuntime(18711): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:39.134 E/AndroidRuntime(18711): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:00:40.527 E/AndroidRuntime(18763): FATAL EXCEPTION: main
+03-21 21:00:40.527 E/AndroidRuntime(18763): Process: com.dokodemo, PID: 18763
+03-21 21:00:40.527 E/AndroidRuntime(18763): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:00:40.527 E/AndroidRuntime(18763): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:36:57.679 E/AndroidRuntime(29525): FATAL EXCEPTION: main
+03-21 21:36:57.679 E/AndroidRuntime(29525): Process: com.dokodemo, PID: 29525
+03-21 21:36:57.679 E/AndroidRuntime(29525): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:36:57.679 E/AndroidRuntime(29525): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-21 21:36:59.136 E/AndroidRuntime(29959): FATAL EXCEPTION: main
+03-21 21:36:59.136 E/AndroidRuntime(29959): Process: com.dokodemo, PID: 29959
+03-21 21:36:59.136 E/AndroidRuntime(29959): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.os.Looper.loop(Looper.java:408)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at java.lang.reflect.Method.invoke(Native Method)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-21 21:36:59.136 E/AndroidRuntime(29959): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:47.160 E/AndroidRuntime(31734): FATAL EXCEPTION: main
+03-22 00:22:47.160 E/AndroidRuntime(31734): Process: com.dokodemo, PID: 31734
+03-22 00:22:47.160 E/AndroidRuntime(31734): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:47.160 E/AndroidRuntime(31734): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:48.601 E/AndroidRuntime(17532): FATAL EXCEPTION: main
+03-22 00:22:48.601 E/AndroidRuntime(17532): Process: com.dokodemo, PID: 17532
+03-22 00:22:48.601 E/AndroidRuntime(17532): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:48.601 E/AndroidRuntime(17532): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:22:55.751 E/AndroidRuntime(17576): FATAL EXCEPTION: main
+03-22 00:22:55.751 E/AndroidRuntime(17576): Process: com.dokodemo, PID: 17576
+03-22 00:22:55.751 E/AndroidRuntime(17576): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:22:55.751 E/AndroidRuntime(17576): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:41:01.281 E/AndroidRuntime(22526): FATAL EXCEPTION: main
+03-22 00:41:01.281 E/AndroidRuntime(22526): Process: com.dokodemo, PID: 22526
+03-22 00:41:01.281 E/AndroidRuntime(22526): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:41:01.281 E/AndroidRuntime(22526): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:41:02.768 E/AndroidRuntime(22883): FATAL EXCEPTION: main
+03-22 00:41:02.768 E/AndroidRuntime(22883): Process: com.dokodemo, PID: 22883
+03-22 00:41:02.768 E/AndroidRuntime(22883): java.lang.UnsatisfiedLinkError: No implementation found for void libv2ray.Libv2ray.initV2Env(java.lang.String) (tried Java_libv2ray_Libv2ray_initV2Env and Java_libv2ray_Libv2ray_initV2Env__Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at libv2ray.Libv2ray.initV2Env(Native Method)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at com.dokodemo.core.CoreManager.initialize(CoreManager.kt:49)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at com.dokodemo.service.DokoDemoVpnService.onCreate(DokoDemoVpnService.kt:103)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.app.ActivityThread.handleCreateService(ActivityThread.java:5660)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.app.ActivityThread.-$$Nest$mhandleCreateService(Unknown Source:0)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2862)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.os.Looper.loop(Looper.java:408)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 00:41:02.768 E/AndroidRuntime(22883): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 00:59:20.536 E/AndroidRuntime(28243): FATAL EXCEPTION: DefaultDispatcher-worker-10
+03-22 00:59:20.536 E/AndroidRuntime(28243): Process: com.dokodemo, PID: 28243
+03-22 00:59:20.536 E/AndroidRuntime(28243): java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 00:59:20.536 E/AndroidRuntime(28243): 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@7d8683, Dispatchers.IO]
+03-22 00:59:31.734 E/AndroidRuntime(28836): FATAL EXCEPTION: DefaultDispatcher-worker-1
+03-22 00:59:31.734 E/AndroidRuntime(28836): Process: com.dokodemo, PID: 28836
+03-22 00:59:31.734 E/AndroidRuntime(28836): java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 00:59:31.734 E/AndroidRuntime(28836): 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@4e4b83e, Dispatchers.IO]
+03-22 01:00:26.482 E/AndroidRuntime(29047): FATAL EXCEPTION: DefaultDispatcher-worker-7
+03-22 01:00:26.482 E/AndroidRuntime(29047): Process: com.dokodemo, PID: 29047
+03-22 01:00:26.482 E/AndroidRuntime(29047): java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 01:00:26.482 E/AndroidRuntime(29047): 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@9fe756a, Dispatchers.IO]
+03-22 01:01:18.676 E/AndroidRuntime(29839): FATAL EXCEPTION: DefaultDispatcher-worker-8
+03-22 01:01:18.676 E/AndroidRuntime(29839): Process: com.dokodemo, PID: 29839
+03-22 01:01:18.676 E/AndroidRuntime(29839): java.lang.UnsatisfiedLinkError: No implementation found for long libv2ray.Libv2ray.queryStats(java.lang.String, java.lang.String) (tried Java_libv2ray_Libv2ray_queryStats and Java_libv2ray_Libv2ray_queryStats__Ljava_lang_String_2Ljava_lang_String_2) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at libv2ray.Libv2ray.queryStats(Native Method)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at com.dokodemo.core.CoreManager.getUploadBytes(CoreManager.kt:484)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at com.dokodemo.service.DokoDemoVpnService$startTrafficMonitor$1.invokeSuspend(DokoDemoVpnService.kt:321)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+03-22 01:01:18.676 E/AndroidRuntime(29839): 	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@eb0d84b, Dispatchers.IO]
+03-22 01:19:43.103 E/AndroidRuntime( 4115): FATAL EXCEPTION: main
+03-22 01:19:43.103 E/AndroidRuntime( 4115): Process: com.dokodemo, PID: 4115
+03-22 01:19:43.103 E/AndroidRuntime( 4115): java.lang.UnsatisfiedLinkError: No implementation found for void go.tun2socks.Tun2socks.stop() (tried Java_go_tun2socks_Tun2socks_stop and Java_go_tun2socks_Tun2socks_stop__) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at go.tun2socks.Tun2socks.stop(Native Method)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at com.dokodemo.service.DokoDemoVpnService.stopVpn(DokoDemoVpnService.kt:285)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at com.dokodemo.service.DokoDemoVpnService.onStartCommand(DokoDemoVpnService.kt:151)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.app.ActivityThread.handleServiceArgs(ActivityThread.java:5868)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.app.ActivityThread.-$$Nest$mhandleServiceArgs(Unknown Source:0)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2924)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.os.Looper.loop(Looper.java:408)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 01:19:43.103 E/AndroidRuntime( 4115): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): FATAL EXCEPTION: main
+03-22 01:19:44.982 E/AndroidRuntime( 9891): Process: com.dokodemo, PID: 9891
+03-22 01:19:44.982 E/AndroidRuntime( 9891): java.lang.UnsatisfiedLinkError: No implementation found for void go.tun2socks.Tun2socks.stop() (tried Java_go_tun2socks_Tun2socks_stop and Java_go_tun2socks_Tun2socks_stop__) - is the library loaded, e.g. System.loadLibrary?
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at go.tun2socks.Tun2socks.stop(Native Method)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at com.dokodemo.service.DokoDemoVpnService.stopVpn(DokoDemoVpnService.kt:285)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at com.dokodemo.service.DokoDemoVpnService.onStartCommand(DokoDemoVpnService.kt:151)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.app.ActivityThread.handleServiceArgs(ActivityThread.java:5868)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.app.ActivityThread.-$$Nest$mhandleServiceArgs(Unknown Source:0)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2924)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.os.Handler.dispatchMessage(Handler.java:115)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.os.Looper.loopOnce(Looper.java:298)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.os.Looper.loop(Looper.java:408)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at android.app.ActivityThread.main(ActivityThread.java:9964)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at java.lang.reflect.Method.invoke(Native Method)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+03-22 01:19:44.982 E/AndroidRuntime( 9891): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)

@@ -55,12 +55,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.dokodemo.ui.components.IndustrialButton
-import com.dokodemo.ui.theme.AcidLime
-import com.dokodemo.ui.theme.IndustrialBlack
-import com.dokodemo.ui.theme.IndustrialGrey
-import com.dokodemo.ui.theme.IndustrialWhite
-import com.dokodemo.ui.theme.MonospaceFont
-import com.dokodemo.ui.theme.TextGrey
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.text.font.FontFamily
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
@@ -104,9 +100,11 @@ fun QrScannerScreen(
             if (result != null) {
                 scannedCode = result
                 scanStatus = "TARGET ACQUIRED"
+                android.widget.Toast.makeText(context, "解码成功", android.widget.Toast.LENGTH_SHORT).show()
                 onQrCodeScanned(result)
             } else {
-                scanStatus = "SCAN FAILED" // Or show a toast
+                scanStatus = "SCAN FAILED"
+                android.widget.Toast.makeText(context, "未识别到有效的二维码", android.widget.Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -131,7 +129,7 @@ fun QrScannerScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(IndustrialBlack)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         if (hasCameraPermission) {
             // Camera Preview
@@ -266,7 +264,7 @@ private fun ScannerOverlay(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(IndustrialBlack.copy(alpha = 0.8f))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -276,21 +274,21 @@ private fun ScannerOverlay(
                     Box(
                         modifier = Modifier
                             .size(8.dp)
-                            .background(AcidLime)
+                            .background(MaterialTheme.colorScheme.primary)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "SYS.READY",
-                        color = AcidLime,
-                        fontFamily = MonospaceFont,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
                 }
                 Text(
                     text = "NET_SECURE // PROTOCOL_V2",
-                    color = TextGrey,
-                    fontFamily = MonospaceFont,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = FontFamily.Monospace,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 16.dp)
                 )
@@ -300,13 +298,13 @@ private fun ScannerOverlay(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .border(1.dp, IndustrialGrey)
+                    .border(1.dp, MaterialTheme.colorScheme.outline)
                     .clickable { onClose() },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "×",
-                    color = IndustrialWhite,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp
                 )
             }
@@ -321,14 +319,14 @@ private fun ScannerOverlay(
         ) {
             Text(
                 text = "RANGE: 0.4M",
-                color = AcidLime,
-                fontFamily = MonospaceFont,
+                color = MaterialTheme.colorScheme.primary,
+                fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp
             )
             Text(
                 text = "ISO: AUTO",
-                color = AcidLime,
-                fontFamily = MonospaceFont,
+                color = MaterialTheme.colorScheme.primary,
+                fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp
             )
         }
@@ -347,20 +345,21 @@ private fun ScannerOverlay(
             )
             
             // Center crosshair
+            val primaryColorCross = MaterialTheme.colorScheme.primary
             Canvas(modifier = Modifier.size(20.dp)) {
                 val center = Offset(size.width / 2, size.height / 2)
                 val length = 10.dp.toPx()
                 
                 // Horizontal line
                 drawLine(
-                    color = AcidLime.copy(alpha = 0.5f),
+                    color = primaryColorCross.copy(alpha = 0.5f),
                     start = Offset(center.x - length, center.y),
                     end = Offset(center.x + length, center.y),
                     strokeWidth = 1.dp.toPx()
                 )
                 // Vertical line
                 drawLine(
-                    color = AcidLime.copy(alpha = 0.5f),
+                    color = primaryColorCross.copy(alpha = 0.5f),
                     start = Offset(center.x, center.y - length),
                     end = Offset(center.x, center.y + length),
                     strokeWidth = 1.dp.toPx()
@@ -377,13 +376,13 @@ private fun ScannerOverlay(
         ) {
             Box(
                 modifier = Modifier
-                    .border(1.dp, AcidLime)
+                    .border(1.dp, MaterialTheme.colorScheme.primary)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = "ALIGN QR CODE",
-                    color = AcidLime,
-                    fontFamily = MonospaceFont,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
                     letterSpacing = 2.sp
@@ -395,7 +394,7 @@ private fun ScannerOverlay(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(IndustrialBlack.copy(alpha = 0.9f))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
                 .padding(16.dp)
         ) {
             Row(
@@ -405,14 +404,14 @@ private fun ScannerOverlay(
                 Column {
                     Text(
                         text = "STATUS",
-                        color = TextGrey,
-                        fontFamily = MonospaceFont,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontFamily = FontFamily.Monospace,
                         fontSize = 10.sp
                     )
                     Text(
                         text = scanStatus,
-                        color = AcidLime,
-                        fontFamily = MonospaceFont,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
@@ -420,8 +419,8 @@ private fun ScannerOverlay(
                 
                 Text(
                     text = "CAM_01 [ACTIVE]",
-                    color = TextGrey,
-                    fontFamily = MonospaceFont,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = FontFamily.Monospace,
                     fontSize = 10.sp
                 )
             }
@@ -451,8 +450,8 @@ private fun ScannerOverlay(
             // Footer
             Text(
                 text = "DOKODEMO VPN // V.2.0",
-                color = TextGrey,
-                fontFamily = MonospaceFont,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -465,6 +464,7 @@ private fun ViewfinderBrackets(
     scanLineOffset: Float,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Canvas(modifier = modifier) {
         val strokeWidth = 3.dp.toPx()
         val bracketLength = 40.dp.toPx()
@@ -495,7 +495,7 @@ private fun ViewfinderBrackets(
         
         corners.forEach { (start, end) ->
             drawLine(
-                color = AcidLime,
+                color = primaryColor,
                 start = start,
                 end = end,
                 strokeWidth = strokeWidth
@@ -505,7 +505,7 @@ private fun ViewfinderBrackets(
         // Draw scanning line
         val scanY = rect.top + (rect.height * scanLineOffset)
         drawLine(
-            color = AcidLime.copy(alpha = 0.7f),
+            color = primaryColor.copy(alpha = 0.7f),
             start = Offset(rect.left + 20.dp.toPx(), scanY),
             end = Offset(rect.right - 20.dp.toPx(), scanY),
             strokeWidth = 2.dp.toPx()
