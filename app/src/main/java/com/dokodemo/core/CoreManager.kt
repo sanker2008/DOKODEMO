@@ -48,6 +48,12 @@ class CoreManager @Inject constructor(
         if (isInitialized) return
         
         try {
+            go.Seq.setContext(context)
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to initialize go.Seq context", e)
+        }
+        
+        try {
             val filesDir = context.filesDir.absolutePath
             Libv2ray.initCoreEnv(filesDir, "")
             isInitialized = true
@@ -372,9 +378,25 @@ class CoreManager @Inject constructor(
         
         return try {
             try { coreController?.stopLoop() } catch (_: Throwable) {}
-            // newCoreController only takes the callback handler, which can be null in Kotlin if type corresponds,
-            // but the generated class expects a CoreCallbackHandler. We can pass null.
-            val ctrl = Libv2ray.newCoreController(null)
+            // newCoreController requires a CoreCallbackHandler, passing null causes SIGABRT
+            val callback = object : libv2ray.CoreCallbackHandler {
+                override fun onEmitStatus(status: Long, msg: String?): Long {
+                    Log.i(TAG, "Core status [$status]: $msg")
+                    return 0L
+                }
+                
+                override fun shutdown(): Long {
+                    Log.i(TAG, "Core shutdown callback")
+                    return 0L
+                }
+                
+                override fun startup(): Long {
+                    Log.i(TAG, "Core startup callback")
+                    return 0L
+                }
+            }
+            
+            val ctrl = Libv2ray.newCoreController(callback)
             if (ctrl == null) return false
             
             // startLoop takes the config json!

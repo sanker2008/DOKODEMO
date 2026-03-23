@@ -18,7 +18,7 @@ import com.dokodemo.MainActivity
 import com.dokodemo.core.CoreManager
 import com.dokodemo.data.model.ServerProfile
 import dagger.hilt.android.AndroidEntryPoint
-import go.tun2socks.Tun2socks
+import com.dokodemo.core.Tun2socksWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -164,7 +164,7 @@ class DokoDemoVpnService : VpnService() {
         if (isRunning) {
             Log.w(TAG, "VPN already running, restarting for new node: $serverName")
             try { coreManager.stopCore() } catch (_: Throwable) {}
-            try { Tun2socks.stop() } catch (_: Throwable) {}
+            try { Tun2socksWrapper.stop() } catch (_: Throwable) {}
             try { vpnInterface?.close() } catch (_: Throwable) {}
             vpnInterface = null
             trafficJob?.cancel()
@@ -211,6 +211,13 @@ class DokoDemoVpnService : VpnService() {
                     vpnBuilder.setMetered(false)
                 }
                 
+                try {
+                    // CRITICAL: Exclude this app from the VPN to prevent infinite routing loops
+                    vpnBuilder.addDisallowedApplication(packageName)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Cannot exclude self from VPN", e)
+                }
+                
                 vpnInterface = vpnBuilder.establish()
                 
                 if (vpnInterface == null) {
@@ -226,7 +233,7 @@ class DokoDemoVpnService : VpnService() {
                 
                 // 3. Start tun2socks
                 val tun2socksStarted = try {
-                    Tun2socks.start(
+                    Tun2socksWrapper.start(
                         tunFd,
                         coreManager.getSocksAddress(),
                         VPN_DNS_1,
@@ -290,7 +297,7 @@ class DokoDemoVpnService : VpnService() {
         
         // Stop tun2socks
         try {
-            Tun2socks.stop()
+            Tun2socksWrapper.stop()
             Log.i(TAG, "tun2socks stopped")
         } catch (e: Throwable) {
             Log.w(TAG, "Error stopping tun2socks (native lib missing?): ${e.message}")

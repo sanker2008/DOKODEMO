@@ -1,10 +1,10 @@
-package go.tun2socks
+package com.dokodemo.core
 
 import com.v2ray.ang.service.TProxyService
 import java.io.File
 import android.util.Log
 
-object Tun2socks {
+object Tun2socksWrapper {
     private var proxyService: TProxyService? = null
     
     @JvmStatic
