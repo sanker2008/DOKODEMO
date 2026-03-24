@@ -5,7 +5,10 @@ import android.content.Intent
 import android.net.VpnService
 import com.dokodemo.core.CoreManager
 import com.dokodemo.data.model.ServerProfile
+import com.dokodemo.data.preferences.AppPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class VpnController @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val coreManager: CoreManager
+    private val coreManager: CoreManager,
+    private val appPreferences: AppPreferences
 ) {
     
     /**
@@ -37,16 +41,25 @@ class VpnController @Inject constructor(
     /**
      * Start VPN connection with the given server profile
      */
-    fun connect(profile: ServerProfile) {
-        val configJson = coreManager.generateConfig(profile)
+    suspend fun connect(profile: ServerProfile) {
+        val routingMode = appPreferences.routingMode.first()
+        val proxiedApps = appPreferences.proxiedApps.first()
+        
+        val configJson = coreManager.generateConfig(profile, routingMode)
         
         val intent = Intent(context, DokoDemoVpnService::class.java).apply {
             action = DokoDemoVpnService.ACTION_START
             putExtra(DokoDemoVpnService.EXTRA_SERVER_CONFIG, configJson)
             putExtra(DokoDemoVpnService.EXTRA_SERVER_NAME, profile.name)
+            putExtra("routing_mode", routingMode.name)
+            putStringArrayListExtra("proxied_apps", ArrayList(proxiedApps.toList()))
         }
         
-        context.startForegroundService(intent)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
     }
     
     /**
@@ -59,7 +72,11 @@ class VpnController @Inject constructor(
             putExtra(DokoDemoVpnService.EXTRA_SERVER_NAME, serverName)
         }
         
-        context.startForegroundService(intent)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
     }
     
     /**

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dokodemo.data.model.Protocol
@@ -199,8 +201,21 @@ class HomeViewModel @Inject constructor(
             addAction(DokoDemoVpnService.ACTION_VPN_DISCONNECTED)
         }
         
-        context.registerReceiver(trafficReceiver, trafficFilter, Context.RECEIVER_NOT_EXPORTED)
-        context.registerReceiver(vpnStateReceiver, vpnStateFilter, Context.RECEIVER_NOT_EXPORTED)
+        trafficReceiver?.let { receiver ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.registerReceiver(receiver, trafficFilter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                context.registerReceiver(receiver, trafficFilter)
+            }
+        }
+        
+        vpnStateReceiver?.let { receiver ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.registerReceiver(receiver, vpnStateFilter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                context.registerReceiver(receiver, vpnStateFilter)
+            }
+        }
     }
     
     private fun updateTrafficStats(uploadBytes: Long, downloadBytes: Long) {

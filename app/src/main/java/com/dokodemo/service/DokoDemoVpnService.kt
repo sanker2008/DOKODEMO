@@ -135,14 +135,16 @@ class DokoDemoVpnService : VpnService() {
         when (intent?.action) {
             ACTION_START -> {
                 val configJson = intent.getStringExtra(EXTRA_SERVER_CONFIG)
-                val serverName = intent.getStringExtra(EXTRA_SERVER_NAME) ?: "DokoDemo"
-                
-                if (configJson != null) {
-                    // MUST call startForeground immediately on the main thread
-                    // before doing any heavy work, to avoid ForegroundServiceDidNotStartInTimeException
-                    startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
-                    startVpn(configJson, serverName)
-                } else {
+                    val serverName = intent.getStringExtra(EXTRA_SERVER_NAME) ?: "DokoDemo"
+                    val routingMode = intent.getStringExtra("routing_mode")
+                    val proxiedApps = intent.getStringArrayListExtra("proxied_apps")
+                    
+                    if (configJson != null) {
+                        // MUST call startForeground immediately on the main thread
+                        // before doing any heavy work, to avoid ForegroundServiceDidNotStartInTimeException
+                        startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
+                        startVpn(configJson, serverName, routingMode, proxiedApps)
+                    } else {
                     Log.e(TAG, "No configuration provided")
                     stopSelf()
                 }
@@ -160,7 +162,12 @@ class DokoDemoVpnService : VpnService() {
         return START_STICKY
     }
     
-    private fun startVpn(configJson: String, serverName: String) {
+    private fun startVpn(
+        configJson: String,
+        serverName: String,
+        routingMode: String? = null,
+        proxiedApps: List<String>? = null
+    ) {
         if (isRunning) {
             Log.w(TAG, "VPN already running, restarting for new node: $serverName")
             try { coreManager.stopCore() } catch (_: Throwable) {}
@@ -211,11 +218,22 @@ class DokoDemoVpnService : VpnService() {
                     vpnBuilder.setMetered(false)
                 }
                 
-                try {
-                    // CRITICAL: Exclude this app from the VPN to prevent infinite routing loops
-                    vpnBuilder.addDisallowedApplication(packageName)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Cannot exclude self from VPN", e)
+                if (routingMode == "SPLIT" && !proxiedApps.isNullOrEmpty()) {
+                    Log.i(TAG, "Split tunneling mode: ${proxiedApps.size} apps")
+                    proxiedApps.forEach { pkg ->
+                        try {
+                            vpnBuilder.addAllowedApplication(pkg)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to add allowed application: $pkg")
+                        }
+                    }
+                } else {
+                    try {
+                        // CRITICAL: Exclude this app from the VPN to prevent infinite routing loops
+                        vpnBuilder.addDisallowedApplication(packageName)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Cannot exclude self from VPN", e)
+                    }
                 }
                 
                 vpnInterface = vpnBuilder.establish()
@@ -334,6 +352,9 @@ class DokoDemoVpnService : VpnService() {
                     val currentDownload = coreManager.getDownloadBytes()
                     
                     // Calculate speed (bytes per second)
+                    if (currentUpload < lastUploadBytes) lastUploadBytes = 0
+                    if (currentDownload < lastDownloadBytes) lastDownloadBytes = 0
+                    
                     uploadSpeed = currentUpload - lastUploadBytes
                     downloadSpeed = currentDownload - lastDownloadBytes
                     

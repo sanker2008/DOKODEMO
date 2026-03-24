@@ -56,11 +56,10 @@ fun HomeScreen(
         viewModel.onVpnPermissionResult(result.resultCode == Activity.RESULT_OK)
     }
 
-    LaunchedEffect(uiState.needsVpnPermission, uiState.vpnPermissionIntent) {
-        if (uiState.needsVpnPermission) {
-            uiState.vpnPermissionIntent?.let { intent ->
-                vpnPermissionLauncher.launch(intent)
-            }
+    val vpnIntent = uiState.vpnPermissionIntent
+    LaunchedEffect(uiState.needsVpnPermission, vpnIntent) {
+        if (uiState.needsVpnPermission && vpnIntent != null) {
+            vpnPermissionLauncher.launch(vpnIntent)
         }
     }
 

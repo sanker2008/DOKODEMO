@@ -49,7 +49,7 @@ data class ServerProfile(
     
     // 协议配置
     val protocol: Protocol = Protocol.VLESS,
-    val encryption: String = "none",    // VMess: auto/aes-128-gcm 等；SS: 加密方式
+    val encryption: String = "auto",    // VMess: auto/aes-128-gcm 等；SS: 加密方式
     val flow: String = "",              // VLESS Reality 用
     
     // TLS 设置

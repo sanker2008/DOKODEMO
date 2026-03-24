@@ -101,8 +101,16 @@ fun ConfigEditorScreen(
                         IndustrialInput(
                             value = uiState.uuid, onValueChange = viewModel::updateUuid,
                             label = if (uiState.protocol == Protocol.TROJAN) "密码 (Password)" else "UUID",
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
+                        if (uiState.protocol == Protocol.VMESS) {
+                            InputDropdown(
+                                label = "加密方式 (Security)", value = uiState.security,
+                                options = listOf("auto", "aes-128-gcm", "chacha20-poly1305", "none"),
+                                onValueChange = viewModel::updateSecurity,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                     Protocol.SHADOWSOCKS -> {
                         IndustrialInput(

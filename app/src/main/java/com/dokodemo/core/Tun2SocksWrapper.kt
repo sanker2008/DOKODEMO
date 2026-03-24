@@ -16,11 +16,14 @@ object Tun2socksWrapper {
             
             val config = """
                 tunnel:
-                  mtu: $mtu
+                  mtu: ${if (mtu > 1280) 1280 else mtu}
                 socks5:
                   address: $addr
                   port: $port
                   udp: 'udp'
+                dns:
+                  address: 127.0.0.1
+                  port: 5353
             """.trimIndent()
             
             val cacheDir = "/data/data/com.dokodemo/cache"

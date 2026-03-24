@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
+import com.dokodemo.data.preferences.RoutingMode
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -78,7 +79,7 @@ class CoreManager @Inject constructor(
     /**
      * Generate V2Ray JSON configuration from ServerProfile
      */
-    fun generateConfig(profile: ServerProfile): String {
+    fun generateConfig(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL): String {
         val config = buildMap<String, Any> {
             // Log settings
             put("log", mapOf(
@@ -89,21 +90,46 @@ class CoreManager @Inject constructor(
             
             // DNS settings
             put("dns", mapOf<String, Any>(
-                "servers" to listOf(
-                    mapOf(
-                        "address" to DNS_LOCAL,
-                        "port" to 53,
-                        "domains" to listOf("geosite:cn")
-                    ),
-                    mapOf(
+                "servers" to buildList {
+                    // Local DNS for CN sites only in Bypass CN mode
+                    if (routingMode == RoutingMode.BYPASS_CN) {
+                        add(mapOf(
+                            "address" to DNS_LOCAL,
+                            "port" to 53,
+                            "domains" to listOf("geosite:cn")
+                        ))
+                    }
+                    // Remote DNS for everything else
+                    add(mapOf(
                         "address" to DNS_REMOTE,
                         "port" to 53
-                    )
-                ),
+                    ))
+                },
                 "queryStrategy" to "UseIPv4"
             ))
             
             // Inbounds - Local SOCKS5 proxy
+            // Stats and Policy
+            put("stats", emptyMap<String, Any>())
+            put("policy", mapOf(
+                "levels" to mapOf(
+                    "0" to mapOf(
+                        "statsUserUplink" to true,
+                        "statsUserDownlink" to true
+                    ),
+                    "8" to mapOf(
+                        "statsUserUplink" to true,
+                        "statsUserDownlink" to true
+                    )
+                ),
+                "system" to mapOf(
+                    "statsInboundUplink" to true,
+                    "statsInboundDownlink" to true,
+                    "statsOutboundUplink" to true,
+                    "statsOutboundDownlink" to true
+                )
+            ))
+
             put("inbounds", listOf(
                 mapOf(
                     "tag" to "socks",
@@ -128,10 +154,21 @@ class CoreManager @Inject constructor(
                     "protocol" to "http",
                     "sniffing" to mapOf(
                         "enabled" to true,
-                        "destOverride" to listOf("http", "tls")
+                        "destOverride" to listOf("http", "tls", "quic")
                     ),
                     "settings" to mapOf(
                         "allowTransparent" to false
+                    )
+                ),
+                mapOf(
+                    "tag" to "dns-in",
+                    "port" to 5353,
+                    "listen" to "127.0.0.1",
+                    "protocol" to "dokodemo-door",
+                    "settings" to mapOf(
+                        "address" to "8.8.8.8",
+                        "port" to 53,
+                        "network" to "udp"
                     )
                 )
             ))
@@ -157,32 +194,49 @@ class CoreManager @Inject constructor(
             put("routing", mapOf(
                 "domainStrategy" to "IPIfNonMatch",
                 "domainMatcher" to "hybrid",
-                "rules" to listOf(
+                "rules" to buildList {
                     // Block ads (optional)
-                    mapOf(
+                    add(mapOf(
                         "type" to "field",
                         "domain" to listOf("geosite:category-ads-all"),
                         "outboundTag" to "block"
-                    ),
+                    ))
+                    
                     // Direct for private IPs
-                    mapOf(
+                    add(mapOf(
                         "type" to "field",
                         "ip" to listOf("geoip:private"),
                         "outboundTag" to "direct"
-                    ),
-                    // Direct for CN sites (optional, can be removed)
-                    mapOf(
+                    ))
+                    
+                    // Direct for CN sites only in BYPASS_CN mode
+                    if (routingMode == RoutingMode.BYPASS_CN) {
+                        add(mapOf(
+                            "type" to "field",
+                            "domain" to listOf("geosite:cn"),
+                            "outboundTag" to "direct"
+                        ))
+                        add(mapOf(
+                            "type" to "field",
+                            "ip" to listOf("geoip:cn"),
+                            "outboundTag" to "direct"
+                        ))
+                    }
+                    
+                    // Google.com through proxy
+                    add(mapOf(
                         "type" to "field",
-                        "domain" to listOf("geosite:cn"),
-                        "outboundTag" to "direct"
-                    ),
+                        "domain" to listOf("domain:google.com"),
+                        "outboundTag" to "proxy"
+                    ))
+                    
                     // Everything else goes through proxy
-                    mapOf(
+                    add(mapOf(
                         "type" to "field",
                         "port" to "0-65535",
                         "outboundTag" to "proxy"
-                    )
-                )
+                    ))
+                }
             ))
             
             // Policy
@@ -277,8 +331,8 @@ class CoreManager @Inject constructor(
             ),
             "streamSettings" to streamSettings,
             "mux" to mapOf(
-                "enabled" to false,
-                "concurrency" to -1
+                "enabled" to true,
+                "concurrency" to 8
             )
         )
     }
@@ -355,6 +409,29 @@ class CoreManager @Inject constructor(
                     put("grpcSettings", mapOf(
                         "serviceName" to profile.wsPath, // reuse wsPath for serviceName
                         "multiMode" to false
+                    ))
+                }
+                "kcp" -> {
+                    put("kcpSettings", buildMap {
+                        put("mtu", 1100)
+                        put("tti", 50)
+                        put("uplinkCapacity", 12)
+                        put("downlinkCapacity", 100)
+                        put("congestion", true)
+                        put("readBufferSize", 2)
+                        put("writeBufferSize", 2)
+                        put("header", mapOf(
+                            "type" to profile.kcpHeader.ifEmpty { "none" }
+                        ))
+                        if (profile.kcpSeed.isNotEmpty()) {
+                            put("seed", profile.kcpSeed)
+                        }
+                    })
+                }
+                "httpupgrade" -> {
+                    put("httpupgradeSettings", mapOf(
+                        "path" to profile.wsPath.ifEmpty { "/" },
+                        "host" to profile.wsHost.ifEmpty { profile.address }
                     ))
                 }
                 "tcp" -> {

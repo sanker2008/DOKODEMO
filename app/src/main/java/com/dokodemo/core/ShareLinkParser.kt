@@ -3,7 +3,6 @@ package com.dokodemo.core
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
 import java.net.URLDecoder
-import java.util.Base64
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -77,11 +76,11 @@ class ShareLinkParser @Inject constructor() {
     private fun parseVmess(link: String): ServerProfile {
         val base64 = link.removePrefix("vmess://")
         val decodedBytes = try {
-            Base64.getDecoder().decode(base64)
+            android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
         } catch (e: IllegalArgumentException) {
             try {
                 // fallback to URL-safe decode
-                Base64.getUrlDecoder().decode(base64)
+                android.util.Base64.decode(base64, android.util.Base64.URL_SAFE)
             } catch (e2: Exception) {
                 android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
             }
