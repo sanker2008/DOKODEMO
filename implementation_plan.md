@@ -1,4 +1,4 @@
-# SanProxy — 完整开发规划
+# DokoDemo — 完整开发规划
 
 > 本文档面向技术零基础读者，包含技术原理讲解、页面功能设计、代码保留决策。
 
@@ -16,7 +16,7 @@
 
 **VPN（Virtual Private Network）** 的工作原理类似，但它是在系统层面建立一条"虚拟隧道"，让 **手机上所有 App 的流量** 都自动走隧道，不需要每个 App 单独配置。
 
-SanProxy 使用的是 **VPN 技术做流量劫持 + 代理协议做数据传输** 的组合方案。
+DokoDemo 使用的是 **VPN 技术做流量劫持 + 代理协议做数据传输** 的组合方案。
 
 ---
 
@@ -123,17 +123,17 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 原设计：纯黑背景 + 酸橙绿 + 全大写等宽字体，像一个黑客终端。  
 问题：**视觉信息密度过高，普通用户难以快速找到核心操作**。
 
-### 新 UI 方向：简洁现代深色
+### 新 UI 方向：现代、通透、干净且温暖
 
 | 设计元素 | 选择 | 原因 |
 |---------|------|------|
-| 背景色 | 深蓝灰 `#12121F` | 有层次，比纯黑更舒适 |
-| 主色调 | 蓝紫 `#6C63FF` | 科技感，识别度高 |
-| 强调色 | 青蓝 `#4FC3F7` | 状态高亮、延迟数字 |
-| 卡片 | 圆角16dp，轻透明 `#1E1E35` | 层次清晰 |
-| 字体正文 | `Inter`（Google Fonts） | 阅读舒适 |
-| 字体数据 | `JetBrains Mono` | 仅用于 IP、延迟等数字 |
-| 连接按钮 | 大圆形，连接时光晕动画 | 一眼就知道怎么用 |
+| 背景色 | `#F0F4F7` (Light) / `#121212` (Dark) | 干净舒适，适配深浅色模式 |
+| 主操作色 | Soft Blue `#A0C4E3` | 温和、易于接受 |
+| 文本/图标 | Slate `#607D8B` | 清晰且不刺眼 |
+| 状态高亮 | Soft Mint Green `#B7D5C7` | 用于连接成功状态及呼吸灯动画，表示安全 |
+| 卡片/组件 | 大圆角 (16dp+)，轻微 Glassmorphism | 层次清晰，现代感强 |
+| 字体正文 | 系统默认 Sans-serif (支持大小调节) | 兼顾多语言阅读体验 |
+| 连接按钮 | 大圆形，连接后带呼吸光环动画 | 核心操作，反馈明确 |
 
 ---
 
@@ -147,7 +147,7 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 
 ```
 ┌─────────────────────────────┐
-│  SanProxy          [设置图标] │
+│  DokoDemo                [路由模式] │
 │─────────────────────────────│
 │  状态：未连接                │
 │                              │
@@ -180,7 +180,7 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 
 ```
 ┌─────────────────────────────┐
-│  节点列表    [⚡测速]  [+添加] │
+│  节点列表  [⚡延迟测试] [+添加]│
 │─────────────────────────────│
 │  [全部] [默认分组] [机场A]   │  ← 分组标签，可左右滑动
 │─────────────────────────────│
@@ -202,7 +202,7 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 - **点击节点**：选中该节点为当前活跃节点（返回主页后连接此节点）
 - **长按节点**：弹出菜单 → 编辑 / 删除 / 移入分组 / 复制节点链接
 - **点击 [+]**：弹出添加方式选择（手动填写 / 粘贴链接 / 扫码）
-- **点击 [⚡测速]**：并发对所有节点 ping 测试，更新延迟显示
+- **点击 [⚡延迟测试]**：并发对所有节点 ping 测试，更新延迟显示
 - **分组标签**：筛选显示对应分组的节点
 
 ---
@@ -439,7 +439,7 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 | [IndustrialButton.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/components/IndustrialButton.kt) | 工业风组件全废弃 |
 | [IndustrialCard.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/components/IndustrialCard.kt) | 同上 |
 | [IndustrialInput.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/components/IndustrialInput.kt) | 同上（改用 Material TextField）|
-| [IndustrialToggle.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/components/IndustrialToggle.kt) | 同上（改用 Material Switch）|
+| [IndustrialToggle.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/components/IndustrialToggle.kt) | 已经全局采用，替换默认的 Switch |
 | [Color.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/theme/Color.kt)（旧） | 全部替换为新色板 |
 | [Theme.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/theme/Theme.kt)（旧） | 全部替换为新主题 |
 | [Type.kt](file:///d:/aidev/DOKODEMO/app/src/main/java/com/dokodemo/ui/theme/Type.kt)（旧） | 替换为 Inter + JetBrains Mono |
@@ -458,8 +458,8 @@ App 定期拉取这个 URL，解析其中的节点，自动更新节点列表。
 | `ui/screens/groups/GroupSheet.kt` | 分组管理弹层 |
 | `ui/screens/groups/GroupViewModel.kt` | 分组 VM |
 | `ui/screens/logs/LogsScreen.kt` | 日志查看页 |
-| `ui/theme/Color.kt`（新） | 深蓝紫色系 |
-| `ui/theme/Theme.kt`（新） | Clean Modern Dark 主题 |
+| `ui/theme/Color.kt`（新） | 现代浅色/深色系统 (Soft Blue, Mint Green 等) |
+| `ui/theme/Theme.kt`（新） | Modern Transparent Clean Warm 主题 |
 | `ui/components/ConnectButton.kt` | 大圆形连接按钮 + 动画 |
 | `ui/components/NodeCard.kt` | 节点列表卡片组件 |
 | `ui/components/TrafficGraph.kt` | 流量折线图（从 HomeScreen 提取）|
@@ -570,7 +570,7 @@ val kcpSeed: String = "",         // KCP 混淆密钥（可选）
 | KCP 伪装 | DTLS |
 
 然后点击连接，期望结果：
-- ✅ 通知栏出现"SanProxy 已连接"
+- ✅ 通知栏出现"DokoDemo 已连接"
 - ✅ 手机浏览器能访问 google.com
 - ✅ TikTok App 能正常刷视频
 

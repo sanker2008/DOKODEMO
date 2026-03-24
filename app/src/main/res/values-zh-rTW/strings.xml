@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DokoDemo</string>
+
+    <string name="connecting">連線中…</string>
+    <string name="connected">已連線</string>
+    <string name="disconnected">未連線</string>
+    <string name="connect">連線</string>
+    <string name="disconnect">斷開</string>
+    <string name="please_select_node">請先選擇一個節點</string>
+    <string name="current_node">目前節點</string>
+    <string name="no_node_selected">未選擇節點</string>
+    <string name="switch_node">切換 →</string>
+    <string name="traffic_monitor">流量監控</string>
+    <string name="home">主頁</string>
+    <string name="nodes">節點</string>
+    <string name="settings">設定</string>
+    <string name="connected_ip">已連線 %1$s</string>
+
+    <string name="back">返回</string>
+    <string name="node_management">節點管理</string>
+    <string name="subscription_settings">訂閱設定</string>
+    <string name="subscription_settings_desc">批次匯入並自動更新節點</string>
+    <string name="proxy_routing">代理路由</string>
+    <string name="routing_mode">路由模式</string>
+    <string name="split_tunneling">分應用代理</string>
+    <string name="split_tunneling_desc">選擇哪些 App 走代理</string>
+    <string name="connection">連線</string>
+    <string name="mux_multiplexing">Mux 多路復用</string>
+    <string name="mux_desc">合併多條流量通道（降延遲）</string>
+    <string name="allow_insecure">允許不安全憑證</string>
+    <string name="allow_insecure_desc">跳過 TLS 憑證驗證（不推薦）</string>
+    <string name="udp_proxy">UDP 代理</string>
+    <string name="udp_proxy_desc">轉發 UDP 流量（遊戲/語音通話）</string>
+    <string name="ad_block">廣告過濾</string>
+    <string name="ad_block_desc">阻擋常見廣告網域</string>
+    <string name="appearance">外觀</string>
+    <string name="dark_mode">深色模式</string>
+    <string name="dark_mode_desc">開啟深色主題</string>
+    <string name="font_size">字體大小</string>
+    <string name="font_size_desc">調整應用內字體大小</string>
+    <string name="font_size_small">小</string>
+    <string name="font_size_normal">正常</string>
+    <string name="font_size_large">大</string>
+    <string name="language">語言</string>
+    <string name="language_desc">選擇應用程式語言</string>
+    <string name="debugging">除錯</string>
+    <string name="view_logs">檢視日誌</string>
+    <string name="view_logs_desc">Xray 核心運作日誌</string>
+    <string name="about">關於</string>
+    <string name="core_version">核心版本</string>
+    <string name="app_version">App 版本</string>
+    <string name="cancel">取消</string>
+    <string name="choose_routing_mode">選擇流量的路由方式：</string>
+    <string name="routing_global_title">全局（所有流量）</string>
+    <string name="routing_bypass_cn_title">繞過國內</string>
+    <string name="routing_split_title">分應用代理</string>
+    <string name="routing_global_desc">所有流量走代理，TikTok 等境外應用必選此項</string>
+    <string name="routing_bypass_cn_desc">國內直連，境外走代理，平衡模式</string>
+    <string name="routing_split_desc">僅勾選的 App 走代理，需在分應用代理裡設定</string>
+
+    <string name="node_list">節點列表</string>
+    <string name="pinging">測試中…</string>
+    <string name="ping_all">延遲測試</string>
+    <string name="add_node">新增節點</string>
+    <string name="scan_qr">掃碼新增</string>
+    <string name="manual_config">手動設定</string>
+    <string name="search_nodes">搜尋節點…</string>
+    <string name="all">全部</string>
+    <string name="more">更多</string>
+    <string name="edit">編輯</string>
+    <string name="delete">刪除</string>
+    <string name="no_nodes">還沒有節點</string>
+    <string name="click_to_add_node">點擊右下角的按鈕新增節點</string>
+
+    <string name="lang_system">跟隨系統</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="lang_zh_tw">繁體中文</string>
+    <string name="lang_en">English</string>
+    <!-- Splash Screen -->
+    <string name="splash_tagline">無論何處，網絡隨行</string>
+
+</resources>

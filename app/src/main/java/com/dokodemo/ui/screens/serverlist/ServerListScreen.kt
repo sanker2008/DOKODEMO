@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.*
@@ -23,10 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dokodemo.R
 import com.dokodemo.ui.components.IndustrialSearchInput
 import com.dokodemo.ui.components.SquareFab
 import com.dokodemo.ui.theme.*
@@ -69,10 +72,10 @@ fun ServerListScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("节点列表", fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.node_list), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, "返回")
+                        Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 actions = {
@@ -85,11 +88,11 @@ fun ServerListScreen(
                                 strokeWidth = 2.dp
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text("测速中...", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.pinging), fontWeight = FontWeight.Bold)
                         } else {
-                            Icon(Icons.Rounded.Refresh, "全部测速", modifier = Modifier.size(18.dp))
+                            Icon(Icons.Rounded.Refresh, stringResource(R.string.ping_all), modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("测速", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.ping_all), fontWeight = FontWeight.Bold)
                         }
                     }
                 },
@@ -106,23 +109,24 @@ fun ServerListScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(16.dp),
-                    icon = { Icon(Icons.Rounded.Add, "添加节点") },
-                    text = { Text("添加节点") }
+                    icon = { Icon(Icons.Rounded.Add, stringResource(R.string.add_node)) },
+                    text = { Text(stringResource(R.string.add_node)) }
                 )
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                    containerColor = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("扫码添加", color = MaterialTheme.colorScheme.onSurface) },
+                        text = { Text(stringResource(R.string.scan_qr), color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
                             expanded = false
                             onNavigateToAddProfile()
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("手动配置", color = MaterialTheme.colorScheme.onSurface) },
+                        text = { Text(stringResource(R.string.manual_config), color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
                             expanded = false
                             onNavigateToConfigEditor(null)
@@ -141,7 +145,7 @@ fun ServerListScreen(
             IndustrialSearchInput(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
-                placeholder = "搜索节点…",
+                placeholder = stringResource(R.string.search_nodes),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -156,7 +160,7 @@ fun ServerListScreen(
                 ) {
                     item {
                         GroupChip(
-                            label = "全部",
+                            label = stringResource(R.string.all),
                             selected = uiState.selectedGroupId == null,
                             onClick = { viewModel.selectGroup(null) }
                         )
@@ -188,7 +192,8 @@ fun ServerListScreen(
                         isSelected = server.id == uiState.selectedServerId,
                         onClick = { viewModel.selectServer(server.id) },
                         onEdit = { onNavigateToConfigEditor(server.id) },
-                        onDelete = { viewModel.deleteServer(server) }
+                        onDelete = { viewModel.deleteServer(server) },
+                        onPing = { viewModel.pingSingleServer(server) }
                     )
                 }
 
@@ -224,7 +229,8 @@ private fun NodeCard(
     isSelected: Boolean,
     onClick: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onPing: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -320,23 +326,29 @@ private fun NodeCard(
             // 更多操作菜单
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Rounded.MoreVert, "更多", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(Icons.Rounded.MoreVert, stringResource(R.string.more), tint = MaterialTheme.colorScheme.onSurface)
                 }
                 DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
+                    expanded = showMenu, 
+                    onDismissRequest = { showMenu = false },
+                    containerColor = MaterialTheme.colorScheme.background
                 ) {
-                    DropdownMenuItem(
-                        text = { Text("编辑") },
-                        leadingIcon = { Icon(Icons.Rounded.Edit, null) },
-                        onClick = { showMenu = false; onEdit() }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("删除", color = MaterialTheme.colorScheme.error) },
-                        leadingIcon = { Icon(Icons.Rounded.Delete, null, tint = MaterialTheme.colorScheme.error) },
-                        onClick = { showMenu = false; onDelete() }
-                    )
-                }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.ping_all)) },
+                                leadingIcon = { Icon(Icons.Rounded.Refresh, null) },
+                                onClick = { showMenu = false; onPing() }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.edit)) },
+                                leadingIcon = { Icon(Icons.Rounded.Edit, null) },
+                                onClick = { showMenu = false; onEdit() }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
+                                leadingIcon = { Icon(Icons.Rounded.Delete, null, tint = MaterialTheme.colorScheme.error) },
+                                onClick = { showMenu = false; onDelete() }
+                            )
+                        }
             }
         }
     }
@@ -352,15 +364,20 @@ private fun EmptyState() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("📋", fontSize = 48.sp)
+            Icon(
+                imageVector = Icons.Rounded.List,
+                contentDescription = "Empty",
+                modifier = Modifier.size(64.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            )
             Spacer(Modifier.height(12.dp))
             Text(
-                "还没有节点",
+                stringResource(R.string.no_nodes),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                "点击右下角的按钮添加节点",
+                stringResource(R.string.click_to_add_node),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

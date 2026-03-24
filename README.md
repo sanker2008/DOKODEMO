@@ -1,161 +1,69 @@
-# DOKODEMO // V2RAY CLIENT
-> **"Function over Form"** - An Industrial Neubrutalism V2Ray Client for Android.
+# DokoDemo
 
-![Badge](https://img.shields.io/badge/Kotlin-2.0-7F52FF.svg) ![Badge](https://img.shields.io/badge/Compose-Material3-4285F4.svg) ![Badge](https://img.shields.io/badge/V2Ray-Core-CCFF00.svg)
+DokoDemo 是一款基于 Android 的轻量级、高性能 V2Ray/Xray 客户端。
 
-**DokoDemo** is a high-performance, design-centric proxy client built on modern Android technologies. It strictly adheres to **Neubrutalism** principles: pure black backgrounds, acid lime accents, sharp borders, and zero elevation.
+## 1. 核心技术栈
 
----
+- **语言**: Kotlin
+- **UI 框架**: Jetpack Compose (Material Design 3)
+- **架构**: MVVM (Model-View-ViewModel)
+- **依赖注入**: Hilt
+- **持久化**: Room (节点/订阅管理), DataStore (应用设置)
+- **异步与响应式**: Coroutines & Flow
+- **代理核心**: Xray-core (通过 JNI 桥接 `libv2ray.aar`)
+- **VPN 接口**: Android `VpnService` + `tun2socks` (实现全局与分应用代理)
 
-## ⚡ Features (功能特性)
+## 2. 核心原理解析
 
-*   **Industrial UI Design**: Unique visual identity with bold typography (JetBrains Mono) and high-contrast colors.
-*   **V2Ray/Xray Support**: Full support for **VLESS**, **VMESS**, **Trojan**, and **Shadowsocks** protocols via `LibXray`.
-*   **Real-time Monitoring**: Oscilloscope-style traffic monitor and live speed status in notification.
-*   **Advanced Routing**: 
-    *   **Global**: All traffic proxied.
-    *   **Bypass CN**: Direct connection for Chinese IPs/Domains.
-    *   **Split Tunneling**: Per-app proxy configuration.
-*   **Quick Configuration**:
-    *   **QR Scanner**: Integrated CameraX scanner for quick profile addition.
-    *   **Clipboard Import**: Auto-parse `vless://`, `vmess://`, `trojan://` links.
-*   **Secure & Private**: Uses Android's native `VpnService` with `tun2socks` integration. No user data tracking.
+DokoDemo 使用 **VPN 技术做流量劫持 + 代理协议做数据传输** 的组合方案。
 
----
+1. **流量劫持**: `DokoDemoVpnService` 创建虚拟网卡 (TUN 设备)，拦截系统流量。
+2. **协议转换**: `tun2socks` 读取虚拟网卡数据，将 TCP/UDP 包转换为 SOCKS5 协议流量。
+3. **加密与伪装**: `Xray-core` 在本地监听 SOCKS5 端口，使用节点配置 (VMess, VLESS, Shadowsocks 等) 加密流量。
+4. **代理传输**: 发送给远端代理服务器，实现科学上网。
 
-## 🛠 Tech Stack (技术栈)
+## 3. 视觉与设计规范 (Design System)
 
-*   **Language**: Kotlin (100%)
-*   **UI Framework**: Jetpack Compose + Material3
-*   **Architecture**: MVVM + Clean Architecture
-*   **Dependency Injection**: Hilt (Dagger)
-*   **Data Persistence**: Room Database (SQLite) + DataStore (Preferences)
-*   **Asynchronous**: Kotlin Coroutines + Flow
-*   **Navigation**: Jetpack Navigation Compose
-*   **Camera**: CameraX
-*   **Core Integration**:
-    *   **V2Ray Core**: `LibXray` (Go) via JNI
-    *   **Tun2Socks**: `go-tun2socks`
+项目摒弃了初期的工业风 (Neubrutalism)，转而采用 **现代、通透、干净且温暖 (Modern, Transparent, Clean, Warm)** 的设计风格。
 
----
+- **核心配色**:
+  - 基础背景: `#F0F4F7` (Light) / `#121212` (Dark)
+  - 主操作色 (Primary): `#A0C4E3` (Soft Blue)
+  - 文本/图标: `#607D8B` (Slate)
+  - 连接/成功状态 (Accent): Soft Mint Green `#B7D5C7` (用于呼吸灯及连接状态)
+- **UI 元素**: 采用大圆角 (最小 16dp) 和轻微的玻璃拟物化 (Glassmorphism) 效果。取消了生硬的边框和强烈的对比度。
+- **状态反馈**: 连接成功后，主页显示平缓的呼吸光环动画。
 
-## 🚀 Setup & Build (安装与构建)
+## 4. 核心功能模块
 
-### Prerequisites
-*   Android Studio
-*   JDK 17
-*   Android SDK API 35 (min API 24)
+1. **主页 (Dashboard)**: 
+   - 大尺寸圆形连接按钮，配合连接后的呼吸灯动效。
+   - 实时流量监控 (上传/下载)。
+   - 快速切换当前节点。
+2. **节点管理 (Server List)**:
+   - 节点列表展示与分组筛选。
+   - 扫码添加、剪贴板解析、手动配置编辑。
+   - 延迟测试 (Ping)。
+3. **分应用代理 (Split Tunneling)**:
+   - 允许用户勾选特定 App 走代理或直连，配合工业风开关组件 `IndustrialToggle`。
+4. **应用设置 (Settings)**:
+   - 路由模式选择 (全局、绕过国内、仅代理选中)。
+   - 外观与字体大小调节。
+   - 语言切换 (简体中文、繁體中文、English)。
+   - 高级网络设置 (Mux, UDP 代理, 广告过滤等)。
 
-### ⚠️ Native Libraries Setup (重要配置)
+## 5. 原生库依赖 (Native Libraries Setup)
 
-Due to repository limitations, the native V2Ray core library must be downloaded manually.
+DokoDemo 的核心代理能力依赖于以下原生库，开发前请确保环境正确：
 
-1.  **Download AAR**:
-    *   Download `libv2ray.aar` from [Nicegram Xray Core Releases](https://github.com/nicegram/nicegram-xray-core/releases) or compatible `AndroidLibXrayLite` builds.
-2.  **Install AAR**:
-    *   Rename the file to `libv2ray.aar`.
-    *   Place it in the directory: `app/libs/libv2ray.aar`.
-3.  **Sync Gradle**:
-    *   Click "Sync Project with Gradle Files" in Android Studio.
+1. **libv2ray.aar (Xray-core 核心)**:
+   - 放置路径: `app/libs/libv2ray.aar`
+2. **GeoIP / GeoSite 数据**:
+   - 放置路径: `app/src/main/assets/geoip.dat` 和 `app/src/main/assets/geosite.dat`
+   - 用于路由规则的域名和 IP 匹配。
 
-> **Mock Mode**: If the AAR is missing, the app will run in "Mock Mode". UI and database features will work, but **VPN connections will fail**.
+## 6. 开发规范
 
-### Build Command
-```bash
-# Build Debug APK
-./gradlew assembleDebug
-
-# Install to Device
-adb install app/build/outputs/apk/debug/app-debug.apk
-```
-
----
-
-## 📂 Project Structure
-
-```
-d:/dev/san/dd/
-├── app/src/main/java/com/dokodemo/
-│   ├── core/           # Core Manager (Config generation, JNI wrapper)
-│   ├── data/           # Repository, Room DAO, Models
-│   ├── di/             # Hilt Modules
-│   ├── navigation/     # NavHost & Routes
-│   ├── service/        # VpnService & Tun2Socks
-│   ├── ui/
-│   │   ├── components/ # Reusable Industrial UI Components
-│   │   ├── screens/    # Feature Screens (Home, ServerList, Settings...)
-│   │   └── theme/      # Color, Type, Theme (Neubrutalism)
-│   └── ...
-```
-
----
-
-## 📸 Screenshots
-
-| Home Dashboard | Server List | Config Editor |
-|:---:|:---:|:---:|
-| Core control & Monitor | Server selection | Profile management |
-
-| QR Scanner | Settings | Split Tunneling |
-|:---:|:---:|:---:|
-| CameraX integration | Core configuration | App routing |
-
----
-
-## 📄 License
-
-This project includes code derived from V2Ray/Xray and Tun2Socks.
-*   **App Code**: Apache 2.0
-*   **V2Ray Core**: MPL 2.0 / GPL v3
-
----
-
-**DOKODEMO** // SYSTEM_READY
-
----
-
-## 🛠️ Usage Guide (使用指南)
-
-### 1. Import Profile (导入节点)
-DokoDemo supports multiple ways to import server configurations:
-
-*   **QR Scan**: Tap the **[SCAN]** button on the home dashboard to scan a VLESS/VMESS/Trojan QR code.
-*   **Clipboard**: Copy a `vmess://`, `vless://`, or `trojan://` link and tap **[IMPORT]**.
-*   **Manual**: Navigate to **Server List** -> **Add (+)** -> **Manual Input**.
-
-### 2. Connect (启动连接)
-*   On the **Home Dashboard**, tap the large **[CONNECT]** button.
-*   **First Run**: You will be prompted to grant **VPN Permission**. Accept to proceed.
-*   **Status**:
-    *   **IDLE**: Disconnected.
-    *   **CONNECTING**: Handshaking...
-    *   **CONNECTED**: VPN tunnel active. Traffic monitoring curve will activate.
-
-### 3. Split Tunneling (分应用代理)
-*   Go to **Settings** -> **Split Tunneling**.
-*   **Mode**:
-    *   **Proxy All**: All apps go through VPN.
-    *   **Bypass Selected**: Selected apps bypass VPN (Direct).
-    *   **Proxy Selected**: Only selected apps use VPN.
-*   Toggle switches for installed apps to configure their routing.
-
-### 4. System Logs (日志调试)
-*   Tap the **Terminal Icon** (Bottom Right) to open the System Logs console.
-*   View real-time V2Ray Core logs for troubleshooting connection issues.
-
----
-
-## ⚠️ Troubleshooting (常见问题)
-
-**Q: Failed to load V2Ray Core?**
-A: Ensure you have successfully set up the native libraries (see **Setup & Build**). The app requires `libv2ray.aar` and `geoip/geosite` assets.
-
-**Q: Connection Timeout?**
-A: Check your server configuration. Verify that the server time matches your device time (V2Ray is time-sensitive).
-
-**Q: "Mock Mode" Warning?**
-A: This means `libv2ray.aar` was not found during build. The app is running in UI-only mode. Please download and install the AAR.
-
----
-
-> **Note**: This project is for educational and research purposes only. Please comply with local laws and regulations.
+- **状态管理**: ViewModel 中统一使用 `data class UiState` 并在 `StateFlow` 中暴露。
+- **UI 绘制**: 遵循最新的配色和排版系统 (`DokoDemoTheme`)。使用 `AppPreferences` 实现字体大小缩放和深色模式跟随。
+- **多语言**: 必须使用 `strings.xml` 进行文本硬编码的抽离，以便于多语言支持。

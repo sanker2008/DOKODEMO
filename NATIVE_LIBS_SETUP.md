@@ -1,5 +1,7 @@
 # DokoDemo Native Library Setup
 
+> **[注意/NOTE]** 项目名称为 DokoDemo。
+
 ## Required Libraries
 
 DokoDemo requires the following native libraries for V2Ray core functionality:

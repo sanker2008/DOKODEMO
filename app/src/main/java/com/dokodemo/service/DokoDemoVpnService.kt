@@ -199,7 +199,7 @@ class DokoDemoVpnService : VpnService() {
                 
                 // 2. Establish VPN interface
                 val vpnBuilder = Builder()
-                    .setSession("SanProxy - $serverName")
+                    .setSession("DokoDemo - $serverName")
                     .setMtu(VPN_MTU)
                     .addAddress(VPN_ADDRESS, 24)
                     .addDnsServer(VPN_DNS_1)

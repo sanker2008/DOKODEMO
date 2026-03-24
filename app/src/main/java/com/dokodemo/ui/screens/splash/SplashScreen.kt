@@ -1,349 +1,198 @@
 package com.dokodemo.ui.screens.splash
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.material3.MaterialTheme
+import com.dokodemo.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreen(
     onNavigateToHome: () -> Unit
 ) {
-    // Animation states
-    val logoAlpha = remember { Animatable(0f) }
-    val textAlpha = remember { Animatable(0f) }
-    var showCursor by remember { mutableStateOf(true) }
-    var progressWidth by remember { mutableStateOf(0f) }
-    
-    // Cursor blink animation
-    val infiniteTransition = rememberInfiniteTransition(label = "cursor")
-    val cursorAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "cursorBlink"
-    )
-    
-    // Animation sequence
+    // Animation states mapping exactly to the 2.0s timeline
+    val dotScale = remember { Animatable(0f) }
+    val bloomProgress = remember { Animatable(0f) }
+    val blinkAlpha = remember { Animatable(0f) }
+
+    // Colors
+    val bgColor = Color(0xFFF0F4F7) // Pure Ice White
+    val dotColor = Color(0xFF607D8B) // Blue-Grey
+    val lineColor = Color(0xFFA0C4E3) // Sky Blue
+    val blinkColor = Color(0xFFB7D5C7) // Soft Mint Green
+
     LaunchedEffect(Unit) {
-        // Fade in logo
-        logoAlpha.animateTo(1f, animationSpec = tween(800))
-        delay(200)
+        // 0.0s - 0.5s: The Dawn (Central dot appears and expands)
+        dotScale.animateTo(1f, animationSpec = tween(500, easing = EaseOutCubic))
         
-        // Fade in text
-        textAlpha.animateTo(1f, animationSpec = tween(500))
+        // 0.5s - 1.2s: The Bloom (Network lines flow organically)
+        bloomProgress.animateTo(1f, animationSpec = tween(700, easing = FastOutSlowInEasing))
+        
+        // 1.2s - 1.5s: Stabilization
         delay(300)
         
-        // Progress bar animation
-        val steps = 20
-        for (i in 1..steps) {
-            progressWidth = i.toFloat() / steps
-            delay(50)
+        // 1.5s - 2.0s: The Signal (Nodes blink with halo)
+        launch {
+            blinkAlpha.animateTo(1f, animationSpec = tween(250, easing = EaseOut))
+            blinkAlpha.animateTo(0f, animationSpec = tween(250, easing = EaseIn))
         }
-        
         delay(500)
         
-        // Navigate to home
+        // Buffer before transitioning
+        delay(100)
         onNavigateToHome()
     }
-    
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(bgColor),
+        contentAlignment = Alignment.Center
     ) {
-        // Grid background
-        GridBackground()
-        
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.Center
         ) {
-            // Top version text
-            Text(
-                text = "V.1.0.4-ALPHA // DOKO_CLIENT",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp,
-                letterSpacing = 1.sp,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            
-            // Center content
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.alpha(logoAlpha.value)
-            ) {
-                // Logo - Nested squares with checkmark
-                NestedSquaresLogo(
-                    modifier = Modifier.size(160.dp)
-                )
+            // Network Bloom Animation Canvas
+            Canvas(modifier = Modifier.size(160.dp)) {
+                val R = size.minDimension / 2 * 0.8f
+                val center = Offset(size.width / 2, size.height / 2)
                 
-                Spacer(modifier = Modifier.height(48.dp))
-                
-                // App name
-                Text(
-                    text = "DOKODEMO",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 32.sp,
-                    letterSpacing = 8.sp,
-                    modifier = Modifier.alpha(textAlpha.value)
-                )
-            }
-            
-            // Bottom content
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(bottom = 48.dp)
-            ) {
-                // Status text with blinking cursor
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val primaryColor = MaterialTheme.colorScheme.primary
-                    // Circle indicator
-                    Canvas(modifier = Modifier.size(8.dp)) {
-                        drawCircle(
-                            color = primaryColor,
-                            radius = size.minDimension / 2
+                // Define the abstract D-shaped network nodes
+                val n0 = center // Central Dot
+                val n1 = center + Offset(-0.4f * R, -0.8f * R) // Top Left
+                val n2 = center + Offset(-0.4f * R, 0.8f * R)  // Bottom Left
+                val n3 = center + Offset(0.3f * R, -0.8f * R)  // Top Mid
+                val n4 = center + Offset(0.3f * R, 0.8f * R)   // Bottom Mid
+                val n5 = center + Offset(0.8f * R, -0.3f * R)  // Right Curve 1
+                val n6 = center + Offset(0.8f * R, 0.3f * R)   // Right Curve 2
+
+                // 2. Draw Network Lines (The Bloom)
+                if (bloomProgress.value > 0f) {
+                    val strokeWidth = 4.dp.toPx()
+                    
+                    fun drawProgressLine(start: Offset, end: Offset, progress: Float) {
+                        if (progress <= 0f) return
+                        val currentEnd = Offset(
+                            start.x + (end.x - start.x) * progress,
+                            start.y + (end.y - start.y) * progress
+                        )
+                        drawLine(
+                            color = lineColor,
+                            start = start,
+                            end = currentEnd,
+                            strokeWidth = strokeWidth,
+                            cap = StrokeCap.Round
                         )
                     }
-                    
-                    Spacer(modifier = Modifier.width(8.dp))
-                    
-                    Text(
-                        text = "SYSTEM INITIALIZING...",
-                        color = primaryColor,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 12.sp,
-                        letterSpacing = 1.sp
-                    )
-                    
-                    // Blinking cursor
-                    Text(
-                        text = "_",
-                        color = primaryColor,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        modifier = Modifier.alpha(cursorAlpha)
+
+                    // Phase 1: Center to outer nodes
+                    val p1 = (bloomProgress.value / 0.6f).coerceIn(0f, 1f)
+                    drawProgressLine(n0, n1, p1)
+                    drawProgressLine(n0, n2, p1)
+                    drawProgressLine(n0, n3, p1)
+                    drawProgressLine(n0, n4, p1)
+                    drawProgressLine(n0, n5, p1)
+                    drawProgressLine(n0, n6, p1)
+
+                    // Phase 2: Connect outer nodes to form 'D'
+                    val p2 = ((bloomProgress.value - 0.4f) / 0.6f).coerceIn(0f, 1f)
+                    drawProgressLine(n1, n2, p2) // Left spine
+                    drawProgressLine(n1, n3, p2) // Top
+                    drawProgressLine(n2, n4, p2) // Bottom
+                    drawProgressLine(n3, n5, p2) // Top curve
+                    drawProgressLine(n5, n6, p2) // Right curve
+                    drawProgressLine(n6, n4, p2) // Bottom curve
+                }
+
+                // 1. Draw Central Dot (The Dawn)
+                if (dotScale.value > 0f) {
+                    drawCircle(
+                        color = dotColor,
+                        radius = 8.dp.toPx() * dotScale.value,
+                        center = n0
                     )
                 }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // Progress bar with caution stripes
-                CautionProgressBar(
-                    progress = progressWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .padding(horizontal = 48.dp)
-                )
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                // Footer text
-                Text(
-                    text = "SECURE CONNECTION PROTOCOL",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 10.sp,
-                    letterSpacing = 1.sp
-                )
+
+                // Draw Outer Nodes fading in
+                val nodeRadius = 5.dp.toPx()
+                if (bloomProgress.value > 0.5f) {
+                    val nodeAlpha = ((bloomProgress.value - 0.5f) * 2).coerceIn(0f, 1f)
+                    val nColor = lineColor.copy(alpha = nodeAlpha)
+                    listOf(n1, n2, n3, n4, n5, n6).forEach { node ->
+                        drawCircle(color = nColor, radius = nodeRadius, center = node)
+                    }
+                }
+
+                // 3. Draw The Signal (Mint Green Blink)
+                if (blinkAlpha.value > 0f) {
+                    val haloRadius = 18.dp.toPx()
+                    // Blink on key strategic nodes
+                    listOf(n0, n3, n5, n2).forEach { node ->
+                        drawCircle(
+                            color = blinkColor.copy(alpha = blinkAlpha.value * 0.4f),
+                            radius = haloRadius,
+                            center = node
+                        )
+                        drawCircle(
+                            color = blinkColor.copy(alpha = blinkAlpha.value),
+                            radius = nodeRadius * 1.5f,
+                            center = node
+                        )
+                    }
+                }
             }
-        }
-    }
-}
-
-@Composable
-private fun GridBackground() {
-    val outlineColor = MaterialTheme.colorScheme.outline
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val gridSize = 40.dp.toPx()
-        val strokeWidth = 0.5.dp.toPx()
-        
-        // Draw vertical lines
-        var x = 0f
-        while (x < size.width) {
-            drawLine(
-                color = outlineColor.copy(alpha = 0.3f),
-                start = Offset(x, 0f),
-                end = Offset(x, size.height),
-                strokeWidth = strokeWidth
+            
+            Spacer(modifier = Modifier.height(56.dp))
+            
+            // App Title Text
+            Text(
+                text = "DokoDemo",
+                color = dotColor,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                letterSpacing = 1.sp
             )
-            x += gridSize
-        }
-        
-        // Draw horizontal lines
-        var y = 0f
-        while (y < size.height) {
-            drawLine(
-                color = outlineColor.copy(alpha = 0.3f),
-                start = Offset(0f, y),
-                end = Offset(size.width, y),
-                strokeWidth = strokeWidth
-            )
-            y += gridSize
-        }
-    }
-}
-
-@Composable
-private fun NestedSquaresLogo(modifier: Modifier = Modifier) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val backgroundColor = MaterialTheme.colorScheme.background
-    Canvas(modifier = modifier) {
-        val strokeWidth = 3.dp.toPx()
-        val padding = 20.dp.toPx()
-        
-        // Outer square (with corner brackets)
-        val outerSize = size.minDimension
-        val outerOffset = Offset(
-            (size.width - outerSize) / 2,
-            (size.height - outerSize) / 2
-        )
-        
-        // Draw corner brackets for outer square
-        val bracketLength = outerSize * 0.15f
-        
-        // Top-left corner
-        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + bracketLength), Offset(outerOffset.x, outerOffset.y), strokeWidth)
-        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y), Offset(outerOffset.x + bracketLength, outerOffset.y), strokeWidth)
-        
-        // Top-right corner
-        drawLine(primaryColor, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y), strokeWidth)
-        drawLine(primaryColor, Offset(outerOffset.x + outerSize, outerOffset.y), Offset(outerOffset.x + outerSize, outerOffset.y + bracketLength), strokeWidth)
-        
-        // Bottom-left corner
-        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x, outerOffset.y + outerSize), strokeWidth)
-        drawLine(primaryColor, Offset(outerOffset.x, outerOffset.y + outerSize), Offset(outerOffset.x + bracketLength, outerOffset.y + outerSize), strokeWidth)
-        
-        // Bottom-right corner
-        drawLine(primaryColor, Offset(outerOffset.x + outerSize - bracketLength, outerOffset.y + outerSize), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
-        drawLine(primaryColor, Offset(outerOffset.x + outerSize, outerOffset.y + outerSize - bracketLength), Offset(outerOffset.x + outerSize, outerOffset.y + outerSize), strokeWidth)
-        
-        // Middle square (full outline)
-        val middleSize = outerSize - padding * 2
-        val middleOffset = Offset(
-            outerOffset.x + padding,
-            outerOffset.y + padding
-        )
-        drawRect(
-            color = primaryColor,
-            topLeft = middleOffset,
-            size = Size(middleSize, middleSize),
-            style = Stroke(width = strokeWidth)
-        )
-        
-        // Inner square (filled)
-        val innerSize = middleSize - padding * 2
-        val innerOffset = Offset(
-            middleOffset.x + padding,
-            middleOffset.y + padding
-        )
-        drawRect(
-            color = primaryColor,
-            topLeft = innerOffset,
-            size = Size(innerSize, innerSize)
-        )
-        
-        // Checkmark in center
-        val checkStart = Offset(
-            innerOffset.x + innerSize * 0.25f,
-            innerOffset.y + innerSize * 0.5f
-        )
-        val checkMiddle = Offset(
-            innerOffset.x + innerSize * 0.45f,
-            innerOffset.y + innerSize * 0.7f
-        )
-        val checkEnd = Offset(
-            innerOffset.x + innerSize * 0.75f,
-            innerOffset.y + innerSize * 0.3f
-        )
-        
-        drawLine(backgroundColor, checkStart, checkMiddle, strokeWidth * 1.5f)
-        drawLine(backgroundColor, checkMiddle, checkEnd, strokeWidth * 1.5f)
-    }
-}
-
-@Composable
-private fun CautionProgressBar(
-    progress: Float,
-    modifier: Modifier = Modifier
-) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val bgColor = MaterialTheme.colorScheme.background
-    val outlineColor = MaterialTheme.colorScheme.outline
-    Canvas(modifier = modifier) {
-        val stripeWidth = 8.dp.toPx()
-        val progressWidth = size.width * progress
-        
-        // Draw yellow/black caution stripes
-        var x = 0f
-        var isYellow = true
-        while (x < progressWidth) {
-            val width = if (stripeWidth < progressWidth - x) stripeWidth else progressWidth - x
-            drawRect(
-                color = if (isYellow) primaryColor else bgColor,
-                topLeft = Offset(x, 0f),
-                size = Size(width, size.height)
-            )
-            x += stripeWidth
-            isYellow = !isYellow
-        }
-        
-        // Draw remaining empty part
-        if (progressWidth < size.width) {
-            drawRect(
-                color = outlineColor.copy(alpha = 0.3f),
-                topLeft = Offset(progressWidth, 0f),
-                size = Size(size.width - progressWidth, size.height)
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Tagline Text
+            Text(
+                text = stringResource(id = R.string.splash_tagline),
+                color = dotColor.copy(alpha = 0.7f),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = FontFamily.SansSerif,
+                letterSpacing = 2.sp
             )
         }
     }

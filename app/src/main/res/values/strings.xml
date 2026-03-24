@@ -1,3 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DokoDemo</string>
+
+    <!-- HomeScreen -->
+    <string name="connecting">连接中…</string>
+    <string name="connected">已连接</string>
+    <string name="disconnected">未连接</string>
+    <string name="connect">连接</string>
+    <string name="disconnect">断开</string>
+    <string name="please_select_node">请先选择一个节点</string>
+    <string name="current_node">当前节点</string>
+    <string name="no_node_selected">未选择节点</string>
+    <string name="switch_node">切换 →</string>
+    <string name="traffic_monitor">流量监控</string>
+    <string name="home">主页</string>
+    <string name="nodes">节点</string>
+    <string name="settings">设置</string>
+    <string name="connected_ip">已连接 %1$s</string>
+
+    <!-- SettingsScreen -->
+    <string name="back">返回</string>
+    <string name="node_management">节点管理</string>
+    <string name="subscription_settings">订阅设置</string>
+    <string name="subscription_settings_desc">批量导入并自动更新节点</string>
+    <string name="proxy_routing">代理路由</string>
+    <string name="routing_mode">路由模式</string>
+    <string name="split_tunneling">分应用代理</string>
+    <string name="split_tunneling_desc">选择哪些 App 走代理</string>
+    <string name="connection">连接</string>
+    <string name="mux_multiplexing">Mux 多路复用</string>
+    <string name="mux_desc">合并多条流量通道（降延迟）</string>
+    <string name="allow_insecure">允许不安全证书</string>
+    <string name="allow_insecure_desc">跳过 TLS 证书验证（不推荐）</string>
+    <string name="udp_proxy">UDP 代理</string>
+    <string name="udp_proxy_desc">转发 UDP 流量（游戏/语音通话）</string>
+    <string name="ad_block">广告过滤</string>
+    <string name="ad_block_desc">屏蔽常见广告域名</string>
+    <string name="appearance">外观</string>
+    <string name="dark_mode">深色模式</string>
+    <string name="dark_mode_desc">开启深色主题</string>
+    <string name="font_size">字体大小</string>
+    <string name="font_size_desc">调整应用内字体大小</string>
+    <string name="font_size_small">小</string>
+    <string name="font_size_normal">正常</string>
+    <string name="font_size_large">大</string>
+    <string name="language">语言</string>
+    <string name="language_desc">选择应用语言</string>
+    <string name="debugging">调试</string>
+    <string name="view_logs">查看日志</string>
+    <string name="view_logs_desc">Xray 核心运行日志</string>
+    <string name="about">关于</string>
+    <string name="core_version">核心版本</string>
+    <string name="app_version">App 版本</string>
+    <string name="cancel">取消</string>
+    <string name="choose_routing_mode">选择路由模式：</string>
+    <string name="routing_global_title">全局（所有流量）</string>
+    <string name="routing_bypass_cn_title">绕过国内</string>
+    <string name="routing_split_title">分应用代理</string>
+    <string name="routing_global_desc">所有流量都走代理（如 TikTok 等），推荐</string>
+    <string name="routing_bypass_cn_desc">国内直连，境外走代理，平衡模式</string>
+    <string name="routing_split_desc">仅勾选的 App 走代理，需在分应用代理里配置</string>
+
+    <!-- ServerListScreen -->
+    <string name="node_list">节点列表</string>
+    <string name="pinging">测试中...</string>
+    <string name="ping_all">延迟测试</string>
+    <string name="add_node">添加节点</string>
+    <string name="scan_qr">扫码添加</string>
+    <string name="manual_config">手动配置</string>
+    <string name="search_nodes">搜索节点…</string>
+    <string name="all">全部</string>
+    <string name="more">更多</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="no_nodes">还没有节点</string>
+    <string name="click_to_add_node">点击右下角的按钮添加节点</string>
+
+    <string name="lang_system">跟随系统</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="lang_zh_tw">繁體中文</string>
+    <string name="lang_en">English</string>
+    <!-- Splash Screen -->
+    <string name="splash_tagline">无论何处，网络随行</string>
+
 </resources>

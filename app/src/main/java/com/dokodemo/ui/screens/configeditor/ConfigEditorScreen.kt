@@ -241,7 +241,11 @@ private fun InputDropdown(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.menuAnchor().fillMaxWidth()
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(
+            expanded = expanded, 
+            onDismissRequest = { expanded = false },
+            containerColor = MaterialTheme.colorScheme.background
+        ) {
             options.forEach { opt ->
                 DropdownMenuItem(text = { Text(opt) }, onClick = { onValueChange(opt); expanded = false })
             }
@@ -265,7 +269,11 @@ private fun InputGroupDropdown(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.menuAnchor().fillMaxWidth()
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(
+            expanded = expanded, 
+            onDismissRequest = { expanded = false },
+            containerColor = MaterialTheme.colorScheme.background
+        ) {
             DropdownMenuItem(text = { Text("无分组") }, onClick = { onSelected(null); expanded = false })
             groups.forEach { g ->
                 DropdownMenuItem(text = { Text(g.name) }, onClick = { onSelected(g.id); expanded = false })

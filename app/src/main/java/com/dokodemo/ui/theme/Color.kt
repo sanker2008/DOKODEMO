@@ -2,32 +2,40 @@ package com.dokodemo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ─── 主色调（蓝紫系） ───────────────────────────────────────────────────────
-val Primary = Color(0xFF6C63FF)
-val PrimaryLight = Color(0xFF9D97FF)
-val PrimaryDark = Color(0xFF4A42CC)
+// ─── Core Color Palette ───────────────────────────────────────────────────────
+val BaseBackground = Color(0xFFF0F4F7)       // Ultra-light Ice White/Grey
+val PrimaryAction = Color(0xFFA0C4E3)        // Clear Sky Blue
+val TextIconography = Color(0xFF607D8B)      // Cool Blue-Grey
+val AccentState = Color(0xFFB7D5C7)          // Soft Mint Green
 
-// ─── 强调色（状态/延迟显示） ────────────────────────────────────────────────
-val Accent = Color(0xFF4FC3F7)          // 青蓝：延迟数字、已连接状态
-val AccentGreen = Color(0xFF4CAF50)     // 绿：低延迟 / 已连接指示点
-val AccentOrange = Color(0xFFFF9800)    // 橙：中等延迟
-val AccentRed = Color(0xFFEF5350)       // 红：高延迟 / 错误
+// ─── Semantic Colors ────────────────────────────────────────────────────────
+val SurfaceGlass = Color(0xB3FFFFFF)         // 70% opacity White for Cards
+val SurfaceBorder = Color(0x1A607D8B)        // 10% opacity #607D8B for Card borders
+val TextPrimaryBtn = Color(0xFF546E7A)       // Slightly darker shade for text on Primary Action
+val TextBody = Color(0xB3607D8B)             // 70% opacity #607D8B for Body Text & Subtitles
 
-// ─── 深色主题背景层次 ─────────────────────────────────────────────────────
-val Background = Color(0xFF12121F)      // 最底层深蓝灰
-val Surface = Color(0xFF1C1C2E)         // 卡片/面板背景
-val SurfaceVariant = Color(0xFF252540)  // 次级卡片、输入框背景
-val Outline = Color(0xFF3A3A5C)         // 边框/分割线
-val OutlineVariant = Color(0xFF2A2A45)  // 更浅的边框
+// ─── Accent colors for Ping/States (Keeping some for compatibility if needed) ──
+val AccentGreen = Color(0xFF4CAF50)          // Green: Low latency / Connected indicator
+val AccentOrange = Color(0xFFFF9800)         // Orange: Medium latency
+val AccentRed = Color(0xFFEF5350)            // Red: High latency / Error
 
-// ─── 文字颜色 ──────────────────────────────────────────────────────────────
-val OnBackground = Color(0xFFECECFF)    // 主文字：接近白的蓝白
-val OnSurface = Color(0xFFDDDDFF)       // 卡片上的文字
-val OnSurfaceVariant = Color(0xFF9090B0)// 次要文字、标签
-val TextDisabled = Color(0xFF505070)    // 禁用状态文字
+// ─── Dark Mode Core Color Palette ─────────────────────────────────────────────
+val DarkBaseBackground = Color(0xFF121417)       // Deep Slate/Black
+val DarkPrimaryAction = Color(0xFF7CAEE0)        // Slightly muted Clear Sky Blue for dark mode
+val DarkTextIconography = Color(0xFFE2E8F0)      // Very Light Blue-Grey
+val DarkAccentState = Color(0xFF8FBAA3)          // Muted Mint Green
 
-// ─── 浅色主题（备用，目前以深色为主） ─────────────────────────────────────
-val BackgroundLight = Color(0xFFF5F5FF)
-val SurfaceLight = Color(0xFFFFFFFF)
-val OnBackgroundLight = Color(0xFF1A1A2E)
-val OnSurfaceLight = Color(0xFF2A2A40)
+// ─── Dark Mode Semantic Colors ──────────────────────────────────────────────
+val DarkSurfaceGlass = Color(0x991E2429)         // Dark Glass for Cards
+val DarkSurfaceBorder = Color(0x33E2E8F0)        // Light opacity for Card borders
+val DarkTextPrimaryBtn = Color(0xFF0F172A)       // Dark text on Light Primary Action
+val DarkTextBody = Color(0xB3E2E8F0)             // 70% opacity for Body Text & Subtitles
+
+// Map these back to MaterialTheme names if needed
+val Background = BaseBackground
+val Surface = SurfaceGlass
+val Primary = PrimaryAction
+val OnBackground = TextIconography
+val OnSurface = TextIconography
+val Outline = SurfaceBorder
+

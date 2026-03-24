@@ -42,6 +42,7 @@ class AppPreferences @Inject constructor(
 
     // ─── Key 定义 ──────────────────────────────────────────────────────────
     private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
+    private val FONT_SIZE_KEY = androidx.datastore.preferences.core.floatPreferencesKey("font_size")
     private val PROXIED_APPS_KEY = stringSetPreferencesKey("proxied_apps")
     private val ROUTING_MODE_KEY = stringPreferencesKey("routing_mode")
 
@@ -50,6 +51,10 @@ class AppPreferences @Inject constructor(
     /** 深色/浅色主题，默认深色 */
     val isDarkMode: Flow<Boolean> = dataStore.data
         .map { it[DARK_MODE_KEY] ?: true }
+
+    /** 字体大小缩放比例，默认 1.0f */
+    val fontSizeScale: Flow<Float> = dataStore.data
+        .map { it[FONT_SIZE_KEY] ?: 1.0f }
 
     /** 分应用代理：已选中走代理的包名集合 */
     val proxiedApps: Flow<Set<String>> = dataStore.data
@@ -70,6 +75,10 @@ class AppPreferences @Inject constructor(
 
     suspend fun setDarkMode(enabled: Boolean) {
         dataStore.edit { it[DARK_MODE_KEY] = enabled }
+    }
+
+    suspend fun setFontSizeScale(scale: Float) {
+        dataStore.edit { it[FONT_SIZE_KEY] = scale }
     }
 
     suspend fun setRoutingMode(mode: RoutingMode) {

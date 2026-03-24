@@ -13,50 +13,57 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Primary,
-    onPrimary = OnBackground,
-    primaryContainer = PrimaryDark,
-    onPrimaryContainer = OnBackground,
-    secondary = Accent,
-    onSecondary = Background,
-    secondaryContainer = SurfaceVariant,
-    onSecondaryContainer = OnSurface,
-    background = Background,
-    onBackground = OnBackground,
-    surface = Surface,
-    onSurface = OnSurface,
-    surfaceVariant = SurfaceVariant,
-    onSurfaceVariant = OnSurfaceVariant,
-    outline = Outline,
-    outlineVariant = OutlineVariant,
+private val LightColorScheme = lightColorScheme(
+    primary = PrimaryAction,
+    onPrimary = TextPrimaryBtn,
+    primaryContainer = PrimaryAction,
+    onPrimaryContainer = TextPrimaryBtn,
+    secondary = AccentState,
+    onSecondary = BaseBackground,
+    secondaryContainer = SurfaceGlass,
+    onSecondaryContainer = TextIconography,
+    background = BaseBackground,
+    onBackground = TextIconography,
+    surface = SurfaceGlass,
+    onSurface = TextIconography,
+    surfaceVariant = SurfaceGlass,
+    onSurfaceVariant = TextBody,
+    outline = SurfaceBorder,
+    outlineVariant = SurfaceBorder,
     error = AccentRed,
-    onError = OnBackground,
+    onError = BaseBackground,
     tertiary = AccentGreen,
-    onTertiary = Background
+    onTertiary = BaseBackground
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Primary,
-    onPrimary = OnBackground,
-    primaryContainer = PrimaryLight,
-    onPrimaryContainer = OnBackgroundLight,
-    secondary = Accent,
-    onSecondary = BackgroundLight,
-    background = BackgroundLight,
-    onBackground = OnBackgroundLight,
-    surface = SurfaceLight,
-    onSurface = OnSurfaceLight,
-    surfaceVariant = Color(0xFFF0F0FF),
-    onSurfaceVariant = Color(0xFF606080),
-    outline = Color(0xFFCCCCDD),
+// Defaulting to the same scheme for dark mode as per the new specific aesthetic goal
+private val DarkColorScheme = darkColorScheme(
+    primary = DarkPrimaryAction,
+    onPrimary = DarkTextPrimaryBtn,
+    primaryContainer = DarkPrimaryAction,
+    onPrimaryContainer = DarkTextPrimaryBtn,
+    secondary = DarkAccentState,
+    onSecondary = DarkBaseBackground,
+    secondaryContainer = DarkSurfaceGlass,
+    onSecondaryContainer = DarkTextIconography,
+    background = DarkBaseBackground,
+    onBackground = DarkTextIconography,
+    surface = DarkSurfaceGlass,
+    onSurface = DarkTextIconography,
+    surfaceVariant = DarkSurfaceGlass,
+    onSurfaceVariant = DarkTextBody,
+    outline = DarkSurfaceBorder,
+    outlineVariant = DarkSurfaceBorder,
     error = AccentRed,
-    onError = OnBackground
+    onError = DarkBaseBackground,
+    tertiary = AccentGreen,
+    onTertiary = DarkBaseBackground
 )
 
 @Composable
-fun SanProxyTheme(
-    darkTheme: Boolean = true,  // 默认深色
+fun DokoDemoTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    fontScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -70,9 +77,24 @@ fun SanProxyTheme(
         }
     }
 
+    val scaledTypography = androidx.compose.material3.Typography(
+        headlineLarge = AppTypography.headlineLarge.copy(fontSize = AppTypography.headlineLarge.fontSize * fontScale),
+        headlineMedium = AppTypography.headlineMedium.copy(fontSize = AppTypography.headlineMedium.fontSize * fontScale),
+        headlineSmall = AppTypography.headlineSmall.copy(fontSize = AppTypography.headlineSmall.fontSize * fontScale),
+        titleLarge = AppTypography.titleLarge.copy(fontSize = AppTypography.titleLarge.fontSize * fontScale),
+        titleMedium = AppTypography.titleMedium.copy(fontSize = AppTypography.titleMedium.fontSize * fontScale),
+        titleSmall = AppTypography.titleSmall.copy(fontSize = AppTypography.titleSmall.fontSize * fontScale),
+        bodyLarge = AppTypography.bodyLarge.copy(fontSize = AppTypography.bodyLarge.fontSize * fontScale),
+        bodyMedium = AppTypography.bodyMedium.copy(fontSize = AppTypography.bodyMedium.fontSize * fontScale),
+        bodySmall = AppTypography.bodySmall.copy(fontSize = AppTypography.bodySmall.fontSize * fontScale),
+        labelLarge = AppTypography.labelLarge.copy(fontSize = AppTypography.labelLarge.fontSize * fontScale),
+        labelMedium = AppTypography.labelMedium.copy(fontSize = AppTypography.labelMedium.fontSize * fontScale),
+        labelSmall = AppTypography.labelSmall.copy(fontSize = AppTypography.labelSmall.fontSize * fontScale)
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = scaledTypography,
         content = content
     )
 }

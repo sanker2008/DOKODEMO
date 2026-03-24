@@ -135,6 +135,18 @@ fun DokoNavHost(
                 },
                 onNavigateToSubscriptions = {
                     navController.navigate(Route.Subscriptions.path)
+                },
+                onNavigateToLogs = {
+                    navController.navigate(Route.Logs.path)
+                }
+            )
+        }
+        
+        // Logs
+        composable(Route.Logs.path) {
+            com.dokodemo.ui.screens.logs.LogsScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

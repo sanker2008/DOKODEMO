@@ -116,13 +116,9 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Switch(
+            com.dokodemo.ui.components.IndustrialToggle(
                 checked = app.isProxied,
-                onCheckedChange = { onToggle() },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                    checkedTrackColor = MaterialTheme.colorScheme.primary
-                )
+                onCheckedChange = { onToggle() }
             )
         }
     }

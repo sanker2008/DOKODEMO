@@ -18,6 +18,7 @@ data class SettingsUiState(
     val adBlockEnabled: Boolean = false,
     val allowInsecure: Boolean = false,
     val darkModeEnabled: Boolean = true,
+    val fontSizeScale: Float = 1.0f,
     val coreVersion: String = "---",
     val appVersion: String = "1.0.0"
 )
@@ -36,12 +37,14 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 appPreferences.isDarkMode,
-                appPreferences.routingMode
-            ) { darkMode, routing ->
+                appPreferences.routingMode,
+                appPreferences.fontSizeScale
+            ) { darkMode, routing, fontScale ->
                 _uiState.update {
                     it.copy(
                         darkModeEnabled = darkMode,
-                        routingMode = routing
+                        routingMode = routing,
+                        fontSizeScale = fontScale
                     )
                 }
             }.collect()
@@ -56,6 +59,10 @@ class SettingsViewModel @Inject constructor(
 
     fun setDarkMode(enabled: Boolean) {
         viewModelScope.launch { appPreferences.setDarkMode(enabled) }
+    }
+
+    fun setFontSizeScale(scale: Float) {
+        viewModelScope.launch { appPreferences.setFontSizeScale(scale) }
     }
 
     fun setMuxEnabled(enabled: Boolean) {

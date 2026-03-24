@@ -13,11 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dokodemo.R
 import com.dokodemo.data.preferences.RoutingMode
 import com.dokodemo.ui.components.IndustrialToggleRow
+import com.dokodemo.ui.components.LanguageDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,15 +33,17 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showRoutingDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
+    var showFontSizeDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("设置", fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, "返回")
+                        Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -56,58 +61,58 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // ─── 节点管理 ─────────────────────────────────────────────────
-            SettingsSection(title = "节点管理") {
+            SettingsSection(title = stringResource(R.string.node_management)) {
                 SettingsClickRow(
-                    title = "订阅设置",
-                    subtitle = "批量导入并自动更新节点",
+                    title = stringResource(R.string.subscription_settings),
+                    subtitle = stringResource(R.string.subscription_settings_desc),
                     onClick = onNavigateToSubscriptions
                 )
             }
 
             // ─── 代理模式 ─────────────────────────────────────────────────
-            SettingsSection(title = "代理路由") {
+            SettingsSection(title = stringResource(R.string.proxy_routing)) {
                 SettingsClickRow(
-                    title = "路由模式",
-                    subtitle = uiState.routingMode.displayName,
+                    title = stringResource(R.string.routing_mode),
+                    subtitle = getRoutingModeTitle(uiState.routingMode),
                     onClick = { showRoutingDialog = true }
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
-                    title = "分应用代理",
-                    subtitle = "选择哪些 App 走代理",
+                    title = stringResource(R.string.split_tunneling),
+                    subtitle = stringResource(R.string.split_tunneling_desc),
                     onClick = onNavigateToSplitTunneling
                 )
             }
 
             // ─── 连接设置 ─────────────────────────────────────────────────
-            SettingsSection(title = "连接") {
+            SettingsSection(title = stringResource(R.string.connection)) {
                 IndustrialToggleRow(
-                    label = "Mux 多路复用",
-                    subtitle = "合并多条流量通道（降延迟）",
+                    label = stringResource(R.string.mux_multiplexing),
+                    subtitle = stringResource(R.string.mux_desc),
                     checked = uiState.muxEnabled,
                     onCheckedChange = { viewModel.setMuxEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 IndustrialToggleRow(
-                    label = "允许不安全证书",
-                    subtitle = "跳过 TLS 证书验证（不推荐）",
+                    label = stringResource(R.string.allow_insecure),
+                    subtitle = stringResource(R.string.allow_insecure_desc),
                     checked = uiState.allowInsecure,
                     onCheckedChange = { viewModel.setAllowInsecure(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 IndustrialToggleRow(
-                    label = "UDP 代理",
-                    subtitle = "转发 UDP 流量（游戏/语音通话）",
+                    label = stringResource(R.string.udp_proxy),
+                    subtitle = stringResource(R.string.udp_proxy_desc),
                     checked = uiState.udpEnabled,
                     onCheckedChange = { viewModel.setUdpEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 IndustrialToggleRow(
-                    label = "广告过滤",
-                    subtitle = "屏蔽常见广告域名",
+                    label = stringResource(R.string.ad_block),
+                    subtitle = stringResource(R.string.ad_block_desc),
                     checked = uiState.adBlockEnabled,
                     onCheckedChange = { viewModel.setAdBlockEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -115,30 +120,42 @@ fun SettingsScreen(
             }
 
             // ─── 外观 ─────────────────────────────────────────────────────
-            SettingsSection(title = "外观") {
+            SettingsSection(title = stringResource(R.string.appearance)) {
                 IndustrialToggleRow(
-                    label = "深色模式",
-                    subtitle = "开启深色主题",
+                    label = stringResource(R.string.dark_mode),
+                    subtitle = stringResource(R.string.dark_mode_desc),
                     checked = uiState.darkModeEnabled,
                     onCheckedChange = { viewModel.setDarkMode(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                SettingsClickRow(
+                    title = stringResource(R.string.font_size),
+                    subtitle = stringResource(R.string.font_size_desc),
+                    onClick = { showFontSizeDialog = true }
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                SettingsClickRow(
+                    title = stringResource(R.string.language),
+                    subtitle = stringResource(R.string.language_desc),
+                    onClick = { showLanguageDialog = true }
+                )
             }
 
             // ─── 调试 ─────────────────────────────────────────────────────
-            SettingsSection(title = "调试") {
+            SettingsSection(title = stringResource(R.string.debugging)) {
                 SettingsClickRow(
-                    title = "查看日志",
-                    subtitle = "Xray 核心运行日志",
+                    title = stringResource(R.string.view_logs),
+                    subtitle = stringResource(R.string.view_logs_desc),
                     onClick = { onNavigateToLogs?.invoke() }
                 )
             }
 
             // ─── 关于 ─────────────────────────────────────────────────────
-            SettingsSection(title = "关于") {
-                SettingsInfoRow("核心版本", uiState.coreVersion)
+            SettingsSection(title = stringResource(R.string.about)) {
+                SettingsInfoRow(stringResource(R.string.core_version), uiState.coreVersion)
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
-                SettingsInfoRow("App 版本", uiState.appVersion)
+                SettingsInfoRow(stringResource(R.string.app_version), uiState.appVersion)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -156,6 +173,77 @@ fun SettingsScreen(
             onDismiss = { showRoutingDialog = false }
         )
     }
+
+    // 语言选择弹窗
+    if (showLanguageDialog) {
+        LanguageDialog(onDismiss = { showLanguageDialog = false })
+    }
+
+    // 字体大小选择弹窗
+    if (showFontSizeDialog) {
+        FontSizeDialog(
+            currentScale = uiState.fontSizeScale,
+            onSelect = {
+                viewModel.setFontSizeScale(it)
+                showFontSizeDialog = false
+            },
+            onDismiss = { showFontSizeDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun getRoutingModeTitle(mode: RoutingMode): String {
+    return when (mode) {
+        RoutingMode.GLOBAL -> stringResource(R.string.routing_global_title)
+        RoutingMode.BYPASS_CN -> stringResource(R.string.routing_bypass_cn_title)
+        RoutingMode.SPLIT -> stringResource(R.string.routing_split_title)
+    }
+}
+
+// ─── 字体大小选择弹窗 ─────────────────────────────────────────────────────
+@Composable
+private fun FontSizeDialog(
+    currentScale: Float,
+    onSelect: (Float) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val options = listOf(
+        0.85f to stringResource(R.string.font_size_small),
+        1.0f to stringResource(R.string.font_size_normal),
+        1.15f to stringResource(R.string.font_size_large)
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
+        title = { Text(stringResource(R.string.font_size), fontWeight = FontWeight.SemiBold) },
+        text = {
+            Column {
+                options.forEach { (scale, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { onSelect(scale) }
+                            .padding(vertical = 12.dp, horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = scale == currentScale,
+                            onClick = { onSelect(scale) }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(label, fontWeight = FontWeight.Medium)
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+        }
+    )
 }
 
 // ─── 路由模式选择弹窗 ─────────────────────────────────────────────────────
@@ -167,12 +255,13 @@ private fun RoutingModeDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("路由模式", fontWeight = FontWeight.SemiBold) },
+        containerColor = MaterialTheme.colorScheme.background,
+        title = { Text(stringResource(R.string.routing_mode), fontWeight = FontWeight.SemiBold) },
         text = {
             Column {
                 // 模式说明
                 Text(
-                    "选择流量的路由方式：",
+                    stringResource(R.string.choose_routing_mode),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -192,12 +281,12 @@ private fun RoutingModeDialog(
                         )
                         Spacer(Modifier.width(8.dp))
                         Column {
-                            Text(mode.displayName, fontWeight = FontWeight.Medium)
+                            Text(getRoutingModeTitle(mode), fontWeight = FontWeight.Medium)
                             Text(
                                 text = when (mode) {
-                                    RoutingMode.GLOBAL   -> "所有流量走代理，TikTok 等境外应用必选此项"
-                                    RoutingMode.BYPASS_CN-> "国内直连，境外走代理，平衡模式"
-                                    RoutingMode.SPLIT    -> "仅勾选的 App 走代理，需在分应用代理里配置"
+                                    RoutingMode.GLOBAL   -> stringResource(R.string.routing_global_desc)
+                                    RoutingMode.BYPASS_CN-> stringResource(R.string.routing_bypass_cn_desc)
+                                    RoutingMode.SPLIT    -> stringResource(R.string.routing_split_desc)
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -209,7 +298,7 @@ private fun RoutingModeDialog(
         },
         confirmButton = {},
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("取消") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }
@@ -247,7 +336,7 @@ private fun SettingsClickRow(title: String, subtitle: String, onClick: () -> Uni
             Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Icon(Icons.Rounded.ArrowForward, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Icon(Icons.Rounded.ArrowForward, null, tint = MaterialTheme.colorScheme.onSurface)
     }
 }
 

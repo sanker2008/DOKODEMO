@@ -7,9 +7,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.rounded.PowerSettingsNew
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,10 +28,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dokodemo.R
 import com.dokodemo.ui.theme.*
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +64,13 @@ fun HomeScreen(
         }
     }
 
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearToast()
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
@@ -75,52 +90,12 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // ─── 顶栏 ─────────────────────────────────────────────────────
-            TopBar(onNavigateToSettings)
+            TopBar(
+                routingMode = uiState.routingMode,
+                onRoutingModeChange = { viewModel.setRoutingMode(it) }
+            )
 
             Spacer(Modifier.height(8.dp))
-
-            // ─── 连接状态标签 ─────────────────────────────────────────────
-            StatusBadge(
-                isConnected = uiState.isConnected,
-                isConnecting = uiState.isConnecting
-            )
-
-            Spacer(Modifier.height(32.dp))
-
-            // ─── 大圆形连接按钮 ───────────────────────────────────────────
-            ConnectButton(
-                isConnected = uiState.isConnected,
-                isConnecting = uiState.isConnecting,
-                onClick = {
-                    if (uiState.currentServer == null) {
-                        Toast.makeText(context, "请先选择一个节点", Toast.LENGTH_SHORT).show()
-                    } else {
-                        viewModel.toggleConnection()
-                    }
-                }
-            )
-
-            Spacer(Modifier.height(32.dp))
-
-            // ─── 当前节点卡片 ─────────────────────────────────────────────
-            CurrentNodeCard(
-                serverName = uiState.currentServer?.name ?: "未选择节点",
-                protocol = uiState.protocol,
-                latency = uiState.ping,
-                onClick = onNavigateToServerList
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            // ─── 运行时长（已连接时显示） ─────────────────────────────────
-            if (uiState.isConnected) {
-                Text(
-                    text = "已连接 ${uiState.ipAddress}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(Modifier.height(16.dp))
-            }
 
             // ─── 流量监控（折线图） ────────────────────────────────────────
             TrafficMonitorCard(
@@ -130,14 +105,54 @@ fun HomeScreen(
                 modifier = Modifier.weight(1f)
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(24.dp))
+
+            // ─── 当前节点卡片 ─────────────────────────────────────────────
+            CurrentNodeCard(
+                serverName = uiState.currentServer?.name ?: stringResource(R.string.no_node_selected),
+                protocol = uiState.protocol,
+                latency = uiState.ping,
+                isPinging = uiState.isPinging,
+                onClick = onNavigateToServerList,
+                onPingClick = { viewModel.pingCurrentServer() }
+            )
+
+            Spacer(Modifier.height(32.dp))
+
+            // ─── 连接状态标签 ─────────────────────────────────────────────
+            StatusBadge(
+                isConnected = uiState.isConnected,
+                isConnecting = uiState.isConnecting
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // ─── 大圆形连接按钮 ───────────────────────────────────────────
+            ConnectButton(
+                isConnected = uiState.isConnected,
+                isConnecting = uiState.isConnecting,
+                onClick = {
+                    if (uiState.currentServer == null) {
+                        Toast.makeText(context, context.getString(R.string.please_select_node), Toast.LENGTH_SHORT).show()
+                    } else {
+                        viewModel.toggleConnection()
+                    }
+                }
+            )
+
+            Spacer(Modifier.height(32.dp))
         }
     }
 }
 
 // ─── 顶栏 ──────────────────────────────────────────────────────────────────
 @Composable
-private fun TopBar(onSettings: () -> Unit) {
+private fun TopBar(
+    routingMode: com.dokodemo.data.preferences.RoutingMode,
+    onRoutingModeChange: (com.dokodemo.data.preferences.RoutingMode) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,18 +160,67 @@ private fun TopBar(onSettings: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "SanProxy",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        IconButton(onClick = onSettings) {
-            Icon(
-                imageVector = Icons.Rounded.Settings,
-                contentDescription = "设置",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            com.dokodemo.ui.components.IndustrialLogo(modifier = Modifier.size(32.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "DokoDemo",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
+        }
+
+        val currentRoutingTitle = when (routingMode) {
+            com.dokodemo.data.preferences.RoutingMode.GLOBAL -> stringResource(R.string.routing_global_title)
+            com.dokodemo.data.preferences.RoutingMode.BYPASS_CN -> stringResource(R.string.routing_bypass_cn_title)
+            com.dokodemo.data.preferences.RoutingMode.SPLIT -> stringResource(R.string.routing_split_title)
+        }
+
+        Box {
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.clickable { expanded = true }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = currentRoutingTitle,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowDropDown,
+                        contentDescription = "Select Routing Mode",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                containerColor = MaterialTheme.colorScheme.background
+            ) {
+                com.dokodemo.data.preferences.RoutingMode.entries.forEach { mode ->
+                    val title = when (mode) {
+                        com.dokodemo.data.preferences.RoutingMode.GLOBAL -> stringResource(R.string.routing_global_title)
+                        com.dokodemo.data.preferences.RoutingMode.BYPASS_CN -> stringResource(R.string.routing_bypass_cn_title)
+                        com.dokodemo.data.preferences.RoutingMode.SPLIT -> stringResource(R.string.routing_split_title)
+                    }
+                    DropdownMenuItem(
+                        text = { Text(title) },
+                        onClick = {
+                            onRoutingModeChange(mode)
+                            expanded = false
+                        }
+                    )
+                }
+            }
         }
     }
 }
@@ -189,9 +253,9 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
         animationSpec = tween(400), label = "dotColor"
     )
     val statusText = when {
-        isConnecting -> "连接中…"
-        isConnected  -> "已连接"
-        else         -> "未连接"
+        isConnecting -> stringResource(R.string.connecting)
+        isConnected  -> stringResource(R.string.connected)
+        else         -> stringResource(R.string.disconnected)
     }
 
     Row(
@@ -239,29 +303,32 @@ private fun ConnectButton(
     )
 
     val bgColor by animateColorAsState(
-        targetValue = if (isConnected) Primary else MaterialTheme.colorScheme.surfaceVariant,
+        targetValue = MaterialTheme.colorScheme.background,
         animationSpec = spring(stiffness = Spring.StiffnessLow),
         label = "btnBg"
     )
     val textColor by animateColorAsState(
-        targetValue = if (isConnected) Color.White else MaterialTheme.colorScheme.onSurface,
+        targetValue = MaterialTheme.colorScheme.primary,
         label = "btnText"
     )
     val buttonText = when {
-        isConnecting -> "连接中"
-        isConnected  -> "断开"
-        else         -> "连接"
+        isConnecting -> stringResource(R.string.connecting)
+        isConnected  -> stringResource(R.string.disconnect)
+        else         -> stringResource(R.string.connect)
     }
 
-    Box(contentAlignment = Alignment.Center) {
-        // 连接时的光圈（仅已连接状态显示）
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.size(240.dp) // 预留呼吸效果的空间，防止连接成功后页面闪动
+    ) {
+        // 连接时的呼吸光环 (Diffused Soft Mint Green internal glow / breathing halo)
         if (isConnected) {
             Box(
                 modifier = Modifier
                     .size(160.dp)
                     .scale(pulseScale)
                     .clip(CircleShape)
-                    .background(Primary.copy(alpha = pulseAlpha))
+                    .background(AccentState.copy(alpha = pulseAlpha))
             )
         }
 
@@ -270,24 +337,35 @@ private fun ConnectButton(
             modifier = Modifier
                 .size(140.dp)
                 .clip(CircleShape)
-                .background(
-                    brush = if (isConnected) {
-                        Brush.radialGradient(listOf(PrimaryLight, Primary))
-                    } else {
-                        Brush.radialGradient(listOf(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            MaterialTheme.colorScheme.surfaceVariant
-                        ))
-                    }
+                .background(bgColor)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
                 )
                 .clickable(enabled = !isConnecting, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
+            // Very soft diffused glow behind icon when connected
+            if (isConnected) {
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.radialGradient(
+                                listOf(AccentState.copy(alpha = 0.5f), Color.Transparent)
+                            )
+                        )
+                )
+            }
+            
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = if (isConnected) "⏹" else "▶",
-                    fontSize = 28.sp,
-                    color = textColor
+                Icon(
+                    imageVector = Icons.Rounded.PowerSettingsNew,
+                    contentDescription = buttonText,
+                    tint = textColor,
+                    modifier = Modifier.size(48.dp)
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
@@ -307,7 +385,9 @@ private fun CurrentNodeCard(
     serverName: String,
     protocol: String,
     latency: String,
-    onClick: () -> Unit
+    isPinging: Boolean,
+    onClick: () -> Unit,
+    onPingClick: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
@@ -324,7 +404,7 @@ private fun CurrentNodeCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "当前节点",
+                    text = stringResource(R.string.current_node),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -335,29 +415,54 @@ private fun CurrentNodeCard(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                if (protocol.isNotEmpty()) {
-                    Text(
-                        text = protocol,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Spacer(Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (protocol.isNotEmpty()) {
+                        Text(
+                            text = protocol,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
             Column(horizontalAlignment = Alignment.End) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = latency.ifEmpty { "--" },
+                        fontFamily = MonoFont,
+                        fontWeight = FontWeight.SemiBold,
+                        color = when {
+                            latency.isEmpty() || latency == "--" -> MaterialTheme.colorScheme.onSurfaceVariant
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> AccentGreen
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> AccentOrange
+                            else -> AccentRed
+                        },
+                        fontSize = 18.sp
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(
+                        onClick = onPingClick,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        if (isPinging) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Rounded.Refresh,
+                                contentDescription = "Ping",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                }
                 Text(
-                    text = latency.ifEmpty { "--" },
-                    fontFamily = MonoFont,
-                    fontWeight = FontWeight.SemiBold,
-                    color = when {
-                        latency.isEmpty() || latency == "--" -> MaterialTheme.colorScheme.onSurfaceVariant
-                        latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> AccentGreen
-                        latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> AccentOrange
-                        else -> AccentRed
-                    },
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "切换 →",
+                    text = stringResource(R.string.switch_node),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -386,7 +491,7 @@ private fun TrafficMonitorCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "流量监控",
+                    stringResource(R.string.traffic_monitor),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -450,25 +555,37 @@ fun HomeBottomNav(
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 0.dp
+        tonalElevation = 0.dp,
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
+        val navItemColors = NavigationBarItemDefaults.colors(
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+            unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        )
+
         NavigationBarItem(
             selected = currentRoute == "home",
             onClick = onNavigateToHome,
-            icon = { Text("🏠", fontSize = 20.sp) },
-            label = { Text("主页") }
+            icon = { Icon(Icons.Rounded.Home, contentDescription = stringResource(R.string.home)) },
+            label = { Text(stringResource(R.string.home)) },
+            colors = navItemColors
         )
         NavigationBarItem(
             selected = currentRoute == "nodes",
             onClick = onNavigateToServerList,
-            icon = { Text("📋", fontSize = 20.sp) },
-            label = { Text("节点") }
+            icon = { Icon(Icons.Rounded.List, contentDescription = stringResource(R.string.nodes)) },
+            label = { Text(stringResource(R.string.nodes)) },
+            colors = navItemColors
         )
         NavigationBarItem(
             selected = currentRoute == "settings",
             onClick = onNavigateToSettings,
-            icon = { Text("⚙️", fontSize = 20.sp) },
-            label = { Text("设置") }
+            icon = { Icon(Icons.Rounded.Settings, contentDescription = stringResource(R.string.settings)) },
+            label = { Text(stringResource(R.string.settings)) },
+            colors = navItemColors
         )
     }
 }

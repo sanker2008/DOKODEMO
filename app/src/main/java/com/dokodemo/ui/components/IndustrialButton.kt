@@ -23,13 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dokodemo.ui.theme.Primary
-import com.dokodemo.ui.theme.PrimaryDark
-import com.dokodemo.ui.theme.Accent
+import androidx.compose.material3.MaterialTheme
 
 /**
  * 主操作按钮（替代旧 IndustrialButton）
- * 圆角12dp，渐变背景，支持 active 状态
+ * 圆角16dp，支持 active 状态
  */
 @Composable
 fun IndustrialButton(
@@ -46,9 +44,9 @@ fun IndustrialButton(
 
     val containerColor by animateColorAsState(
         targetValue = when {
-            !enabled -> MaterialTheme.colorScheme.surfaceVariant
-            isActive -> Primary
-            else -> MaterialTheme.colorScheme.surfaceVariant
+            !enabled -> MaterialTheme.colorScheme.surface
+            isActive -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.surface
         },
         animationSpec = tween(200),
         label = "containerColor"
@@ -57,7 +55,7 @@ fun IndustrialButton(
     val contentColor by animateColorAsState(
         targetValue = when {
             !enabled -> MaterialTheme.colorScheme.onSurfaceVariant
-            isActive -> Color.White
+            isActive -> MaterialTheme.colorScheme.onPrimary
             else -> MaterialTheme.colorScheme.onSurface
         },
         animationSpec = tween(200),
@@ -68,11 +66,11 @@ fun IndustrialButton(
         onClick = onClick,
         modifier = modifier.defaultMinSize(minHeight = minHeight),
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
             disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp),
@@ -100,12 +98,12 @@ fun LargeIndustrialButton(
     subText: String? = null
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (isActive) Primary else MaterialTheme.colorScheme.surfaceVariant,
+        targetValue = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
         animationSpec = tween(300),
         label = "largeContainerColor"
     )
     val contentColor by animateColorAsState(
-        targetValue = if (isActive) Color.White else MaterialTheme.colorScheme.onSurface,
+        targetValue = if (isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
         animationSpec = tween(300),
         label = "largeContentColor"
     )
@@ -151,8 +149,8 @@ fun SquareFab(
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        containerColor = Primary,
-        contentColor = Color.White
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         content()
     }
@@ -169,12 +167,12 @@ fun IndustrialTabButton(
     modifier: Modifier = Modifier
 ) {
     val bgColor by animateColorAsState(
-        targetValue = if (isSelected) Primary else Color.Transparent,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
         animationSpec = tween(150),
         label = "tabBg"
     )
     val textColor by animateColorAsState(
-        targetValue = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         animationSpec = tween(150),
         label = "tabText"
     )

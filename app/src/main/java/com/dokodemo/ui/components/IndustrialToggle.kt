@@ -25,8 +25,8 @@ fun IndustrialToggle(
         onCheckedChange = onCheckedChange,
         modifier = modifier,
         colors = SwitchDefaults.colors(
-            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-            checkedTrackColor = MaterialTheme.colorScheme.primary,
+            checkedThumbColor = MaterialTheme.colorScheme.primary, // #A0C4E3 thumb when active
+            checkedTrackColor = MaterialTheme.colorScheme.surfaceVariant, // Gray track
             uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
             uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
         )

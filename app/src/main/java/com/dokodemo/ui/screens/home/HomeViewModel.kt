@@ -42,14 +42,23 @@ data class HomeUiState(
     val vpnPermissionIntent: Intent? = null,
     
     // Core info
-    val coreVersion: String = "---"
+    val coreVersion: String = "---",
+    
+    // Routing Mode
+    val routingMode: com.dokodemo.data.preferences.RoutingMode = com.dokodemo.data.preferences.RoutingMode.GLOBAL,
+    
+    // Ping
+    val isPinging: Boolean = false,
+    val toastMessage: String? = null
 )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val vpnController: VpnController,
-    private val serverRepository: ServerRepository
+    private val serverRepository: ServerRepository,
+    private val appPreferences: com.dokodemo.data.preferences.AppPreferences,
+    private val serverPinger: com.dokodemo.core.ServerPinger
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -63,8 +72,52 @@ class HomeViewModel @Inject constructor(
         registerReceivers()
         updateCoreVersion()
         checkVpnState()
+        observeRoutingMode()
     }
     
+    private fun observeRoutingMode() {
+        viewModelScope.launch {
+            appPreferences.routingMode.collect { mode ->
+                _uiState.update { it.copy(routingMode = mode) }
+            }
+        }
+    }
+    
+    fun setRoutingMode(mode: com.dokodemo.data.preferences.RoutingMode) {
+        viewModelScope.launch {
+            appPreferences.setRoutingMode(mode)
+        }
+    }
+    
+    fun pingCurrentServer() {
+        val server = _uiState.value.currentServer ?: return
+        if (_uiState.value.isPinging) return
+        
+        viewModelScope.launch {
+            _uiState.update { it.copy(isPinging = true, toastMessage = "正在测试...") }
+            try {
+                val latency = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    serverPinger.ping(server.address, server.port)
+                }
+                serverRepository.updateLatency(server.id, latency?.toInt())
+                if (latency != null) {
+                    _uiState.update { it.copy(ping = "${latency}ms", toastMessage = "测试成功：${latency}ms") }
+                } else {
+                    _uiState.update { it.copy(ping = "--ms", toastMessage = "测试失败：节点不可达") }
+                }
+            } catch (e: Exception) {
+                serverRepository.updateLatency(server.id, null)
+                _uiState.update { it.copy(ping = "--ms", toastMessage = "测试异常: ${e.message}") }
+            } finally {
+                _uiState.update { it.copy(isPinging = false) }
+            }
+        }
+    }
+    
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
     private fun loadSelectedServer() {
         viewModelScope.launch {
             // Try to get selected server from database

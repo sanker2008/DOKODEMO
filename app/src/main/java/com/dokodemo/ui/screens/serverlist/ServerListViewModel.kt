@@ -129,13 +129,33 @@ class ServerListViewModel @Inject constructor(
                     }
                 }.forEach { it.join() }
                 
-                _uiState.update { it.copy(toastMessage = "测速完成：${successCount.get()}/${servers.size} 个节点可用") }
+                _uiState.update { it.copy(toastMessage = "测试完成：${successCount.get()}/${servers.size} 个节点可用") }
             } catch (e: Exception) {
                 android.util.Log.e("ServerListVM", "Ping failed: ${e.message}")
-                _uiState.update { it.copy(toastMessage = "测速失败: ${e.message}") }
+                _uiState.update { it.copy(toastMessage = "测试失败: ${e.message}") }
             }
 
             _uiState.update { it.copy(isPinging = false) }
+        }
+    }
+
+    fun pingSingleServer(server: ServerItem) {
+        viewModelScope.launch {
+            try {
+                _uiState.update { it.copy(toastMessage = "正在测试...") }
+                val latency = kotlinx.coroutines.withContext(Dispatchers.IO) {
+                    serverPinger.ping(server.address, server.port)
+                }
+                serverRepository.updateLatency(server.id, latency?.toInt())
+                if (latency != null) {
+                    _uiState.update { it.copy(toastMessage = "测试成功：${latency}ms") }
+                } else {
+                    _uiState.update { it.copy(toastMessage = "测试失败：节点不可达") }
+                }
+            } catch (e: Exception) {
+                serverRepository.updateLatency(server.id, null)
+                _uiState.update { it.copy(toastMessage = "测试异常: ${e.message}") }
+            }
         }
     }
 

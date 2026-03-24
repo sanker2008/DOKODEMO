@@ -126,6 +126,7 @@ fun SubscriptionScreen(
     if (uiState.errorMessage != null) {
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
+            containerColor = MaterialTheme.colorScheme.background,
             title = { Text("提示") },
             text = { Text(uiState.errorMessage!!) },
             confirmButton = {
@@ -191,9 +192,13 @@ private fun SubscriptionCard(
 
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Rounded.MoreVert, "更多")
+                    Icon(Icons.Rounded.MoreVert, "更多", tint = MaterialTheme.colorScheme.onSurface)
                 }
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                DropdownMenu(
+                    expanded = showMenu, 
+                    onDismissRequest = { showMenu = false },
+                    containerColor = MaterialTheme.colorScheme.background
+                ) {
                     DropdownMenuItem(
                         text = { Text("编辑") },
                         leadingIcon = { Icon(Icons.Rounded.Edit, null) },
@@ -221,6 +226,7 @@ private fun EditSubscriptionDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
         title = { Text("编辑订阅") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -278,6 +284,7 @@ private fun AddSubscriptionDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
         title = { Text("添加订阅") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
