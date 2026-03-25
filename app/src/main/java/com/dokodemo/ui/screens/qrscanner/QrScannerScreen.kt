@@ -56,8 +56,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.dokodemo.ui.components.IndustrialButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.FlashOn
+import androidx.compose.material.icons.rounded.FlashOff
+import androidx.compose.material.icons.rounded.PhotoLibrary
+import androidx.compose.runtime.rememberUpdatedState
+import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
@@ -101,7 +110,7 @@ fun QrScannerScreen(
                 scannedCode = result
                 scanStatus = "TARGET ACQUIRED"
                 android.widget.Toast.makeText(context, "解码成功", android.widget.Toast.LENGTH_SHORT).show()
-                onQrCodeScanned(result)
+                // Navigation is handled by LaunchedEffect(scannedCode)
             } else {
                 scanStatus = "SCAN FAILED"
                 android.widget.Toast.makeText(context, "未识别到有效的二维码", android.widget.Toast.LENGTH_SHORT).show()
@@ -126,6 +135,15 @@ fun QrScannerScreen(
         }
     }
     
+    // Navigate on main thread when a QR code is detected
+    // (camera callback runs on background thread, so navigate must be deferred)
+    LaunchedEffect(scannedCode) {
+        val code = scannedCode
+        if (code != null) {
+            onQrCodeScanned(code)
+        }
+    }
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -138,7 +156,6 @@ fun QrScannerScreen(
                     if (scannedCode == null) {
                         scannedCode = code
                         scanStatus = "TARGET ACQUIRED"
-                        onQrCodeScanned(code)
                     }
                 },
                 onCameraBound = { boundCamera ->
@@ -173,7 +190,11 @@ private fun decodeQrFromUri(context: Context, uri: Uri): String? {
         val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
         val reader = MultiFormatReader()
         
-        return reader.decode(binaryBitmap).text
+        val hints = mapOf(
+            DecodeHintType.TRY_HARDER to true,
+            DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)
+        )
+        return reader.decode(binaryBitmap, hints).text
     } catch (e: Exception) {
         e.printStackTrace()
         return null
@@ -190,11 +211,8 @@ private fun CameraPreview(
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     
-    DisposableEffect(Unit) {
-        onDispose {
-            cameraExecutor.shutdown()
-        }
-    }
+    // Use rememberUpdatedState to avoid re-binding when the callback changes
+    val currentOnQrCodeDetected by rememberUpdatedState(onQrCodeDetected)
     
     AndroidView(
         factory = { ctx ->
@@ -202,39 +220,44 @@ private fun CameraPreview(
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
         },
-        modifier = modifier,
-        update = { previewView ->
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-            cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
-                
-                val preview = Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-                
-                val imageAnalysis = ImageAnalysis.Builder()
-                    .setTargetResolution(Size(1280, 720))
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .build()
-                
-                // Use our new QrCodeAnalyzer
-                imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzer(onQrCodeDetected))
-                
-                try {
-                    cameraProvider.unbindAll()
-                    val camera = cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        CameraSelector.DEFAULT_BACK_CAMERA,
-                        preview,
-                        imageAnalysis
-                    )
-                    onCameraBound(camera)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }, ContextCompat.getMainExecutor(context))
+        modifier = modifier
+    ) { previewView ->
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
+            
+            val imageAnalysis = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+            
+            imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzer(currentOnQrCodeDetected))
+            
+            try {
+                // Only unbind and rebind if not already bound with the same use cases
+                // (Simplified: unbindAll is still safe here if 'update' is called correctly)
+                cameraProvider.unbindAll()
+                val camera = cameraProvider.bindToLifecycle(
+                    lifecycleOwner,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview,
+                    imageAnalysis
+                )
+                onCameraBound(camera)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }, ContextCompat.getMainExecutor(context))
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraExecutor.shutdown()
         }
-    )
+    }
 }
 
 @Composable
@@ -245,270 +268,136 @@ private fun ScannerOverlay(
     onFlashToggle: () -> Unit,
     onGalleryClick: () -> Unit
 ) {
-    // Scan line animation
+    // 柔和的扫码线动画
     val infiniteTransition = rememberInfiniteTransition(label = "scanLine")
     val scanLineOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+            animation = tween(2500, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
         ),
         label = "scanLineOffset"
     )
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Top bar
+        // 顶部栏 (Mist & Dawn - Transparent + Blur feel)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
-                .padding(16.dp),
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.85f))
+                .padding(top = 48.dp, bottom = 16.dp, start = 20.dp, end = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "SYS.READY",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
-                    )
-                }
-                Text(
-                    text = "NET_SECURE // PROTOCOL_V2",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
+            Text(
+                text = "扫描二维码",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             
-            // Close button
+            // 关闭按钮
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .border(1.dp, MaterialTheme.colorScheme.outline)
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable { onClose() },
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "×",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 20.sp
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Rounded.Close,
+                    contentDescription = "Close",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
         
-        // Range/ISO info
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "RANGE: 0.4M",
-                color = MaterialTheme.colorScheme.primary,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp
-            )
-            Text(
-                text = "ISO: AUTO",
-                color = MaterialTheme.colorScheme.primary,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp
-            )
-        }
-        
-        // Center viewfinder area
+        // 中间扫码区域
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            // Viewfinder brackets
-            ViewfinderBrackets(
-                scanLineOffset = scanLineOffset,
-                modifier = Modifier.size(250.dp)
-            )
+            // 背景暗化
+            Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.4f)))
             
-            // Center crosshair
-            val primaryColorCross = MaterialTheme.colorScheme.primary
-            Canvas(modifier = Modifier.size(20.dp)) {
-                val center = Offset(size.width / 2, size.height / 2)
-                val length = 10.dp.toPx()
-                
-                // Horizontal line
-                drawLine(
-                    color = primaryColorCross.copy(alpha = 0.5f),
-                    start = Offset(center.x - length, center.y),
-                    end = Offset(center.x + length, center.y),
-                    strokeWidth = 1.dp.toPx()
-                )
-                // Vertical line
-                drawLine(
-                    color = primaryColorCross.copy(alpha = 0.5f),
-                    start = Offset(center.x, center.y - length),
-                    end = Offset(center.x, center.y + length),
-                    strokeWidth = 1.dp.toPx()
-                )
-            }
-        }
-        
-        // Align QR Code text
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
+            // 扫码框
+            val primaryColor = MaterialTheme.colorScheme.primary
             Box(
                 modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .size(280.dp)
+                    .border(2.dp, primaryColor.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
+                    .background(androidx.compose.ui.graphics.Color.Transparent)
             ) {
-                Text(
-                    text = "ALIGN QR CODE",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    letterSpacing = 2.sp
-                )
+                // 扫描线
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val scanY = size.height * scanLineOffset
+                    drawLine(
+                        color = primaryColor,
+                        start = Offset(0f, scanY),
+                        end = Offset(size.width, scanY),
+                        strokeWidth = 3.dp.toPx()
+                    )
+                    // 渐变光晕
+                    drawRect(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(androidx.compose.ui.graphics.Color.Transparent, primaryColor.copy(alpha = 0.3f)),
+                            startY = maxOf(0f, scanY - 60.dp.toPx()),
+                            endY = scanY
+                        ),
+                        topLeft = Offset(0f, maxOf(0f, scanY - 60.dp.toPx())),
+                        size = androidx.compose.ui.geometry.Size(size.width, minOf(60.dp.toPx(), scanY))
+                    )
+                }
             }
         }
         
-        // Status section
+        // 底部控制操作区
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
-                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = if (scanStatus == "SCANNING...") "请将二维码放入框内" else "识别成功",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (scanStatus == "SCANNING...") MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Column {
-                    Text(
-                        text = "STATUS",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 10.sp
-                    )
-                    Text(
-                        text = scanStatus,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                }
-                
-                Text(
-                    text = "CAM_01 [ACTIVE]",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 10.sp
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Action buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+                // 闪光灯按钮
                 IndustrialButton(
-                    text = "⚡ FLASH",
-                    onClick = onFlashToggle,
+                    text = "照明",
+                    icon = if (isFlashOn) Icons.Rounded.FlashOn else Icons.Rounded.FlashOff,
                     isActive = isFlashOn,
+                    onClick = onFlashToggle,
                     modifier = Modifier.weight(1f)
                 )
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                // 相册按钮
                 IndustrialButton(
-                    text = "🖼 GALLERY",
+                    text = "相册",
+                    icon = Icons.Rounded.PhotoLibrary,
                     onClick = onGalleryClick,
                     modifier = Modifier.weight(1f)
                 )
             }
-            
-            Spacer(modifier = Modifier.height(12.dp))
-            
-            // Footer
-            Text(
-                text = "DOKODEMO VPN // V.2.0",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            Spacer(modifier = Modifier.height(32.dp))
         }
-    }
-}
-
-@Composable
-private fun ViewfinderBrackets(
-    scanLineOffset: Float,
-    modifier: Modifier = Modifier
-) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    Canvas(modifier = modifier) {
-        val strokeWidth = 3.dp.toPx()
-        val bracketLength = 40.dp.toPx()
-        val cornerOffset = 8.dp.toPx()
-        
-        val rect = Rect(
-            left = cornerOffset,
-            top = cornerOffset,
-            right = size.width - cornerOffset,
-            bottom = size.height - cornerOffset
-        )
-        
-        // Draw corner brackets
-        val corners = listOf(
-            // Top-left
-            Pair(Offset(rect.left, rect.top + bracketLength), Offset(rect.left, rect.top)),
-            Pair(Offset(rect.left, rect.top), Offset(rect.left + bracketLength, rect.top)),
-            // Top-right
-            Pair(Offset(rect.right - bracketLength, rect.top), Offset(rect.right, rect.top)),
-            Pair(Offset(rect.right, rect.top), Offset(rect.right, rect.top + bracketLength)),
-            // Bottom-left
-            Pair(Offset(rect.left, rect.bottom - bracketLength), Offset(rect.left, rect.bottom)),
-            Pair(Offset(rect.left, rect.bottom), Offset(rect.left + bracketLength, rect.bottom)),
-            // Bottom-right
-            Pair(Offset(rect.right - bracketLength, rect.bottom), Offset(rect.right, rect.bottom)),
-            Pair(Offset(rect.right, rect.bottom - bracketLength), Offset(rect.right, rect.bottom))
-        )
-        
-        corners.forEach { (start, end) ->
-            drawLine(
-                color = primaryColor,
-                start = start,
-                end = end,
-                strokeWidth = strokeWidth
-            )
-        }
-        
-        // Draw scanning line
-        val scanY = rect.top + (rect.height * scanLineOffset)
-        drawLine(
-            color = primaryColor.copy(alpha = 0.7f),
-            start = Offset(rect.left + 20.dp.toPx(), scanY),
-            end = Offset(rect.right - 20.dp.toPx(), scanY),
-            strokeWidth = 2.dp.toPx()
-        )
     }
 }

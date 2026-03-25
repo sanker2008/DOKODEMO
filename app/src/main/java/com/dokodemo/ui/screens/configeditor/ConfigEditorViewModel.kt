@@ -105,8 +105,9 @@ class ConfigEditorViewModel @Inject constructor(
     fun parseUri(uri: String) {
         viewModelScope.launch {
             try {
-                val decodedUri = URLDecoder.decode(uri, StandardCharsets.UTF_8.toString())
-                val profile = shareLinkParser.parse(decodedUri)
+                // Navigation arguments are already decoded, and raw scanned URIs shouldn't be fully decoded here
+                // as it breaks base64 (+ replaced with space).
+                val profile = shareLinkParser.parse(uri.trim())
                 if (profile != null) {
                     _uiState.update {
                         it.copy(
@@ -114,14 +115,20 @@ class ConfigEditorViewModel @Inject constructor(
                             address = profile.address,
                             port = if (profile.port == 0) "" else profile.port.toString(),
                             uuid = profile.uuid,
+                            password = profile.password,
                             protocol = profile.protocol,
                             security = profile.encryption,
                             network = profile.network,
                             wsPath = profile.wsPath,
                             wsHost = profile.wsHost,
                             useTls = profile.useTls,
-                            serverName = profile.serverName
+                            serverName = profile.serverName,
+                            kcpHeader = profile.kcpHeader
                         )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(addressError = "分享链接解析失败: 格式不支持或已损坏")
                     }
                 }
             } catch (e: Exception) {

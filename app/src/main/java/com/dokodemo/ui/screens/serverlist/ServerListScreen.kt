@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -68,6 +69,19 @@ fun ServerListScreen(
         result
     }
 
+    val listState = rememberLazyListState()
+    var hasScrolledToSelected by remember { mutableStateOf(false) }
+
+    LaunchedEffect(filteredServers, uiState.selectedServerId) {
+        if (!hasScrolledToSelected && filteredServers.isNotEmpty() && uiState.selectedServerId != null) {
+            val index = filteredServers.indexOfFirst { it.id == uiState.selectedServerId }
+            if (index != -1) {
+                listState.scrollToItem(index)
+                hasScrolledToSelected = true
+            }
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -115,8 +129,9 @@ fun ServerListScreen(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.primary)
                 ) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.scan_qr), color = MaterialTheme.colorScheme.onSurface) },
@@ -179,6 +194,7 @@ fun ServerListScreen(
 
             // ─── 节点列表 ─────────────────────────────────────────────────
             LazyColumn(
+                state = listState,
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -190,7 +206,10 @@ fun ServerListScreen(
                     NodeCard(
                         server = server,
                         isSelected = server.id == uiState.selectedServerId,
-                        onClick = { viewModel.selectServer(server.id) },
+                        onClick = {
+                            viewModel.selectServer(server.id)
+                            onNavigateBack()
+                        },
                         onEdit = { onNavigateToConfigEditor(server.id) },
                         onDelete = { viewModel.deleteServer(server) },
                         onPing = { viewModel.pingSingleServer(server) }
@@ -331,7 +350,7 @@ private fun NodeCard(
                 DropdownMenu(
                     expanded = showMenu, 
                     onDismissRequest = { showMenu = false },
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ping_all)) },

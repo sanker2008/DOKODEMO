@@ -36,6 +36,7 @@ fun IndustrialButton(
     modifier: Modifier = Modifier,
     isActive: Boolean = false,
     enabled: Boolean = true,
+    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
     minHeight: Dp = 52.dp,
     // 以下参数保留兼容性但不使用
     borderWidth: Dp = 0.dp
@@ -76,12 +77,25 @@ fun IndustrialButton(
         elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp),
         interactionSource = interactionSource
     ) {
-        Text(
-            text = text,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
-            textAlign = TextAlign.Center
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

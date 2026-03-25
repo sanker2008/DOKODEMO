@@ -252,7 +252,7 @@ private fun InputDropdown(
         ExposedDropdownMenu(
             expanded = expanded, 
             onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             options.forEach { opt ->
                 DropdownMenuItem(text = { Text(opt) }, onClick = { onValueChange(opt); expanded = false })
@@ -280,7 +280,7 @@ private fun InputGroupDropdown(
         ExposedDropdownMenu(
             expanded = expanded, 
             onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             DropdownMenuItem(text = { Text("无分组") }, onClick = { onSelected(null); expanded = false })
             groups.forEach { g ->

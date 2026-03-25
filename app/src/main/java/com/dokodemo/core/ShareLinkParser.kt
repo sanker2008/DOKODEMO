@@ -101,7 +101,8 @@ class ShareLinkParser @Inject constructor() {
             network = fields["net"] ?: "tcp",
             wsPath = fields["path"] ?: "",
             wsHost = fields["host"] ?: "",
-            serverName = fields["sni"] ?: ""
+            serverName = fields["sni"] ?: "",
+            kcpHeader = fields["type"] ?: "none"
         )
     }
     

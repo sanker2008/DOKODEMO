@@ -48,9 +48,9 @@ class AppPreferences @Inject constructor(
 
     // ─── Flow（响应式读取） ────────────────────────────────────────────────
 
-    /** 深色/浅色主题，默认深色 */
+    /** 深色/浅色主题，默认浅色 */
     val isDarkMode: Flow<Boolean> = dataStore.data
-        .map { it[DARK_MODE_KEY] ?: true }
+        .map { it[DARK_MODE_KEY] ?: false }
 
     /** 字体大小缩放比例，默认 1.0f */
     val fontSizeScale: Flow<Float> = dataStore.data

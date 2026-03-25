@@ -197,7 +197,7 @@ private fun SubscriptionCard(
                 DropdownMenu(
                     expanded = showMenu, 
                     onDismissRequest = { showMenu = false },
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     DropdownMenuItem(
                         text = { Text("编辑") },

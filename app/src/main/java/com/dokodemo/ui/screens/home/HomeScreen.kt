@@ -203,7 +203,7 @@ private fun TopBar(
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                containerColor = MaterialTheme.colorScheme.background
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 com.dokodemo.data.preferences.RoutingMode.entries.forEach { mode ->
                     val title = when (mode) {

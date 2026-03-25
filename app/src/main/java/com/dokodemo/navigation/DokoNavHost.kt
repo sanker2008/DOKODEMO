@@ -115,9 +115,8 @@ fun DokoNavHost(
                     navController.popBackStack()
                 },
                 onQrCodeScanned = { code ->
-                    // Get the ServerList back stack entry (which becomes previousBackStackEntry for ConfigEditor)
-                    navController.previousBackStackEntry?.savedStateHandle?.set("scannedUri", code)
-                    navController.navigate(Route.ConfigEditor.path) {
+                    val encoded = URLEncoder.encode(code, StandardCharsets.UTF_8.toString())
+                    navController.navigate("${Route.ConfigEditor.path}?uri=$encoded") {
                         popUpTo(Route.QrScanner.path) { inclusive = true }
                     }
                 }
