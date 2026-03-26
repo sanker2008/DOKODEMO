@@ -77,6 +77,7 @@ class DokoDemoVpnService : VpnService() {
         const val EXTRA_DOWNLOAD_SPEED = "download_speed"
         const val EXTRA_TOTAL_UPLOAD = "total_upload"
         const val EXTRA_TOTAL_DOWNLOAD = "total_download"
+        const val EXTRA_ERROR_REASON = "error_reason"
         
         @Volatile
         private var instance: DokoDemoVpnService? = null
@@ -185,17 +186,51 @@ class DokoDemoVpnService : VpnService() {
             try {
                 Log.i(TAG, "Starting VPN connection to: $serverName")
                 
-                // 1. Start V2Ray core (SOCKS5 proxy)
-                val coreStarted = try {
-                    coreManager.startCore(configJson)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Exception starting V2Ray core: ${e.message}", e)
-                    false
+                // 1. Start V2Ray core with automatic port retry
+                var coreError: String? = null
+                var finalConfig = configJson
+                
+                for (attempt in 0 until 5) {
+                    if (attempt > 0) {
+                        // Parse config and modify only the dns-in inbound port
+                        try {
+                            val newPort = CoreManager.DNS_INBOUND_PORT + attempt
+                            Log.w(TAG, "Port conflict, retrying with DNS port $newPort (attempt ${attempt + 1}/5)")
+                            val jsonObj = com.google.gson.JsonParser.parseString(configJson).asJsonObject
+                            val inbounds = jsonObj.getAsJsonArray("inbounds")
+                            for (i in 0 until inbounds.size()) {
+                                val inbound = inbounds[i].asJsonObject
+                                if (inbound.get("tag")?.asString == "dns-in") {
+                                    inbound.addProperty("port", newPort)
+                                    break
+                                }
+                            }
+                            finalConfig = jsonObj.toString()
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to modify config for retry: ${e.message}")
+                            break
+                        }
+                    }
+                    
+                    coreError = try {
+                        coreManager.startCore(finalConfig)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Exception starting V2Ray core: ${e.message}", e)
+                        "核心异常: ${e.message}"
+                    }
+                    
+                    if (coreError == null) {
+                        if (attempt > 0) Log.i(TAG, "Core started on alternate DNS port ${CoreManager.DNS_INBOUND_PORT + attempt}")
+                        break // success
+                    }
+                    
+                    // Only retry on port binding errors
+                    if (!coreError.contains("address already in use", ignoreCase = true)) break
                 }
                 
-                if (!coreStarted) {
-                    Log.e(TAG, "Failed to start V2Ray core")
-                    broadcastDisconnected()
+                if (coreError != null) {
+                    Log.e(TAG, "Failed to start V2Ray core: $coreError")
+                    broadcastDisconnected(coreError)
                     stopSelf()
                     return@launch
                 }
@@ -300,8 +335,15 @@ class DokoDemoVpnService : VpnService() {
         }
     }
     
-    private fun broadcastDisconnected() {
-        try { sendBroadcast(Intent(ACTION_VPN_DISCONNECTED).apply { setPackage(packageName) }) } catch (_: Exception) {}
+    private fun broadcastDisconnected(errorReason: String? = null) {
+        try {
+            sendBroadcast(Intent(ACTION_VPN_DISCONNECTED).apply {
+                setPackage(packageName)
+                if (errorReason != null) {
+                    putExtra(EXTRA_ERROR_REASON, errorReason)
+                }
+            })
+        } catch (_: Exception) {}
     }
     
     private fun stopVpn() {

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -179,6 +178,7 @@ class HomeViewModel @Inject constructor(
                         }
                     }
                     DokoDemoVpnService.ACTION_VPN_DISCONNECTED -> {
+                        val errorReason = intent?.getStringExtra(DokoDemoVpnService.EXTRA_ERROR_REASON)
                         _uiState.update { state ->
                             state.copy(
                                 isConnected = false,
@@ -186,7 +186,8 @@ class HomeViewModel @Inject constructor(
                                 ipAddress = "UNPROTECTED",
                                 uploadSpeed = "0 KB/s",
                                 downloadSpeed = "0 KB/s",
-                                speedHistory = List(50) { 0f }
+                                speedHistory = List(50) { 0f },
+                                toastMessage = errorReason?.let { "连接失败：$it" }
                             )
                         }
                     }
@@ -202,19 +203,21 @@ class HomeViewModel @Inject constructor(
         }
         
         trafficReceiver?.let { receiver ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.registerReceiver(receiver, trafficFilter, Context.RECEIVER_NOT_EXPORTED)
-            } else {
-                context.registerReceiver(receiver, trafficFilter)
-            }
+            ContextCompat.registerReceiver(
+                context,
+                receiver,
+                trafficFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         }
         
         vpnStateReceiver?.let { receiver ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.registerReceiver(receiver, vpnStateFilter, Context.RECEIVER_NOT_EXPORTED)
-            } else {
-                context.registerReceiver(receiver, vpnStateFilter)
-            }
+            ContextCompat.registerReceiver(
+                context,
+                receiver,
+                vpnStateFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         }
     }
     

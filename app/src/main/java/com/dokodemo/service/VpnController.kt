@@ -45,6 +45,7 @@ class VpnController @Inject constructor(
         val routingMode = appPreferences.routingMode.first()
         val proxiedApps = appPreferences.proxiedApps.first()
         
+        // Generate initial config (service will handle retries via CoreManager)
         val configJson = coreManager.generateConfig(profile, routingMode)
         
         val intent = Intent(context, DokoDemoVpnService::class.java).apply {
@@ -52,6 +53,8 @@ class VpnController @Inject constructor(
             putExtra(DokoDemoVpnService.EXTRA_SERVER_CONFIG, configJson)
             putExtra(DokoDemoVpnService.EXTRA_SERVER_NAME, profile.name)
             putExtra("routing_mode", routingMode.name)
+            putExtra("server_address", profile.address)
+            putExtra("server_port", profile.port)
             putStringArrayListExtra("proxied_apps", ArrayList(proxiedApps.toList()))
         }
         

@@ -34,6 +34,8 @@ class CoreManager @Inject constructor(
         // DNS settings
         const val DNS_LOCAL = "8.8.8.8"
         const val DNS_REMOTE = "1.1.1.1"
+        const val DNS_INBOUND_PORT = 10853
+        private const val MAX_PORT_RETRIES = 5
     }
     
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
@@ -79,7 +81,7 @@ class CoreManager @Inject constructor(
     /**
      * Generate V2Ray JSON configuration from ServerProfile
      */
-    fun generateConfig(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL): String {
+    fun generateConfig(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL, dnsPort: Int = DNS_INBOUND_PORT): String {
         val config = buildMap<String, Any> {
             // Log settings
             put("log", mapOf(
@@ -162,7 +164,7 @@ class CoreManager @Inject constructor(
                 ),
                 mapOf(
                     "tag" to "dns-in",
-                    "port" to 5353,
+                    "port" to dnsPort,
                     "listen" to "127.0.0.1",
                     "protocol" to "dokodemo-door",
                     "settings" to mapOf(
@@ -450,12 +452,49 @@ class CoreManager @Inject constructor(
         return ""
     }
     
-    fun startCore(configJson: String): Boolean {
+    /**
+     * Start V2Ray core with automatic port retry.
+     * If a port binding conflict occurs, automatically retries with different DNS inbound ports.
+     * @return null if successful, or an error message string on failure.
+     */
+    fun startCore(configJson: String): String? {
+        initialize()
+        return startCoreInternal(configJson)
+    }
+    
+    /**
+     * Start V2Ray core with a profile, with automatic port retry on bind failure.
+     * @return null if successful, or an error message string on failure.
+     */
+    fun startCoreWithRetry(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL): String? {
         initialize()
         
+        for (attempt in 0 until MAX_PORT_RETRIES) {
+            val dnsPort = DNS_INBOUND_PORT + attempt
+            val config = generateConfig(profile, routingMode, dnsPort)
+            Log.i(TAG, "Attempting core start (attempt ${attempt + 1}/$MAX_PORT_RETRIES, dnsPort=$dnsPort)")
+            
+            val error = startCoreInternal(config)
+            if (error == null) {
+                if (attempt > 0) {
+                    Log.i(TAG, "Successfully started on alternate DNS port $dnsPort after $attempt retries")
+                }
+                return null // success
+            }
+            
+            // Only retry if it's a port binding error
+            if (!error.contains("address already in use", ignoreCase = true)) {
+                return error // non-retryable error
+            }
+            
+            Log.w(TAG, "Port conflict on attempt ${attempt + 1}, retrying with port ${dnsPort + 1}...")
+        }
+        return "所有备用端口均被占用，请重启设备后重试"
+    }
+    
+    private fun startCoreInternal(configJson: String): String? {
         return try {
             try { coreController?.stopLoop() } catch (_: Throwable) {}
-            // newCoreController requires a CoreCallbackHandler, passing null causes SIGABRT
             val callback = object : libv2ray.CoreCallbackHandler {
                 override fun onEmitStatus(status: Long, msg: String?): Long {
                     Log.i(TAG, "Core status [$status]: $msg")
@@ -474,19 +513,23 @@ class CoreManager @Inject constructor(
             }
             
             val ctrl = Libv2ray.newCoreController(callback)
-            if (ctrl == null) return false
+            if (ctrl == null) return "初始化 V2Ray 核心失败"
             
-            // startLoop takes the config json!
             ctrl.startLoop(configJson)
             
             coreController = ctrl
             currentConfig = configJson
             Log.i(TAG, "V2Ray core started successfully")
-            true
+            null // success
         } catch (e: Throwable) {
             Log.e(TAG, "Native library error: ${e.message}")
-            currentConfig = configJson
-            false
+            val rawMsg = e.message ?: "Unknown error"
+            when {
+                rawMsg.contains("address already in use", ignoreCase = true) ->
+                    "端口被占用: $rawMsg"
+                rawMsg.contains("timeout") -> "连接超时"
+                else -> "核心启动失败: $rawMsg"
+            }
         }
     }
     
