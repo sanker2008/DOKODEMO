@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
+import com.dokodemo.data.preferences.CustomRoutingRule
+import com.dokodemo.data.preferences.CustomRuleAction
+import com.dokodemo.data.preferences.CustomRuleMatchType
 import com.dokodemo.data.preferences.RoutingMode
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -81,7 +84,15 @@ class CoreManager @Inject constructor(
     /**
      * Generate V2Ray JSON configuration from ServerProfile
      */
-    fun generateConfig(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL, dnsPort: Int = DNS_INBOUND_PORT): String {
+    fun generateConfig(
+        profile: ServerProfile,
+        routingMode: RoutingMode = RoutingMode.GLOBAL,
+        muxEnabled: Boolean = false,
+        allowInsecure: Boolean = false,
+        udpEnabled: Boolean = true,
+        customRules: List<CustomRoutingRule> = emptyList(),
+        dnsPort: Int = DNS_INBOUND_PORT
+    ): String {
         val config = buildMap<String, Any> {
             // Log settings
             put("log", mapOf(
@@ -145,7 +156,7 @@ class CoreManager @Inject constructor(
                     ),
                     "settings" to mapOf(
                         "auth" to "noauth",
-                        "udp" to true,
+                        "udp" to udpEnabled,
                         "allowTransparent" to false
                     )
                 ),
@@ -156,7 +167,13 @@ class CoreManager @Inject constructor(
                     "protocol" to "http",
                     "sniffing" to mapOf(
                         "enabled" to true,
-                        "destOverride" to listOf("http", "tls", "quic")
+                        "destOverride" to buildList {
+                            add("http")
+                            add("tls")
+                            if (udpEnabled) {
+                                add("quic")
+                            }
+                        }
                     ),
                     "settings" to mapOf(
                         "allowTransparent" to false
@@ -177,7 +194,7 @@ class CoreManager @Inject constructor(
             
             // Outbounds
             put("outbounds", listOf(
-                generateOutbound(profile),
+                generateOutbound(profile, muxEnabled, allowInsecure),
                 mapOf(
                     "tag" to "direct",
                     "protocol" to "freedom",
@@ -197,19 +214,25 @@ class CoreManager @Inject constructor(
                 "domainStrategy" to "IPIfNonMatch",
                 "domainMatcher" to "hybrid",
                 "rules" to buildList {
-                    // Block ads (optional)
-                    add(mapOf(
-                        "type" to "field",
-                        "domain" to listOf("geosite:category-ads-all"),
-                        "outboundTag" to "block"
-                    ))
-                    
                     // Direct for private IPs
                     add(mapOf(
                         "type" to "field",
                         "ip" to listOf("geoip:private"),
                         "outboundTag" to "direct"
                     ))
+
+                    if (!udpEnabled) {
+                        add(mapOf(
+                            "type" to "field",
+                            "network" to "udp",
+                            "outboundTag" to "block"
+                        ))
+                    }
+
+                    customRules
+                        .filter { it.enabled }
+                        .mapNotNull(::buildCustomRoutingRule)
+                        .forEach(::add)
                     
                     // Direct for CN sites only in BYPASS_CN mode
                     if (routingMode == RoutingMode.BYPASS_CN) {
@@ -267,18 +290,26 @@ class CoreManager @Inject constructor(
         return gson.toJson(config)
     }
     
-    private fun generateOutbound(profile: ServerProfile): Map<String, Any> {
+    private fun generateOutbound(
+        profile: ServerProfile,
+        muxEnabled: Boolean,
+        allowInsecure: Boolean
+    ): Map<String, Any> {
         return when (profile.protocol) {
-            Protocol.VLESS -> generateVlessOutbound(profile)
-            Protocol.VMESS -> generateVmessOutbound(profile)
-            Protocol.TROJAN -> generateTrojanOutbound(profile)
+            Protocol.VLESS -> generateVlessOutbound(profile, muxEnabled, allowInsecure)
+            Protocol.VMESS -> generateVmessOutbound(profile, muxEnabled, allowInsecure)
+            Protocol.TROJAN -> generateTrojanOutbound(profile, muxEnabled, allowInsecure)
             Protocol.SHADOWSOCKS -> generateShadowsocksOutbound(profile)
-            else -> generateVlessOutbound(profile)
+            else -> generateVlessOutbound(profile, muxEnabled, allowInsecure)
         }
     }
     
-    private fun generateVlessOutbound(profile: ServerProfile): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile)
+    private fun generateVlessOutbound(
+        profile: ServerProfile,
+        muxEnabled: Boolean,
+        allowInsecure: Boolean
+    ): Map<String, Any> {
+        val streamSettings = generateStreamSettings(profile, allowInsecure)
         
         return mapOf(
             "tag" to "proxy",
@@ -303,14 +334,18 @@ class CoreManager @Inject constructor(
             ),
             "streamSettings" to streamSettings,
             "mux" to mapOf(
-                "enabled" to false,
-                "concurrency" to -1
+                "enabled" to muxEnabled,
+                "concurrency" to if (muxEnabled) 8 else -1
             )
         )
     }
     
-    private fun generateVmessOutbound(profile: ServerProfile): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile)
+    private fun generateVmessOutbound(
+        profile: ServerProfile,
+        muxEnabled: Boolean,
+        allowInsecure: Boolean
+    ): Map<String, Any> {
+        val streamSettings = generateStreamSettings(profile, allowInsecure)
         
         return mapOf(
             "tag" to "proxy",
@@ -333,14 +368,18 @@ class CoreManager @Inject constructor(
             ),
             "streamSettings" to streamSettings,
             "mux" to mapOf(
-                "enabled" to true,
-                "concurrency" to 8
+                "enabled" to muxEnabled,
+                "concurrency" to if (muxEnabled) 8 else -1
             )
         )
     }
     
-    private fun generateTrojanOutbound(profile: ServerProfile): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile)
+    private fun generateTrojanOutbound(
+        profile: ServerProfile,
+        muxEnabled: Boolean,
+        allowInsecure: Boolean
+    ): Map<String, Any> {
+        val streamSettings = generateStreamSettings(profile, allowInsecure)
         
         return mapOf(
             "tag" to "proxy",
@@ -357,8 +396,8 @@ class CoreManager @Inject constructor(
             ),
             "streamSettings" to streamSettings,
             "mux" to mapOf(
-                "enabled" to false,
-                "concurrency" to -1
+                "enabled" to muxEnabled,
+                "concurrency" to if (muxEnabled) 8 else -1
             )
         )
     }
@@ -381,7 +420,7 @@ class CoreManager @Inject constructor(
         )
     }
     
-    private fun generateStreamSettings(profile: ServerProfile): Map<String, Any> {
+    private fun generateStreamSettings(profile: ServerProfile, allowInsecure: Boolean): Map<String, Any> {
         return buildMap {
             put("network", profile.network.ifEmpty { "tcp" })
             
@@ -390,7 +429,7 @@ class CoreManager @Inject constructor(
                 put("security", "tls")
                 put("tlsSettings", mapOf(
                     "serverName" to profile.serverName.ifEmpty { profile.address },
-                    "allowInsecure" to profile.allowInsecure,
+                    "allowInsecure" to (profile.allowInsecure || allowInsecure),
                     "fingerprint" to "chrome"
                 ))
             } else {
@@ -444,6 +483,52 @@ class CoreManager @Inject constructor(
             }
         }
     }
+
+    private fun buildCustomRoutingRule(rule: CustomRoutingRule): Map<String, Any>? {
+        val value = rule.value.trim()
+        if (value.isEmpty()) {
+            return null
+        }
+
+        val outboundTag = when (rule.action) {
+            CustomRuleAction.PROXY -> "proxy"
+            CustomRuleAction.DIRECT -> "direct"
+            CustomRuleAction.BLOCK -> "block"
+        }
+
+        return when (rule.matchType) {
+            CustomRuleMatchType.DOMAIN_FULL -> mapOf(
+                "type" to "field",
+                "domain" to listOf("full:$value"),
+                "outboundTag" to outboundTag
+            )
+            CustomRuleMatchType.DOMAIN_SUFFIX -> mapOf(
+                "type" to "field",
+                "domain" to listOf("domain:$value"),
+                "outboundTag" to outboundTag
+            )
+            CustomRuleMatchType.DOMAIN_KEYWORD -> mapOf(
+                "type" to "field",
+                "domain" to listOf("keyword:$value"),
+                "outboundTag" to outboundTag
+            )
+            CustomRuleMatchType.IP_CIDR -> mapOf(
+                "type" to "field",
+                "ip" to listOf(value),
+                "outboundTag" to outboundTag
+            )
+            CustomRuleMatchType.GEOSITE -> mapOf(
+                "type" to "field",
+                "domain" to listOf("geosite:$value"),
+                "outboundTag" to outboundTag
+            )
+            CustomRuleMatchType.GEOIP -> mapOf(
+                "type" to "field",
+                "ip" to listOf("geoip:$value"),
+                "outboundTag" to outboundTag
+            )
+        }
+    }
     
     /**
      * Test configuration validity
@@ -466,12 +551,27 @@ class CoreManager @Inject constructor(
      * Start V2Ray core with a profile, with automatic port retry on bind failure.
      * @return null if successful, or an error message string on failure.
      */
-    fun startCoreWithRetry(profile: ServerProfile, routingMode: RoutingMode = RoutingMode.GLOBAL): String? {
+    fun startCoreWithRetry(
+        profile: ServerProfile,
+        routingMode: RoutingMode = RoutingMode.GLOBAL,
+        muxEnabled: Boolean = false,
+        allowInsecure: Boolean = false,
+        udpEnabled: Boolean = true,
+        customRules: List<CustomRoutingRule> = emptyList()
+    ): String? {
         initialize()
         
         for (attempt in 0 until MAX_PORT_RETRIES) {
             val dnsPort = DNS_INBOUND_PORT + attempt
-            val config = generateConfig(profile, routingMode, dnsPort)
+            val config = generateConfig(
+                profile = profile,
+                routingMode = routingMode,
+                muxEnabled = muxEnabled,
+                allowInsecure = allowInsecure,
+                udpEnabled = udpEnabled,
+                customRules = customRules,
+                dnsPort = dnsPort
+            )
             Log.i(TAG, "Attempting core start (attempt ${attempt + 1}/$MAX_PORT_RETRIES, dnsPort=$dnsPort)")
             
             val error = startCoreInternal(config)

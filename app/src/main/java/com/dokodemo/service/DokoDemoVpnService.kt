@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.dokodemo.MainActivity
 import com.dokodemo.core.CoreManager
 import com.dokodemo.data.model.ServerProfile
+import com.dokodemo.data.preferences.SplitTunnelingMode
 import dagger.hilt.android.AndroidEntryPoint
 import com.dokodemo.core.Tun2socksWrapper
 import kotlinx.coroutines.CoroutineScope
@@ -136,16 +137,15 @@ class DokoDemoVpnService : VpnService() {
         when (intent?.action) {
             ACTION_START -> {
                 val configJson = intent.getStringExtra(EXTRA_SERVER_CONFIG)
-                    val serverName = intent.getStringExtra(EXTRA_SERVER_NAME) ?: "DokoDemo"
-                    val routingMode = intent.getStringExtra("routing_mode")
-                    val proxiedApps = intent.getStringArrayListExtra("proxied_apps")
-                    
-                    if (configJson != null) {
-                        // MUST call startForeground immediately on the main thread
-                        // before doing any heavy work, to avoid ForegroundServiceDidNotStartInTimeException
-                        startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
-                        startVpn(configJson, serverName, routingMode, proxiedApps)
-                    } else {
+                val serverName = intent.getStringExtra(EXTRA_SERVER_NAME) ?: "DokoDemo"
+                val routingMode = intent.getStringExtra("routing_mode")
+                val splitTunnelingMode = intent.getStringExtra("split_tunneling_mode")
+                val proxiedApps = intent.getStringArrayListExtra("proxied_apps")
+
+                if (configJson != null) {
+                    startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
+                    startVpn(configJson, serverName, routingMode, splitTunnelingMode, proxiedApps)
+                } else {
                     Log.e(TAG, "No configuration provided")
                     stopSelf()
                 }
@@ -167,6 +167,7 @@ class DokoDemoVpnService : VpnService() {
         configJson: String,
         serverName: String,
         routingMode: String? = null,
+        splitTunnelingMode: String? = null,
         proxiedApps: List<String>? = null
     ) {
         if (isRunning) {
@@ -253,18 +254,34 @@ class DokoDemoVpnService : VpnService() {
                     vpnBuilder.setMetered(false)
                 }
                 
-                if (routingMode == "SPLIT" && !proxiedApps.isNullOrEmpty()) {
-                    Log.i(TAG, "Split tunneling mode: ${proxiedApps.size} apps")
-                    proxiedApps.forEach { pkg ->
+                if (routingMode == "SPLIT") {
+                    val mode = runCatching {
+                        SplitTunnelingMode.valueOf(splitTunnelingMode ?: SplitTunnelingMode.PROXY_SELECTED.name)
+                    }.getOrDefault(SplitTunnelingMode.PROXY_SELECTED)
+
+                    if (proxiedApps.isNullOrEmpty()) {
+                        vpnBuilder.addDisallowedApplication(packageName)
+                    } else {
+                        Log.i(TAG, "Split tunneling mode: ${mode.name}, ${proxiedApps.size} apps")
+                        proxiedApps.forEach { pkg ->
+                            try {
+                                if (mode == SplitTunnelingMode.PROXY_SELECTED) {
+                                    vpnBuilder.addAllowedApplication(pkg)
+                                } else {
+                                    vpnBuilder.addDisallowedApplication(pkg)
+                                }
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Failed to apply split tunneling for $pkg")
+                            }
+                        }
                         try {
-                            vpnBuilder.addAllowedApplication(pkg)
+                            vpnBuilder.addDisallowedApplication(packageName)
                         } catch (e: Exception) {
-                            Log.w(TAG, "Failed to add allowed application: $pkg")
+                            Log.w(TAG, "Cannot exclude self from VPN", e)
                         }
                     }
                 } else {
                     try {
-                        // CRITICAL: Exclude this app from the VPN to prevent infinite routing loops
                         vpnBuilder.addDisallowedApplication(packageName)
                     } catch (e: Exception) {
                         Log.w(TAG, "Cannot exclude self from VPN", e)

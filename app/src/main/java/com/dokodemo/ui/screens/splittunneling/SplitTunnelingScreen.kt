@@ -1,16 +1,31 @@
 package com.dokodemo.ui.screens.splittunneling
 
+import android.content.pm.ApplicationInfo
 import android.content.Context
-import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Checklist
+import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -18,11 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dokodemo.data.preferences.AppPreferences
+import com.dokodemo.data.preferences.SplitTunnelingMode
 import com.dokodemo.ui.components.IndustrialCard
-import com.dokodemo.ui.components.IndustrialSearchInput
+import com.dokodemo.ui.components.IndustrialToggle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -60,14 +77,33 @@ fun SplitTunnelingScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            IndustrialSearchInput(
+            OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.search(it) },
-                placeholder = "搜索应用(支持包名/中文名)",
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                placeholder = { Text("搜索应用名称或包名") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                singleLine = true,
+                shape = RoundedCornerShape(18.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            SplitModeSection(
+                currentMode = uiState.splitMode,
+                onModeChange = viewModel::setSplitMode
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SummarySection(
+                selectedCount = uiState.selectedCount,
+                showSystemApps = uiState.showSystemApps,
+                onToggleSystemApps = viewModel::setShowSystemApps,
+                onSelectVisibleApps = viewModel::selectVisibleApps,
+                onClearSelection = viewModel::clearSelection
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -79,6 +115,17 @@ fun SplitTunnelingScreen(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 32.dp)
                 ) {
+                    item {
+                        Text(
+                            text = if (uiState.splitMode == SplitTunnelingMode.PROXY_SELECTED) {
+                                "仅你选中的应用会进入代理，其他应用保持直连。"
+                            } else {
+                                "除你选中的应用外，其余应用都会进入代理。"
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     items(uiState.filteredApps) { app ->
                         AppItem(
                             app = app,
@@ -94,7 +141,9 @@ fun SplitTunnelingScreen(
 @Composable
 private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
     IndustrialCard(
-        modifier = Modifier.clickable { onToggle() }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onToggle() }
     ) {
         Row(
             modifier = Modifier
@@ -108,15 +157,24 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
                     text = app.appName,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = app.packageName,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (app.isSystemApp) {
+                    Text(
+                        text = "系统应用",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
-            com.dokodemo.ui.components.IndustrialToggle(
+            IndustrialToggle(
                 checked = app.isProxied,
                 onCheckedChange = { onToggle() }
             )
@@ -124,17 +182,103 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
     }
 }
 
+@Composable
+private fun SplitModeSection(
+    currentMode: SplitTunnelingMode,
+    onModeChange: (SplitTunnelingMode) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = "分应用模式",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            SegmentedButton(
+                selected = currentMode == SplitTunnelingMode.PROXY_SELECTED,
+                onClick = { onModeChange(SplitTunnelingMode.PROXY_SELECTED) },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                label = { Text("仅选中走代理") }
+            )
+            SegmentedButton(
+                selected = currentMode == SplitTunnelingMode.BYPASS_SELECTED,
+                onClick = { onModeChange(SplitTunnelingMode.BYPASS_SELECTED) },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                label = { Text("仅选中直连") }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SummarySection(
+    selectedCount: Int,
+    showSystemApps: Boolean,
+    onToggleSystemApps: (Boolean) -> Unit,
+    onSelectVisibleApps: () -> Unit,
+    onClearSelection: () -> Unit
+) {
+    IndustrialCard {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "已选应用 $selectedCount 个",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "显示系统应用",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                IndustrialToggle(
+                    checked = showSystemApps,
+                    onCheckedChange = onToggleSystemApps
+                )
+            }
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(onClick = onSelectVisibleApps) {
+                    Icon(Icons.Rounded.Checklist, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("选择当前列表")
+                }
+                OutlinedButton(onClick = onClearSelection) {
+                    Icon(Icons.Rounded.ClearAll, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("清空选择")
+                }
+            }
+        }
+    }
+}
+
 data class AppInfo(
     val appName: String,
     val packageName: String,
-    val isProxied: Boolean = false
+    val isProxied: Boolean = false,
+    val isSystemApp: Boolean = false
 )
 
 data class SplitTunnelingUiState(
     val allApps: List<AppInfo> = emptyList(),
     val filteredApps: List<AppInfo> = emptyList(),
     val searchQuery: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val splitMode: SplitTunnelingMode = SplitTunnelingMode.PROXY_SELECTED,
+    val showSystemApps: Boolean = false,
+    val selectedCount: Int = 0
 )
 
 @HiltViewModel
@@ -147,17 +291,27 @@ class SplitTunnelingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            appPreferences.proxiedApps.collect { proxiedSet ->
-                _uiState.update { state ->
-                    val updatedApps = state.allApps.map { app ->
-                        app.copy(isProxied = proxiedSet.contains(app.packageName))
+            combine(
+                appPreferences.proxiedApps,
+                appPreferences.splitTunnelingMode
+            ) { proxiedSet, splitMode -> proxiedSet to splitMode }
+                .collect { (proxiedSet, splitMode) ->
+                    _uiState.update { state ->
+                        val updatedApps = state.allApps.map { app ->
+                            app.copy(isProxied = proxiedSet.contains(app.packageName))
+                        }
+                        state.copy(
+                            allApps = updatedApps,
+                            filteredApps = filterApps(
+                                apps = updatedApps,
+                                query = state.searchQuery,
+                                showSystemApps = state.showSystemApps
+                            ),
+                            selectedCount = proxiedSet.size,
+                            splitMode = splitMode
+                        )
                     }
-                    state.copy(
-                        allApps = updatedApps,
-                        filteredApps = filterApps(updatedApps, state.searchQuery)
-                    )
                 }
-            }
         }
     }
 
@@ -168,35 +322,41 @@ class SplitTunnelingViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val pm = context.packageManager
-            val intent = Intent(Intent.ACTION_MAIN, null)
-            intent.addCategory(Intent.CATEGORY_LAUNCHER)
-
             val apps = try {
-                pm.queryIntentActivities(intent, 0).mapNotNull { resolveInfo ->
+                pm.getInstalledApplications(0)
+                    .mapNotNull { applicationInfo ->
                     try {
-                        val appInfo = resolveInfo.activityInfo.applicationInfo
-                        val packageName = appInfo.packageName
-                        val label = appInfo.loadLabel(pm).toString()
+                        val packageName = applicationInfo.packageName
+                        val label = applicationInfo.loadLabel(pm)?.toString().orEmpty()
 
-                        if (packageName == context.packageName) null
-                        else AppInfo(label, packageName)
+                        if (packageName == context.packageName || label.isBlank()) {
+                            null
+                        } else {
+                            AppInfo(
+                                appName = label,
+                                packageName = packageName,
+                                isSystemApp = applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                            )
+                        }
                     } catch (e: Exception) {
                         null
                     }
-                }.sortedBy { it.appName.lowercase() }
+                }
+                    .distinctBy { it.packageName }
+                    .sortedBy { it.appName.lowercase() }
             } catch (e: Exception) {
                 emptyList()
             }
 
             withContext(Dispatchers.Main) {
                 _uiState.update { state ->
-                    val updatedApps = apps.map { app ->
-                        // 因为这里此时 appPreferences 还没同步完，我们可以等待它或者直接依赖 flow
-                        app
-                    }
                     state.copy(
-                        allApps = updatedApps,
-                        filteredApps = filterApps(updatedApps, state.searchQuery),
+                        allApps = apps,
+                        filteredApps = filterApps(
+                            apps = apps,
+                            query = state.searchQuery,
+                            showSystemApps = state.showSystemApps
+                        ),
                         isLoading = false
                     )
                 }
@@ -208,7 +368,30 @@ class SplitTunnelingViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 searchQuery = query,
-                filteredApps = filterApps(it.allApps, query)
+                filteredApps = filterApps(
+                    apps = it.allApps,
+                    query = query,
+                    showSystemApps = it.showSystemApps
+                )
+            )
+        }
+    }
+
+    fun setSplitMode(mode: SplitTunnelingMode) {
+        viewModelScope.launch {
+            appPreferences.setSplitTunnelingMode(mode)
+        }
+    }
+
+    fun setShowSystemApps(show: Boolean) {
+        _uiState.update {
+            it.copy(
+                showSystemApps = show,
+                filteredApps = filterApps(
+                    apps = it.allApps,
+                    query = it.searchQuery,
+                    showSystemApps = show
+                )
             )
         }
     }
@@ -226,10 +409,32 @@ class SplitTunnelingViewModel @Inject constructor(
         }
     }
 
-    private fun filterApps(apps: List<AppInfo>, query: String): List<AppInfo> {
-        return if (query.isEmpty()) apps else apps.filter {
-            it.appName.contains(query, ignoreCase = true) ||
-                    it.packageName.contains(query, ignoreCase = true)
+    fun selectVisibleApps() {
+        viewModelScope.launch {
+            val packages = _uiState.value.filteredApps.map { it.packageName }.toSet()
+            appPreferences.setProxiedApps(_uiState.value.allApps.filter {
+                it.isProxied || packages.contains(it.packageName)
+            }.map { it.packageName }.toSet())
+        }
+    }
+
+    fun clearSelection() {
+        viewModelScope.launch {
+            appPreferences.setProxiedApps(emptySet())
+        }
+    }
+
+    private fun filterApps(
+        apps: List<AppInfo>,
+        query: String,
+        showSystemApps: Boolean
+    ): List<AppInfo> {
+        return apps.filter { app ->
+            (showSystemApps || !app.isSystemApp) && (
+                query.isBlank() ||
+                    app.appName.contains(query, ignoreCase = true) ||
+                    app.packageName.contains(query, ignoreCase = true)
+                )
         }
     }
 }

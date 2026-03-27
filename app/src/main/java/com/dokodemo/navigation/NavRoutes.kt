@@ -18,6 +18,7 @@ sealed class Route(val path: String) {
     object QrScanner : Route("qr_scanner")
     object Settings : Route("settings")
     object SplitTunneling : Route("split_tunneling")
+    object CustomRoutingRules : Route("custom_routing_rules")
     // object SystemLogs : Route("logs") // Not implemented yet
     object Subscriptions : Route("subscriptions")
     object Logs : Route("logs")

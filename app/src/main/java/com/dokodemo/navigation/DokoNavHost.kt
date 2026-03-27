@@ -132,6 +132,9 @@ fun DokoNavHost(
                 onNavigateToSplitTunneling = {
                     navController.navigate(Route.SplitTunneling.path)
                 },
+                onNavigateToCustomRules = {
+                    navController.navigate(Route.CustomRoutingRules.path)
+                },
                 onNavigateToSubscriptions = {
                     navController.navigate(Route.Subscriptions.path)
                 },
@@ -153,6 +156,14 @@ fun DokoNavHost(
         // Split Tunneling
         composable(Route.SplitTunneling.path) {
             com.dokodemo.ui.screens.splittunneling.SplitTunnelingScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Route.CustomRoutingRules.path) {
+            com.dokodemo.ui.screens.routing.CustomRoutingRulesScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

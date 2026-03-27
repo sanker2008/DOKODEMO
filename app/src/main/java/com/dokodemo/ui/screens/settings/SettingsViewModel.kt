@@ -13,9 +13,7 @@ import javax.inject.Inject
 data class SettingsUiState(
     val routingMode: RoutingMode = RoutingMode.GLOBAL,
     val muxEnabled: Boolean = false,
-    val sniffingEnabled: Boolean = true,
     val udpEnabled: Boolean = true,
-    val adBlockEnabled: Boolean = false,
     val allowInsecure: Boolean = false,
     val darkModeEnabled: Boolean = true,
     val fontSizeScale: Float = 1.0f,
@@ -33,23 +31,37 @@ class SettingsViewModel @Inject constructor(
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
-        // 监听 DataStore 中保存的设置
         viewModelScope.launch {
             combine(
-                appPreferences.isDarkMode,
-                appPreferences.routingMode,
-                appPreferences.fontSizeScale
-            ) { darkMode, routing, fontScale ->
+                combine(
+                    appPreferences.isDarkMode,
+                    appPreferences.routingMode,
+                    appPreferences.fontSizeScale
+                ) { darkMode, routing, fontScale ->
+                    Triple(darkMode, routing, fontScale)
+                },
+                combine(
+                    appPreferences.muxEnabled,
+                    appPreferences.allowInsecure,
+                    appPreferences.udpEnabled
+                ) { muxEnabled, allowInsecure, udpEnabled ->
+                    Triple(muxEnabled, allowInsecure, udpEnabled)
+                }
+            ) { primaryState, connectionState ->
+                val (darkMode, routing, fontScale) = primaryState
+                val (muxEnabled, allowInsecure, udpEnabled) = connectionState
                 _uiState.update {
                     it.copy(
                         darkModeEnabled = darkMode,
                         routingMode = routing,
-                        fontSizeScale = fontScale
+                        fontSizeScale = fontScale,
+                        muxEnabled = muxEnabled,
+                        allowInsecure = allowInsecure,
+                        udpEnabled = udpEnabled
                     )
                 }
             }.collect()
         }
-        // 获取 Xray-core 版本
         _uiState.update { it.copy(coreVersion = vpnController.getCoreVersion()) }
     }
 
@@ -66,19 +78,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setMuxEnabled(enabled: Boolean) {
-        _uiState.update { it.copy(muxEnabled = enabled) }
-        // TODO: 保存到 DataStore（后续迭代）
+        viewModelScope.launch { appPreferences.setMuxEnabled(enabled) }
     }
 
     fun setAllowInsecure(enabled: Boolean) {
-        _uiState.update { it.copy(allowInsecure = enabled) }
+        viewModelScope.launch { appPreferences.setAllowInsecure(enabled) }
     }
 
     fun setUdpEnabled(enabled: Boolean) {
-        _uiState.update { it.copy(udpEnabled = enabled) }
-    }
-
-    fun setAdBlockEnabled(enabled: Boolean) {
-        _uiState.update { it.copy(adBlockEnabled = enabled) }
+        viewModelScope.launch { appPreferences.setUdpEnabled(enabled) }
     }
 }

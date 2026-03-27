@@ -27,6 +27,7 @@ import com.dokodemo.ui.components.LanguageDialog
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToSplitTunneling: () -> Unit,
+    onNavigateToCustomRules: () -> Unit,
     onNavigateToSubscriptions: () -> Unit,
     onNavigateToLogs: (() -> Unit)? = null,
     viewModel: SettingsViewModel = hiltViewModel()
@@ -82,6 +83,12 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.split_tunneling_desc),
                     onClick = onNavigateToSplitTunneling
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                SettingsClickRow(
+                    title = stringResource(R.string.custom_routing_rules),
+                    subtitle = stringResource(R.string.custom_routing_rules_desc),
+                    onClick = onNavigateToCustomRules
+                )
             }
 
             // ─── 连接设置 ─────────────────────────────────────────────────
@@ -107,14 +114,6 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.udp_proxy_desc),
                     checked = uiState.udpEnabled,
                     onCheckedChange = { viewModel.setUdpEnabled(it) },
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
-                IndustrialToggleRow(
-                    label = stringResource(R.string.ad_block),
-                    subtitle = stringResource(R.string.ad_block_desc),
-                    checked = uiState.adBlockEnabled,
-                    onCheckedChange = { viewModel.setAdBlockEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }

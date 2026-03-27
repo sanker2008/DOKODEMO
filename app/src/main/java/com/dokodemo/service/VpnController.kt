@@ -44,15 +44,27 @@ class VpnController @Inject constructor(
     suspend fun connect(profile: ServerProfile) {
         val routingMode = appPreferences.routingMode.first()
         val proxiedApps = appPreferences.proxiedApps.first()
+        val splitTunnelingMode = appPreferences.splitTunnelingMode.first()
+        val muxEnabled = appPreferences.muxEnabled.first()
+        val allowInsecure = appPreferences.allowInsecure.first()
+        val udpEnabled = appPreferences.udpEnabled.first()
+        val customRules = appPreferences.customRoutingRules.first()
         
-        // Generate initial config (service will handle retries via CoreManager)
-        val configJson = coreManager.generateConfig(profile, routingMode)
+        val configJson = coreManager.generateConfig(
+            profile = profile,
+            routingMode = routingMode,
+            muxEnabled = muxEnabled,
+            allowInsecure = allowInsecure,
+            udpEnabled = udpEnabled,
+            customRules = customRules
+        )
         
         val intent = Intent(context, DokoDemoVpnService::class.java).apply {
             action = DokoDemoVpnService.ACTION_START
             putExtra(DokoDemoVpnService.EXTRA_SERVER_CONFIG, configJson)
             putExtra(DokoDemoVpnService.EXTRA_SERVER_NAME, profile.name)
             putExtra("routing_mode", routingMode.name)
+            putExtra("split_tunneling_mode", splitTunnelingMode.name)
             putExtra("server_address", profile.address)
             putExtra("server_port", profile.port)
             putStringArrayListExtra("proxied_apps", ArrayList(proxiedApps.toList()))
