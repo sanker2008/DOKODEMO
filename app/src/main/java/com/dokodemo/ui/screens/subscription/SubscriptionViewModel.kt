@@ -107,9 +107,17 @@ class SubscriptionViewModel @Inject constructor(
         }
         
         val result = subscriptionFetcher.fetchAndParse(sub.url, group?.id)
-        result.onSuccess { nodes ->
+        result.onSuccess { (nodes, info) ->
             serverRepository.replaceServersForSubscription(sub.id, nodes)
-            subscriptionRepository.updateSyncStatus(sub.id, System.currentTimeMillis(), nodes.size)
+            subscriptionRepository.updateSyncStatus(
+                id = sub.id, 
+                timestamp = System.currentTimeMillis(), 
+                count = nodes.size,
+                upload = info?.upload ?: sub.upload,
+                download = info?.download ?: sub.download,
+                total = info?.total ?: sub.total,
+                expire = info?.expire ?: sub.expire
+            )
         }.onFailure { e ->
             _uiState.update { it.copy(errorMessage = "更新失败 ${sub.name}: ${e.message}") }
         }

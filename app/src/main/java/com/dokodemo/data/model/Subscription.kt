@@ -18,6 +18,11 @@ data class Subscription(
     val lastUpdated: Long? = null,
     val serverCount: Int = 0,
     
+    val upload: Long = 0,
+    val download: Long = 0,
+    val total: Long = 0,
+    val expire: Long = 0,
+    
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

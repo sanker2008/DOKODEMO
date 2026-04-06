@@ -21,13 +21,20 @@ class SubscriptionFetcher @Inject constructor(
     private val shareLinkParser: ShareLinkParser
 ) {
 
+data class SubscriptionInfo(
+    val upload: Long,
+    val download: Long,
+    val total: Long,
+    val expire: Long
+)
+
     /**
      * 抓取并解析订阅链接
      * @param url 订阅链接
      * @param defaultGroupId 给解析出的节点分配的默认分组id
      * @return 解析得出的节点列表，带有错误处理
      */
-    suspend fun fetchAndParse(url: String, defaultGroupId: Long?): Result<List<ServerProfile>> = withContext(Dispatchers.IO) {
+    suspend fun fetchAndParse(url: String, defaultGroupId: Long?): Result<Pair<List<ServerProfile>, SubscriptionInfo?>> = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
                 .url(url)
@@ -42,10 +49,31 @@ class SubscriptionFetcher @Inject constructor(
 
             val bodyText = response.body?.string() ?: return@withContext Result.failure(Exception("订阅内容为空"))
 
+            val userInfoHeader = response.header("Subscription-Userinfo") ?: response.header("subscription-userinfo")
+            var subInfo: SubscriptionInfo? = null
+            if (userInfoHeader != null) {
+                var upload = 0L
+                var download = 0L
+                var total = 0L
+                var expire = 0L
+                userInfoHeader.split(";").forEach { part ->
+                    val kv = part.trim().split("=")
+                    if (kv.size == 2) {
+                        when (kv[0].lowercase()) {
+                            "upload" -> upload = kv[1].toLongOrNull() ?: 0L
+                            "download" -> download = kv[1].toLongOrNull() ?: 0L
+                            "total" -> total = kv[1].toLongOrNull() ?: 0L
+                            "expire" -> expire = kv[1].toLongOrNull() ?: 0L
+                        }
+                    }
+                }
+                subInfo = SubscriptionInfo(upload, download, total, expire)
+            }
+
             // 解析内容并设置 groupId
             val parsedProfiles = parseContent(bodyText).map { it.copy(groupId = defaultGroupId) }
             
-            Result.success(parsedProfiles)
+            Result.success(Pair(parsedProfiles, subInfo))
         } catch (e: Exception) {
             Result.failure(e)
         }

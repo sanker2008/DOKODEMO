@@ -32,7 +32,7 @@ import com.dokodemo.data.model.Subscription
         Subscription::class,
         Group::class           // v2 新增：分组表
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -73,5 +73,14 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             INSERT INTO groups (id, name, subscriptionId, `order`, createdAt)
             VALUES (1, '默认分组', NULL, 0, ${System.currentTimeMillis()})
         """.trimIndent())
+    }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE subscriptions ADD COLUMN upload INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE subscriptions ADD COLUMN download INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE subscriptions ADD COLUMN total INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE subscriptions ADD COLUMN expire INTEGER NOT NULL DEFAULT 0")
     }
 }

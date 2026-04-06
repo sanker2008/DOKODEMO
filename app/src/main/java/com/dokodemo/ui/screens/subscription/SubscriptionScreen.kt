@@ -177,6 +177,33 @@ private fun SubscriptionCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                
+                if (subscription.total > 0) {
+                    Spacer(Modifier.height(4.dp))
+                    val used = subscription.upload + subscription.download
+                    val usedStr = formatBytes(used)
+                    val totalStr = formatBytes(subscription.total)
+                    val remainStr = formatBytes((subscription.total - used).coerceAtLeast(0))
+                    
+                    val expireStr = if (subscription.expire > 0) {
+                        // expire 可能是秒级别的时间戳
+                        val expireDate = if (subscription.expire > 9999999999L) Date(subscription.expire) else Date(subscription.expire * 1000)
+                        timeFormat.format(expireDate)
+                    } else {
+                        "无限制"
+                    }
+                    
+                    Text(
+                        text = "流量: $usedStr / $totalStr (剩余 $remainStr)",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "过期时间: $expireStr",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             if (isRefreshing) {
@@ -310,4 +337,16 @@ private fun AddSubscriptionDialog(
             TextButton(onClick = onDismiss) { Text("取消") }
         }
     )
+}
+
+private fun formatBytes(bytes: Long): String {
+    if (bytes <= 0) return "0.00 B"
+    var b = bytes.toDouble()
+    var i = 0
+    val units = arrayOf("B", "KB", "MB", "GB", "TB")
+    while (b >= 1024 && i < units.size - 1) {
+        b /= 1024
+        i++
+    }
+    return String.format(Locale.getDefault(), "%.2f %s", b, units[i])
 }

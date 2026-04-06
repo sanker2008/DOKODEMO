@@ -33,6 +33,6 @@ interface SubscriptionDao {
     @Query("DELETE FROM subscriptions WHERE id = :id")
     suspend fun deleteById(id: Long)
     
-    @Query("UPDATE subscriptions SET lastUpdated = :timestamp, serverCount = :count WHERE id = :id")
-    suspend fun updateSyncStatus(id: Long, timestamp: Long, count: Int)
+    @Query("UPDATE subscriptions SET lastUpdated = :timestamp, serverCount = :count, upload = :upload, download = :download, total = :total, expire = :expire WHERE id = :id")
+    suspend fun updateSyncStatus(id: Long, timestamp: Long, count: Int, upload: Long, download: Long, total: Long, expire: Long)
 }
