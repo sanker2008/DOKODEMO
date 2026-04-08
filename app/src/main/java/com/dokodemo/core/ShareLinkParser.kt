@@ -53,6 +53,8 @@ class ShareLinkParser @Inject constructor() {
         val address = addressPort[0]
         val port = addressPort[1].toIntOrNull() ?: 443
         
+        val useReality = params["security"] == "reality"
+        
         return ServerProfile(
             name = name.ifEmpty { "$address:$port" },
             address = address,
@@ -61,7 +63,12 @@ class ShareLinkParser @Inject constructor() {
             protocol = Protocol.VLESS,
             encryption = params["encryption"] ?: "none",
             flow = params["flow"] ?: "",
-            useTls = params["security"] == "tls" || params["security"] == "reality",
+            useTls = params["security"] == "tls" || useReality,
+            useReality = useReality,
+            realityPublicKey = params["pbk"] ?: params["publicKey"] ?: "",
+            realityShortId = params["sid"] ?: params["shortId"] ?: "",
+            realitySpiderX = params["spx"] ?: params["spiderX"] ?: "",
+            fingerprint = params["fp"] ?: params["fingerprint"] ?: "chrome",
             network = params["type"] ?: "tcp",
             wsPath = params["path"] ?: "",
             wsHost = params["host"] ?: "",

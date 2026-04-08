@@ -141,6 +141,19 @@ fun SettingsScreen(
                 )
             }
 
+            // ─── 安全提示 ─────────────────────────────────────────────────
+            SettingsSection(title = stringResource(R.string.security_tips)) {
+                SettingsInfoRow(
+                    label = stringResource(R.string.timezone_tip_title),
+                    value = stringResource(R.string.timezone_tip_desc)
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                SettingsInfoRow(
+                    label = stringResource(R.string.language_tip_title),
+                    value = stringResource(R.string.language_tip_desc)
+                )
+            }
+
             // ─── 调试 ─────────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.debugging)) {
                 SettingsClickRow(

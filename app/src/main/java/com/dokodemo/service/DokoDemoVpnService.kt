@@ -65,10 +65,12 @@ class DokoDemoVpnService : VpnService() {
         
         // VPN Configuration
         private const val VPN_MTU = 1500
-        private const val VPN_ADDRESS = "10.0.0.2"
+        private const val VPN_ADDRESS = "198.18.0.2"
+        private const val VPN_ADDRESS_V6 = "fd00::2"
         private const val VPN_ROUTE = "0.0.0.0"
-        private const val VPN_DNS_1 = "8.8.8.8"
-        private const val VPN_DNS_2 = "8.8.4.4"
+        private const val VPN_ROUTE_V6 = "::"
+        private const val VPN_DNS_1 = "198.18.0.2"
+        private const val VPN_DNS_2 = "198.18.0.2"
         
         // Broadcast actions
         const val ACTION_VPN_CONNECTED = "com.dokodemo.VPN_CONNECTED"
@@ -245,9 +247,11 @@ class DokoDemoVpnService : VpnService() {
                     .setSession("DokoDemo - $serverName")
                     .setMtu(VPN_MTU)
                     .addAddress(VPN_ADDRESS, 24)
+                    .addAddress(VPN_ADDRESS_V6, 64)
                     .addDnsServer(VPN_DNS_1)
                     .addDnsServer(VPN_DNS_2)
                     .addRoute(VPN_ROUTE, 0)
+                    .addRoute(VPN_ROUTE_V6, 0)
                 
                 // Set as always-on capable
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -307,7 +311,8 @@ class DokoDemoVpnService : VpnService() {
                         tunFd,
                         coreManager.getSocksAddress(),
                         VPN_DNS_1,
-                        VPN_MTU
+                        VPN_MTU,
+                        CoreManager.DNS_INBOUND_PORT
                     )
                 } catch (e: Throwable) {
                     Log.e(TAG, "tun2socks start error (native lib may be missing): ${e.message}", e)

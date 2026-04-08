@@ -20,6 +20,8 @@ class LogsViewModel @Inject constructor() : ViewModel() {
 
     private val _logs = MutableStateFlow<List<String>>(emptyList())
     val logs: StateFlow<List<String>> = _logs.asStateFlow()
+    
+    private var lastLogCount = 0
 
     init {
         refreshLogs()
@@ -29,7 +31,7 @@ class LogsViewModel @Inject constructor() : ViewModel() {
     private fun startAutoRefresh() {
         viewModelScope.launch {
             while (isActive) {
-                delay(2000) // Auto-refresh every 2 seconds
+                delay(2000)
                 refreshLogs()
             }
         }
@@ -39,8 +41,7 @@ class LogsViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             val newLogs = withContext(Dispatchers.IO) {
                 try {
-                    // Filter logs to show only relevant ones (e.g., CoreManager, DokoDemoVpnService, V2Ray)
-                    val process = Runtime.getRuntime().exec("logcat -d -t 500 -v time CoreManager:I DokoDemoVpnService:I *:S")
+                    val process = Runtime.getRuntime().exec("logcat -d -t 2000 -v time CoreManager:I DokoDemoVpnService:I *:S")
                     val bufferedReader = BufferedReader(InputStreamReader(process.inputStream))
                     val logList = mutableListOf<String>()
                     var line: String?
@@ -55,7 +56,10 @@ class LogsViewModel @Inject constructor() : ViewModel() {
                     listOf("Error reading logs: ${e.message}")
                 }
             }
-            _logs.value = newLogs
+            if (newLogs.size != lastLogCount || _logs.value.isEmpty()) {
+                _logs.value = newLogs
+                lastLogCount = newLogs.size
+            }
         }
     }
     
@@ -65,10 +69,10 @@ class LogsViewModel @Inject constructor() : ViewModel() {
                 try {
                     Runtime.getRuntime().exec("logcat -c")
                 } catch (e: Exception) {
-                    // Ignore
                 }
             }
             _logs.value = emptyList()
+            lastLogCount = 0
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.dokodemo.data.AppDatabase
 import com.dokodemo.data.MIGRATION_1_2
 import com.dokodemo.data.MIGRATION_2_3
+import com.dokodemo.data.MIGRATION_3_4
 import com.dokodemo.data.dao.GroupDao
 import com.dokodemo.data.dao.ServerDao
 import com.dokodemo.data.dao.SubscriptionDao
@@ -27,7 +28,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "doko_database"
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
     }
 

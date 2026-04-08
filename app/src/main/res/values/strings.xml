@@ -75,6 +75,11 @@
     <string name="debugging">调试</string>
     <string name="view_logs">查看日志</string>
     <string name="view_logs_desc">Xray 核心运行日志</string>
+    <string name="security_tips">安全提示</string>
+    <string name="timezone_tip_title">时区设置</string>
+    <string name="timezone_tip_desc">建议将系统时区设为与代理服务器所在地一致</string>
+    <string name="language_tip_title">语言设置</string>
+    <string name="language_tip_desc">建议将系统语言设为英语，避免被检测</string>
     <string name="about">关于</string>
     <string name="core_version">核心版本</string>
     <string name="app_version">App 版本</string>

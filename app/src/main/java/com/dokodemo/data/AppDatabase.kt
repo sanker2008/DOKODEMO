@@ -19,6 +19,8 @@ import com.dokodemo.data.model.Subscription
  * 版本历史：
  *   v1 → 初始版本（ServerProfile、Subscription 表）
  *   v2 → 新增 groups 表；ServerProfile 追加 kcpHeader、kcpSeed、ssMethod、groupId 列
+ *   v3 → subscriptions 追加流量统计列
+ *   v4 → ServerProfile 追加 Reality 和指纹相关列
  *
  * 注意：每次修改实体类（新增/删除字段）都必须：
  *   1. 增加 version 版本号
@@ -32,7 +34,7 @@ import com.dokodemo.data.model.Subscription
         Subscription::class,
         Group::class           // v2 新增：分组表
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -82,5 +84,16 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         db.execSQL("ALTER TABLE subscriptions ADD COLUMN download INTEGER NOT NULL DEFAULT 0")
         db.execSQL("ALTER TABLE subscriptions ADD COLUMN total INTEGER NOT NULL DEFAULT 0")
         db.execSQL("ALTER TABLE subscriptions ADD COLUMN expire INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // ServerProfile 追加 Reality 和 uTLS 指纹相关列
+        db.execSQL("ALTER TABLE server_profiles ADD COLUMN useReality INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE server_profiles ADD COLUMN realityPublicKey TEXT NOT NULL DEFAULT ''")
+        db.execSQL("ALTER TABLE server_profiles ADD COLUMN realityShortId TEXT NOT NULL DEFAULT ''")
+        db.execSQL("ALTER TABLE server_profiles ADD COLUMN realitySpiderX TEXT NOT NULL DEFAULT ''")
+        db.execSQL("ALTER TABLE server_profiles ADD COLUMN fingerprint TEXT NOT NULL DEFAULT 'chrome'")
     }
 }

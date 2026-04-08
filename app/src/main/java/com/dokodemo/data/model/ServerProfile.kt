@@ -57,6 +57,13 @@ data class ServerProfile(
     val allowInsecure: Boolean = false,
     val serverName: String = "",        // SNI
     
+    // ─── Reality 设置 (VLESS Reality) ─────────────────────────────────────
+    val useReality: Boolean = false,    // 是否使用 Reality (优先于 TLS)
+    val realityPublicKey: String = "",  // Reality 公钥
+    val realityShortId: String = "",    // Reality 短 ID
+    val realitySpiderX: String = "",    // Reality spider 参数
+    val fingerprint: String = "chrome", // uTLS 指纹: chrome/firefox/safari/edge/ios/android
+    
     // 网络/传输设置
     val network: String = "tcp",        // tcp / ws / grpc / kcp
     val wsPath: String = "",            // WebSocket 路径

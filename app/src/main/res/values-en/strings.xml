@@ -73,6 +73,11 @@
     <string name="debugging">Debugging</string>
     <string name="view_logs">View Logs</string>
     <string name="view_logs_desc">Xray core runtime logs</string>
+    <string name="security_tips">Security Tips</string>
+    <string name="timezone_tip_title">Timezone</string>
+    <string name="timezone_tip_desc">Set system timezone to match proxy server location</string>
+    <string name="language_tip_title">Language</string>
+    <string name="language_tip_desc">Set system language to English to avoid detection</string>
     <string name="about">About</string>
     <string name="core_version">Core Version</string>
     <string name="app_version">App Version</string>

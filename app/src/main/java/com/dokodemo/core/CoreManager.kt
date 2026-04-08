@@ -101,24 +101,23 @@ class CoreManager @Inject constructor(
                 "loglevel" to "warning"
             ))
             
-            // DNS settings
+            // DNS settings - 使用远程 DNS 解析
             put("dns", mapOf<String, Any>(
-                "servers" to buildList {
-                    // Local DNS for CN sites only in Bypass CN mode
-                    if (routingMode == RoutingMode.BYPASS_CN) {
-                        add(mapOf(
-                            "address" to DNS_LOCAL,
-                            "port" to 53,
-                            "domains" to listOf("geosite:cn")
-                        ))
-                    }
-                    // Remote DNS for everything else
-                    add(mapOf(
-                        "address" to DNS_REMOTE,
-                        "port" to 53
-                    ))
-                },
-                "queryStrategy" to "UseIPv4"
+                "servers" to listOf(
+                    mapOf(
+                        "tag" to "remote",
+                        "address" to "8.8.8.8",
+                        "detour" to "proxy"
+                    ),
+                    mapOf(
+                        "tag" to "local",
+                        "address" to "223.5.5.5",
+                        "detour" to "direct",
+                        "domains" to listOf("geosite:cn")
+                    )
+                ),
+                "queryStrategy" to "UseIPv4",
+                "disableCache" to false
             ))
             
             // Inbounds - Local SOCKS5 proxy
@@ -152,7 +151,8 @@ class CoreManager @Inject constructor(
                     "sniffing" to mapOf(
                         "enabled" to true,
                         "destOverride" to listOf("http", "tls"),
-                        "routeOnly" to false
+                        "routeOnly" to false,
+                        "domainsExcluded" to listOf("courier.push.apple.com", "api.jpush.cn")
                     ),
                     "settings" to mapOf(
                         "auth" to "noauth",
@@ -167,13 +167,8 @@ class CoreManager @Inject constructor(
                     "protocol" to "http",
                     "sniffing" to mapOf(
                         "enabled" to true,
-                        "destOverride" to buildList {
-                            add("http")
-                            add("tls")
-                            if (udpEnabled) {
-                                add("quic")
-                            }
-                        }
+                        "destOverride" to listOf("http", "tls"),
+                        "routeOnly" to false
                     ),
                     "settings" to mapOf(
                         "allowTransparent" to false
@@ -185,7 +180,7 @@ class CoreManager @Inject constructor(
                     "listen" to "127.0.0.1",
                     "protocol" to "dokodemo-door",
                     "settings" to mapOf(
-                        "address" to "8.8.8.8",
+                        "address" to "1.1.1.1",
                         "port" to 53,
                         "network" to "udp"
                     )
@@ -214,6 +209,13 @@ class CoreManager @Inject constructor(
                 "domainStrategy" to "IPIfNonMatch",
                 "domainMatcher" to "hybrid",
                 "rules" to buildList {
+                    // DNS 查询通过代理
+                    add(mapOf(
+                        "type" to "field",
+                        "inboundTag" to listOf("dns-in"),
+                        "outboundTag" to "proxy"
+                    ))
+                    
                     // Direct for private IPs
                     add(mapOf(
                         "type" to "field",
@@ -311,6 +313,12 @@ class CoreManager @Inject constructor(
     ): Map<String, Any> {
         val streamSettings = generateStreamSettings(profile, allowInsecure)
         
+        val effectiveFlow = when {
+            profile.useReality && profile.flow.isEmpty() -> "xtls-rprx-vision"
+            profile.flow.isNotEmpty() -> profile.flow
+            else -> null
+        }
+        
         return mapOf(
             "tag" to "proxy",
             "protocol" to "vless",
@@ -323,8 +331,8 @@ class CoreManager @Inject constructor(
                             buildMap<String, Any> {
                                 put("id", profile.uuid)
                                 put("encryption", profile.encryption.ifEmpty { "none" })
-                                if (profile.flow.isNotEmpty()) {
-                                    put("flow", profile.flow)
+                                if (effectiveFlow != null) {
+                                    put("flow", effectiveFlow)
                                 }
                                 put("level", 0)
                             }
@@ -424,13 +432,21 @@ class CoreManager @Inject constructor(
         return buildMap {
             put("network", profile.network.ifEmpty { "tcp" })
             
-            // TLS settings
-            if (profile.useTls) {
+            if (profile.useReality) {
+                put("security", "reality")
+                put("realitySettings", mapOf(
+                    "serverName" to profile.serverName.ifEmpty { profile.address },
+                    "publicKey" to profile.realityPublicKey,
+                    "shortId" to profile.realityShortId,
+                    "spiderX" to profile.realitySpiderX.ifEmpty { "/" },
+                    "fingerprint" to profile.fingerprint.ifEmpty { "chrome" }
+                ))
+            } else if (profile.useTls) {
                 put("security", "tls")
                 put("tlsSettings", mapOf(
                     "serverName" to profile.serverName.ifEmpty { profile.address },
                     "allowInsecure" to (profile.allowInsecure || allowInsecure),
-                    "fingerprint" to "chrome"
+                    "fingerprint" to profile.fingerprint.ifEmpty { "chrome" }
                 ))
             } else {
                 put("security", "none")
@@ -448,26 +464,43 @@ class CoreManager @Inject constructor(
                 }
                 "grpc" -> {
                     put("grpcSettings", mapOf(
-                        "serviceName" to profile.wsPath, // reuse wsPath for serviceName
+                        "serviceName" to profile.wsPath,
                         "multiMode" to false
                     ))
                 }
                 "kcp" -> {
-                    put("kcpSettings", buildMap {
-                        put("mtu", 1100)
-                        put("tti", 50)
-                        put("uplinkCapacity", 12)
-                        put("downlinkCapacity", 100)
-                        put("congestion", true)
-                        put("readBufferSize", 2)
-                        put("writeBufferSize", 2)
-                        put("header", mapOf(
-                            "type" to profile.kcpHeader.ifEmpty { "none" }
-                        ))
-                        if (profile.kcpSeed.isNotEmpty()) {
-                            put("seed", profile.kcpSeed)
+                    val headerType = profile.kcpHeader.ifEmpty { "none" }
+                    
+                    // kcpSettings: transport parameters only
+                    put("kcpSettings", mapOf(
+                        "mtu" to 1350,
+                        "tti" to 50,
+                        "uplinkCapacity" to 5,
+                        "downlinkCapacity" to 20,
+                        "congestion" to false,
+                        "readBufferSize" to 2,
+                        "writeBufferSize" to 2
+                    ))
+                    
+                    // finalmask: obfuscation chain (sibling of kcpSettings in streamSettings)
+                    // Order: first = outermost layer, last = innermost
+                    put("finalmask", mapOf(
+                        "udp" to buildList<Any> {
+                            // Layer 1 (outer): header obfuscation
+                            if (headerType != "none") {
+                                add(mapOf("type" to "header-$headerType"))
+                            }
+                            // Layer 2 (inner): base mKCP protocol - always required
+                            add(mapOf("type" to "mkcp-original"))
+                            // Layer 3 (optional): encryption with seed
+                            if (profile.kcpSeed.isNotEmpty()) {
+                                add(mapOf(
+                                    "type" to "mkcp-aes128gcm",
+                                    "settings" to mapOf("key" to profile.kcpSeed)
+                                ))
+                            }
                         }
-                    })
+                    ))
                 }
                 "httpupgrade" -> {
                     put("httpupgradeSettings", mapOf(
@@ -478,6 +511,12 @@ class CoreManager @Inject constructor(
                 "tcp" -> {
                     put("tcpSettings", mapOf(
                         "header" to mapOf("type" to "none")
+                    ))
+                }
+                "xhttp", "splithttp" -> {
+                    put("xhttpSettings", mapOf(
+                        "path" to profile.wsPath.ifEmpty { "/" },
+                        "host" to listOf(profile.wsHost.ifEmpty { profile.address })
                     ))
                 }
             }
@@ -593,6 +632,14 @@ class CoreManager @Inject constructor(
     }
     
     private fun startCoreInternal(configJson: String): String? {
+        Log.d(TAG, "Generated config (saved to file)")
+        try {
+            val configFile = File(context.cacheDir, "xray_config.json")
+            configFile.writeText(configJson)
+            Log.i(TAG, "Config saved to: ${configFile.absolutePath}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save config: ${e.message}")
+        }
         return try {
             try { coreController?.stopLoop() } catch (_: Throwable) {}
             val callback = object : libv2ray.CoreCallbackHandler {
@@ -615,7 +662,7 @@ class CoreManager @Inject constructor(
             val ctrl = Libv2ray.newCoreController(callback)
             if (ctrl == null) return "初始化 V2Ray 核心失败"
             
-            ctrl.startLoop(configJson)
+            ctrl.startLoop(configJson, 0)
             
             coreController = ctrl
             currentConfig = configJson
