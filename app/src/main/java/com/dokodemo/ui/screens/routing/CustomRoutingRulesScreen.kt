@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
+import androidx.compose.material.icons.rounded.ContentPaste
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.AlertDialog
@@ -88,6 +89,7 @@ fun CustomRoutingRulesScreen(
     val uiState by viewModel.uiState.collectAsState()
     var editingRule by remember { mutableStateOf<CustomRoutingRule?>(null) }
     var creatingRule by remember { mutableStateOf(false) }
+    var batchImporting by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -97,6 +99,11 @@ fun CustomRoutingRulesScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { batchImporting = true }) {
+                        Icon(Icons.Rounded.ContentPaste, contentDescription = stringResource(R.string.batch_import))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -173,6 +180,16 @@ fun CustomRoutingRulesScreen(
             onSave = {
                 viewModel.upsertRule(it)
                 editingRule = null
+            }
+        )
+    }
+
+    if (batchImporting) {
+        BatchImportDialog(
+            onDismiss = { batchImporting = false },
+            onImport = { rules ->
+                viewModel.addRules(rules)
+                batchImporting = false
             }
         )
     }
@@ -380,7 +397,7 @@ private fun RuleEditorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.background,
         title = {
             Text(
                 text = stringResource(
@@ -509,6 +526,127 @@ private fun getValueHint(matchType: CustomRuleMatchType): String {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BatchImportDialog(
+    onDismiss: () -> Unit,
+    onImport: (List<CustomRoutingRule>) -> Unit
+) {
+    var text by remember { mutableStateOf("") }
+    var matchType by remember { mutableStateOf(CustomRuleMatchType.DOMAIN_SUFFIX) }
+    var action by remember { mutableStateOf(CustomRuleAction.PROXY) }
+    var typeExpanded by remember { mutableStateOf(false) }
+
+    val lines = text.lines().map { it.trim() }.filter { it.isNotBlank() && !it.startsWith("#") }
+    val validCount = lines.size
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
+        title = {
+            Text(
+                text = stringResource(R.string.batch_import),
+                fontWeight = FontWeight.SemiBold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = stringResource(R.string.batch_import_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                ExposedDropdownMenuBox(
+                    expanded = typeExpanded,
+                    onExpandedChange = { typeExpanded = !typeExpanded }
+                ) {
+                    OutlinedTextField(
+                        value = matchType.displayName,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.batch_import_match_type)) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeExpanded)
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
+                    DropdownMenu(
+                        expanded = typeExpanded,
+                        onDismissRequest = { typeExpanded = false }
+                    ) {
+                        CustomRuleMatchType.entries.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(item.displayName) },
+                                onClick = {
+                                    matchType = item
+                                    typeExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    CustomRuleAction.entries.forEachIndexed { index, item ->
+                        SegmentedButton(
+                            selected = action == item,
+                            onClick = { action = item },
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = CustomRuleAction.entries.size
+                            ),
+                            label = { Text(item.displayName) }
+                        )
+                    }
+                }
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    label = { Text(stringResource(R.string.batch_import_values)) },
+                    placeholder = { Text(stringResource(R.string.batch_import_placeholder)) },
+                    supportingText = {
+                        Text(
+                            text = stringResource(R.string.batch_import_count, validCount),
+                            color = if (validCount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val rules = lines.map { line ->
+                        CustomRoutingRule(
+                            id = UUID.randomUUID().toString(),
+                            name = "${matchType.displayName}: $line",
+                            matchType = matchType,
+                            value = line,
+                            action = action,
+                            enabled = true
+                        )
+                    }
+                    if (rules.isNotEmpty()) {
+                        onImport(rules)
+                    }
+                },
+                enabled = validCount > 0
+            ) {
+                Text(stringResource(R.string.batch_import_confirm, validCount))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
 @HiltViewModel
 class CustomRoutingRulesViewModel @Inject constructor(
     private val appPreferences: AppPreferences
@@ -569,6 +707,14 @@ class CustomRoutingRulesViewModel @Inject constructor(
             }
             val item = current.removeAt(index)
             current.add(targetIndex, item)
+            appPreferences.setCustomRoutingRules(current)
+        }
+    }
+
+    fun addRules(rules: List<CustomRoutingRule>) {
+        viewModelScope.launch {
+            val current = _uiState.value.rules.toMutableList()
+            current.addAll(rules)
             appPreferences.setCustomRoutingRules(current)
         }
     }

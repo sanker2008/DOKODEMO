@@ -165,4 +165,13 @@
     <string name="traffic_total">Total %1$s</string>
     <string name="traffic_history_clear">Clear History</string>
 
+    <!-- Batch Import -->
+    <string name="batch_import">Batch Import</string>
+    <string name="batch_import_hint">One rule per line. Lines starting with # are comments and will be ignored. All rules will use the same match type and action below.</string>
+    <string name="batch_import_match_type">Match Type</string>
+    <string name="batch_import_values">Rule Values</string>
+    <string name="batch_import_placeholder">tiktok.com\ntiktokv.com\nbytedance.com\n# this is a comment</string>
+    <string name="batch_import_count">Detected %1$d rules</string>
+    <string name="batch_import_confirm">Import %1$d Rules</string>
+
 </resources>

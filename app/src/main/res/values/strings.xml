@@ -168,4 +168,13 @@
     <string name="traffic_total">合计 %1$s</string>
     <string name="traffic_history_clear">清空历史</string>
 
+    <!-- Batch Import -->
+    <string name="batch_import">批量导入</string>
+    <string name="batch_import_hint">每行一条规则，以 # 开头的行为注释会被忽略。所有规则将使用下方统一的匹配类型和动作。</string>
+    <string name="batch_import_match_type">匹配类型</string>
+    <string name="batch_import_values">规则值</string>
+    <string name="batch_import_placeholder">tiktok.com\ntiktokv.com\nbytedance.com\n# 这是注释</string>
+    <string name="batch_import_count">已识别 %1$d 条规则</string>
+    <string name="batch_import_confirm">导入 %1$d 条规则</string>
+
 </resources>
