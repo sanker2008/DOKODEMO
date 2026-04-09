@@ -30,6 +30,7 @@ fun SettingsScreen(
     onNavigateToCustomRules: () -> Unit,
     onNavigateToSubscriptions: () -> Unit,
     onNavigateToLogs: (() -> Unit)? = null,
+    onNavigateToTrafficHistory: (() -> Unit)? = null,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -116,6 +117,14 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setUdpEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                IndustrialToggleRow(
+                    label = stringResource(R.string.bypass_lan),
+                    subtitle = stringResource(R.string.bypass_lan_desc),
+                    checked = uiState.bypassLan,
+                    onCheckedChange = { viewModel.setBypassLan(it) },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             }
 
             // ─── 外观 ─────────────────────────────────────────────────────
@@ -160,6 +169,12 @@ fun SettingsScreen(
                     title = stringResource(R.string.view_logs),
                     subtitle = stringResource(R.string.view_logs_desc),
                     onClick = { onNavigateToLogs?.invoke() }
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                SettingsClickRow(
+                    title = stringResource(R.string.traffic_history),
+                    subtitle = stringResource(R.string.traffic_history_desc),
+                    onClick = { onNavigateToTrafficHistory?.invoke() }
                 )
             }
 

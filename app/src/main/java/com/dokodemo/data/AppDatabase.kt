@@ -12,6 +12,8 @@ import com.dokodemo.data.model.Converters
 import com.dokodemo.data.model.Group
 import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.model.Subscription
+import com.dokodemo.data.model.TrafficRecord
+import com.dokodemo.data.dao.TrafficRecordDao
 
 /**
  * Room 数据库
@@ -32,9 +34,10 @@ import com.dokodemo.data.model.Subscription
     entities = [
         ServerProfile::class,
         Subscription::class,
-        Group::class           // v2 新增：分组表
+        Group::class,          // v2 新增：分组表
+        TrafficRecord::class   // v5 新增：流量记录表
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -42,6 +45,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun serverDao(): ServerDao
     abstract fun subscriptionDao(): SubscriptionDao
     abstract fun groupDao(): GroupDao
+    abstract fun trafficRecordDao(): TrafficRecordDao
 }
 
 /**
@@ -95,5 +99,21 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
         db.execSQL("ALTER TABLE server_profiles ADD COLUMN realityShortId TEXT NOT NULL DEFAULT ''")
         db.execSQL("ALTER TABLE server_profiles ADD COLUMN realitySpiderX TEXT NOT NULL DEFAULT ''")
         db.execSQL("ALTER TABLE server_profiles ADD COLUMN fingerprint TEXT NOT NULL DEFAULT 'chrome'")
+    }
+}
+
+val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // 创建流量记录表
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS traffic_records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                serverName TEXT NOT NULL,
+                connectTime INTEGER NOT NULL,
+                disconnectTime INTEGER NOT NULL,
+                uploadBytes INTEGER NOT NULL,
+                downloadBytes INTEGER NOT NULL
+            )
+        """.trimIndent())
     }
 }

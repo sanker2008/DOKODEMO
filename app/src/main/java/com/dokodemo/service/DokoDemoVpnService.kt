@@ -42,6 +42,9 @@ class DokoDemoVpnService : VpnService() {
     @Inject
     lateinit var coreManager: CoreManager
     
+    @Inject
+    lateinit var trafficRecordDao: com.dokodemo.data.dao.TrafficRecordDao
+    
     private var vpnInterface: ParcelFileDescriptor? = null
     private var isRunning = false
     private var trafficJob: Job? = null
@@ -51,6 +54,10 @@ class DokoDemoVpnService : VpnService() {
     private var lastDownloadBytes = 0L
     private var uploadSpeed = 0L
     private var downloadSpeed = 0L
+    
+    // Session stats
+    private var connectTime = 0L
+    private var currentSessionName = ""
     
     companion object {
         private const val TAG = "DokoDemoVpnService"
@@ -143,10 +150,11 @@ class DokoDemoVpnService : VpnService() {
                 val routingMode = intent.getStringExtra("routing_mode")
                 val splitTunnelingMode = intent.getStringExtra("split_tunneling_mode")
                 val proxiedApps = intent.getStringArrayListExtra("proxied_apps")
+                val bypassLan = intent.getBooleanExtra("bypass_lan", true)
 
                 if (configJson != null) {
                     startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
-                    startVpn(configJson, serverName, routingMode, splitTunnelingMode, proxiedApps)
+                    startVpn(configJson, serverName, routingMode, splitTunnelingMode, proxiedApps, bypassLan)
                 } else {
                     Log.e(TAG, "No configuration provided")
                     stopSelf()
@@ -170,10 +178,12 @@ class DokoDemoVpnService : VpnService() {
         serverName: String,
         routingMode: String? = null,
         splitTunnelingMode: String? = null,
-        proxiedApps: List<String>? = null
+        proxiedApps: List<String>? = null,
+        bypassLan: Boolean = true
     ) {
         if (isRunning) {
-            Log.w(TAG, "VPN already running, restarting for new node: $serverName")
+            Log.w(TAG, "VPN already running, saving old session and restarting for new node: $serverName")
+            saveCurrentSessionRecord()
             try { coreManager.stopCore() } catch (_: Throwable) {}
             try { Tun2socksWrapper.stop() } catch (_: Throwable) {}
             try { vpnInterface?.close() } catch (_: Throwable) {}
@@ -181,7 +191,7 @@ class DokoDemoVpnService : VpnService() {
             trafficJob?.cancel()
             trafficJob = null
             isRunning = false
-            // Small delay to let sockets close
+            connectTime = 0L
             Thread.sleep(500)
         }
         
@@ -250,8 +260,27 @@ class DokoDemoVpnService : VpnService() {
                     .addAddress(VPN_ADDRESS_V6, 64)
                     .addDnsServer(VPN_DNS_1)
                     .addDnsServer(VPN_DNS_2)
-                    .addRoute(VPN_ROUTE, 0)
-                    .addRoute(VPN_ROUTE_V6, 0)
+                
+                if (bypassLan) {
+                    val bypassLanRoutes = arrayOf(
+                        "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6",
+                        "16.0.0.0/4", "32.0.0.0/3", "64.0.0.0/2", "128.0.0.0/3",
+                        "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11",
+                        "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
+                        "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13",
+                        "192.169.0.0/16", "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12",
+                        "192.192.0.0/10", "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6",
+                        "200.0.0.0/5", "208.0.0.0/4", "224.0.0.0/3"
+                    )
+                    bypassLanRoutes.forEach { cidr ->
+                        val parts = cidr.split("/")
+                        vpnBuilder.addRoute(parts[0], parts[1].toInt())
+                    }
+                    vpnBuilder.addRoute(VPN_ROUTE_V6, 0)
+                } else {
+                    vpnBuilder.addRoute(VPN_ROUTE, 0)
+                    vpnBuilder.addRoute(VPN_ROUTE_V6, 0)
+                }
                 
                 // Set as always-on capable
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -333,6 +362,8 @@ class DokoDemoVpnService : VpnService() {
                 
                 // 4. Mark as running
                 isRunning = true
+                connectTime = System.currentTimeMillis()
+                currentSessionName = serverName
                 
                 // Update notification
                 updateNotification("已连接", serverName)
@@ -371,7 +402,7 @@ class DokoDemoVpnService : VpnService() {
     private fun stopVpn() {
         Log.i(TAG, "Stopping VPN connection...")
         
-        isRunning = false
+        saveCurrentSessionRecord()
         
         // Stop traffic monitor
         trafficJob?.cancel()
@@ -406,6 +437,45 @@ class DokoDemoVpnService : VpnService() {
         stopSelf()
         
         Log.i(TAG, "VPN disconnected")
+    }
+    
+    private fun saveCurrentSessionRecord() {
+        if (connectTime <= 0) {
+            Log.d(TAG, "No active session to save (connectTime=$connectTime)")
+            return
+        }
+        val finalUpload = try { coreManager.getUploadBytes() } catch (_: Exception) { lastUploadBytes }
+        val finalDownload = try { coreManager.getDownloadBytes() } catch (_: Exception) { lastDownloadBytes }
+        val disconnectTime = System.currentTimeMillis()
+        if (finalUpload <= 0 && finalDownload <= 0) {
+            Log.w(TAG, "Skipping traffic record: no data transferred (up=$finalUpload, down=$finalDownload)")
+        } else {
+            val record = com.dokodemo.data.model.TrafficRecord(
+                serverName = currentSessionName.ifEmpty { "Unknown" },
+                connectTime = connectTime,
+                disconnectTime = disconnectTime,
+                uploadBytes = finalUpload,
+                downloadBytes = finalDownload
+            )
+            Log.i(TAG, "Saving traffic record: server=${record.serverName}, up=${formatTraffic(finalUpload)}, down=${formatTraffic(finalDownload)}, duration=${disconnectTime - connectTime}ms")
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    trafficRecordDao.insert(record)
+                    Log.i(TAG, "Traffic record saved successfully")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error saving traffic record: ${e.message}")
+                }
+            }
+        }
+        connectTime = 0L
+    }
+    
+    private fun formatTraffic(bytes: Long): String {
+        return when {
+            bytes < 1024 -> "${bytes}B"
+            bytes < 1024 * 1024 -> "${bytes / 1024}KB"
+            else -> String.format("%.1fMB", bytes / (1024.0 * 1024.0))
+        }
     }
     
     private fun startTrafficMonitor() {
@@ -465,10 +535,13 @@ class DokoDemoVpnService : VpnService() {
         try {
             unregisterReceiver(connectivityReceiver)
         } catch (e: Exception) {
-            // Receiver not registered
         }
         
-        stopVpn()
+        saveCurrentSessionRecord()
+        
+        trafficJob?.cancel()
+        trafficJob = null
+        
         Log.i(TAG, "VPN Service destroyed")
     }
     

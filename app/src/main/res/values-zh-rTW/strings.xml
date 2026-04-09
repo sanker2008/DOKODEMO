@@ -106,4 +106,58 @@
     <!-- Splash Screen -->
     <string name="splash_tagline">無論何處，網絡隨行</string>
 
+    <!-- Split Tunneling Screen -->
+    <string name="split_tunneling_title">分應用代理</string>
+    <string name="system_apps">系統應用</string>
+    <string name="search_apps">搜尋應用名稱或包名</string>
+    <string name="proxy_selected">僅選中走代理</string>
+    <string name="bypass_selected">僅選中直連</string>
+    <string name="selected_count">已選 %1$d 個</string>
+    <string name="select_visible">[選擇當前列表]</string>
+    <string name="clear_selection">[清空]</string>
+
+    <!-- Config Editor Screen -->
+    <string name="edit_node">編輯節點</string>
+    <string name="add_node_title">新增節點</string>
+    <string name="save">儲存</string>
+    <string name="basic_config">基礎設定</string>
+    <string name="alias">別名/備註</string>
+    <string name="alias_placeholder">如: US Server 01</string>
+    <string name="address">地址(IP/域名)</string>
+    <string name="port">埠</string>
+    <string name="password">密碼</string>
+    <string name="encryption">加密方式</string>
+    <string name="security">加密方式 (Security)</string>
+    <string name="protocol_no_config">此協議暫無專屬表單項，請繼續設定傳輸和 TLS</string>
+    <string name="transport_config">傳輸設定</string>
+    <string name="network_protocol">傳輸協議 (Network)</string>
+    <string name="path">路徑 (Path)</string>
+    <string name="host">偽裝域名 (Host)</string>
+    <string name="service_name">ServiceName</string>
+    <string name="header_type">偽裝類型 (Header Type)</string>
+    <string name="seed">混淆密鑰 (Seed) 可選</string>
+    <string name="tls_config">TLS 設定</string>
+    <string name="enable_tls">開啟 TLS</string>
+    <string name="sni">SNI (Server Name)</string>
+    <string name="allow_insecure_label">允許不安全憑證 (allowInsecure)</string>
+    <string name="group_settings">分組設定</string>
+    <string name="group">所屬分組</string>
+    <string name="no_group">無分組</string>
+
+    <!-- Bypass LAN -->
+    <string name="bypass_lan">繞過區域網</string>
+    <string name="bypass_lan_desc">連線時不代理區域網IP和BT流量</string>
+
+    <!-- Traffic History -->
+    <string name="traffic_history">流量歷史</string>
+    <string name="traffic_history_desc">查看每次連線的流量使用記錄</string>
+    <string name="traffic_history_empty">暫無流量記錄</string>
+    <string name="traffic_history_empty_desc">連線並斷開後，此處將顯示流量統計</string>
+    <string name="traffic_history_summary">流量彙總</string>
+    <string name="traffic_upload">上傳</string>
+    <string name="traffic_download">下載</string>
+    <string name="traffic_sessions">會話數</string>
+    <string name="traffic_total">合計 %1$s</string>
+    <string name="traffic_history_clear">清空歷史</string>
+
 </resources>

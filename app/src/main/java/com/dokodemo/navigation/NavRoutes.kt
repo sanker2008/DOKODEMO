@@ -22,4 +22,5 @@ sealed class Route(val path: String) {
     // object SystemLogs : Route("logs") // Not implemented yet
     object Subscriptions : Route("subscriptions")
     object Logs : Route("logs")
+    object TrafficHistory : Route("traffic_history")
 }

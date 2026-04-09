@@ -49,6 +49,7 @@ class VpnController @Inject constructor(
         val allowInsecure = appPreferences.allowInsecure.first()
         val udpEnabled = appPreferences.udpEnabled.first()
         val customRules = appPreferences.customRoutingRules.first()
+        val bypassLan = appPreferences.bypassLan.first()
         
         val configJson = coreManager.generateConfig(
             profile = profile,
@@ -67,6 +68,7 @@ class VpnController @Inject constructor(
             putExtra("split_tunneling_mode", splitTunnelingMode.name)
             putExtra("server_address", profile.address)
             putExtra("server_port", profile.port)
+            putExtra("bypass_lan", bypassLan)
             putStringArrayListExtra("proxied_apps", ArrayList(proxiedApps.toList()))
         }
         

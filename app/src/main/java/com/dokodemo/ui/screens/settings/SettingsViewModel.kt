@@ -14,6 +14,7 @@ data class SettingsUiState(
     val routingMode: RoutingMode = RoutingMode.GLOBAL,
     val muxEnabled: Boolean = false,
     val udpEnabled: Boolean = true,
+    val bypassLan: Boolean = true,
     val allowInsecure: Boolean = false,
     val darkModeEnabled: Boolean = true,
     val fontSizeScale: Float = 1.0f,
@@ -46,8 +47,9 @@ class SettingsViewModel @Inject constructor(
                     appPreferences.udpEnabled
                 ) { muxEnabled, allowInsecure, udpEnabled ->
                     Triple(muxEnabled, allowInsecure, udpEnabled)
-                }
-            ) { primaryState, connectionState ->
+                },
+                appPreferences.bypassLan
+            ) { primaryState, connectionState, bypass ->
                 val (darkMode, routing, fontScale) = primaryState
                 val (muxEnabled, allowInsecure, udpEnabled) = connectionState
                 _uiState.update {
@@ -57,7 +59,8 @@ class SettingsViewModel @Inject constructor(
                         fontSizeScale = fontScale,
                         muxEnabled = muxEnabled,
                         allowInsecure = allowInsecure,
-                        udpEnabled = udpEnabled
+                        udpEnabled = udpEnabled,
+                        bypassLan = bypass
                     )
                 }
             }.collect()
@@ -87,5 +90,9 @@ class SettingsViewModel @Inject constructor(
 
     fun setUdpEnabled(enabled: Boolean) {
         viewModelScope.launch { appPreferences.setUdpEnabled(enabled) }
+    }
+
+    fun setBypassLan(enabled: Boolean) {
+        viewModelScope.launch { appPreferences.setBypassLan(enabled) }
     }
 }

@@ -14,10 +14,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dokodemo.R
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.ui.components.IndustrialCard
 import com.dokodemo.ui.components.IndustrialInput
@@ -46,13 +48,13 @@ fun ConfigEditorScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(if (serverId != null) "编辑节点" else "添加节点", fontWeight = FontWeight.SemiBold) },
+                title = { Text(if (serverId != null) stringResource(R.string.edit_node) else stringResource(R.string.add_node_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, "返回") }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
                     IconButton(onClick = { viewModel.saveConfig(onNavigateBack) }) {
-                        Icon(Icons.Rounded.Check, "保存", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Rounded.Check, stringResource(R.string.save), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -74,22 +76,22 @@ fun ConfigEditorScreen(
             )
 
             // Basic Info
-            ConfigSection("基础配置") {
+            ConfigSection(stringResource(R.string.basic_config)) {
                 IndustrialInput(
                     value = uiState.name, onValueChange = viewModel::updateName,
-                    label = "别名/备注", placeholder = "如: US Server 01",
+                    label = stringResource(R.string.alias), placeholder = stringResource(R.string.alias_placeholder),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
                 Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
                     IndustrialInput(
                         value = uiState.address, onValueChange = viewModel::updateAddress,
-                        label = "地址(IP/域名)",
+                        label = stringResource(R.string.address),
                         errorMessage = uiState.addressError,
                         modifier = Modifier.weight(2f).padding(end = 12.dp)
                     )
                     IndustrialInput(
                         value = uiState.port, onValueChange = viewModel::updatePort,
-                        label = "端口", keyboardType = KeyboardType.Number,
+                        label = stringResource(R.string.port), keyboardType = KeyboardType.Number,
                         errorMessage = uiState.portError,
                         modifier = Modifier.weight(1f)
                     )
@@ -100,12 +102,12 @@ fun ConfigEditorScreen(
                     Protocol.VMESS, Protocol.VLESS, Protocol.TROJAN -> {
                         IndustrialInput(
                             value = uiState.uuid, onValueChange = viewModel::updateUuid,
-                            label = if (uiState.protocol == Protocol.TROJAN) "密码 (Password)" else "UUID",
+                            label = if (uiState.protocol == Protocol.TROJAN) stringResource(R.string.password) else "UUID",
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
                         if (uiState.protocol == Protocol.VMESS) {
                             InputDropdown(
-                                label = "加密方式 (Security)", value = uiState.security,
+                                label = stringResource(R.string.security), value = uiState.security,
                                 options = listOf("auto", "aes-128-gcm", "chacha20-poly1305", "none"),
                                 onValueChange = viewModel::updateSecurity,
                                 modifier = Modifier.fillMaxWidth()
@@ -115,25 +117,24 @@ fun ConfigEditorScreen(
                     Protocol.SHADOWSOCKS -> {
                         IndustrialInput(
                             value = uiState.password, onValueChange = viewModel::updatePassword,
-                            label = "密码", modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                            label = stringResource(R.string.password), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
                         InputDropdown(
-                            label = "加密方式", value = uiState.ssMethod,
+                            label = stringResource(R.string.encryption), value = uiState.ssMethod,
                             options = listOf("aes-256-gcm", "aes-128-gcm", "chacha20-ietf-poly1305"),
                             onValueChange = viewModel::updateSsMethod
                         )
                     }
                     else -> {
-                        // For other protocols like Wireguard, you can handle here or simply do nothing
-                        Text(text = "此协议暂无专属表单项，请继续配置传输和 TLS", style = MaterialTheme.typography.bodySmall)
+                        Text(text = stringResource(R.string.protocol_no_config), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
 
             // Transport (Network)
-            ConfigSection("传输配置") {
+            ConfigSection(stringResource(R.string.transport_config)) {
                 InputDropdown(
-                    label = "传输协议 (Network)", value = uiState.network,
+                    label = stringResource(R.string.network_protocol), value = uiState.network,
                     options = listOf("tcp", "ws", "grpc", "kcp", "httpupgrade"),
                     onValueChange = viewModel::updateNetwork
                 )
@@ -144,57 +145,57 @@ fun ConfigEditorScreen(
                     "ws", "httpupgrade" -> {
                         IndustrialInput(
                             value = uiState.wsPath, onValueChange = viewModel::updateWsPath,
-                            label = "路径 (Path)", placeholder = "/", modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                            label = stringResource(R.string.path), placeholder = "/", modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
                         IndustrialInput(
                             value = uiState.wsHost, onValueChange = viewModel::updateWsHost,
-                            label = "伪装域名 (Host)", modifier = Modifier.fillMaxWidth()
+                            label = stringResource(R.string.host), modifier = Modifier.fillMaxWidth()
                         )
                     }
                     "grpc" -> {
                         IndustrialInput(
                             value = uiState.wsPath, onValueChange = viewModel::updateWsPath,
-                            label = "ServiceName", modifier = Modifier.fillMaxWidth()
+                            label = stringResource(R.string.service_name), modifier = Modifier.fillMaxWidth()
                         )
                     }
                     "kcp" -> {
                         InputDropdown(
-                            label = "伪装类型 (Header Type)", value = uiState.kcpHeader,
+                            label = stringResource(R.string.header_type), value = uiState.kcpHeader,
                             options = listOf("none", "dtls", "utp", "srtp", "wechat-video", "wireguard"),
                             onValueChange = viewModel::updateKcpHeader,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         IndustrialInput(
                             value = uiState.kcpSeed, onValueChange = viewModel::updateKcpSeed,
-                            label = "混淆密钥 (Seed) 可选", modifier = Modifier.fillMaxWidth()
+                            label = stringResource(R.string.seed), modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
             }
 
             // TLS / Security
-            ConfigSection("TLS 配置") {
+            ConfigSection(stringResource(R.string.tls_config)) {
                 IndustrialToggleRow(
-                    label = "开启 TLS", checked = uiState.useTls,
+                    label = stringResource(R.string.enable_tls), checked = uiState.useTls,
                     onCheckedChange = viewModel::updateUseTls
                 )
                 if (uiState.useTls) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant)
                     IndustrialInput(
                         value = uiState.serverName, onValueChange = viewModel::updateServerName,
-                        label = "SNI (Server Name)", modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                        label = stringResource(R.string.sni), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                     )
                     IndustrialToggleRow(
-                        label = "允许不安全证书 (allowInsecure)", checked = uiState.allowInsecure,
+                        label = stringResource(R.string.allow_insecure_label), checked = uiState.allowInsecure,
                         onCheckedChange = viewModel::updateAllowInsecure
                     )
                 }
             }
 
             // Group Assignment
-            ConfigSection("分组设置") {
+            ConfigSection(stringResource(R.string.group_settings)) {
                 InputGroupDropdown(
-                    label = "所属分组",
+                    label = stringResource(R.string.group),
                     groups = uiState.availableGroups,
                     selectedId = uiState.groupId,
                     onSelected = viewModel::updateGroupId
@@ -267,7 +268,7 @@ private fun InputGroupDropdown(
     label: String, groups: List<com.dokodemo.data.model.Group>, selectedId: Long?, onSelected: (Long?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val selectedText = groups.find { it.id == selectedId }?.name ?: "无分组"
+    val selectedText = groups.find { it.id == selectedId }?.name ?: stringResource(R.string.no_group)
     
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(
@@ -282,7 +283,7 @@ private fun InputGroupDropdown(
             onDismissRequest = { expanded = false },
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            DropdownMenuItem(text = { Text("无分组") }, onClick = { onSelected(null); expanded = false })
+            DropdownMenuItem(text = { Text(stringResource(R.string.no_group)) }, onClick = { onSelected(null); expanded = false })
             groups.forEach { g ->
                 DropdownMenuItem(text = { Text(g.name) }, onClick = { onSelected(g.id); expanded = false })
             }

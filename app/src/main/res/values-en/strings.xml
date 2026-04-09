@@ -111,4 +111,58 @@
     <!-- Splash Screen -->
     <string name="splash_tagline">The network that follows</string>
 
+    <!-- Split Tunneling Screen -->
+    <string name="split_tunneling_title">Split Tunneling</string>
+    <string name="system_apps">System Apps</string>
+    <string name="search_apps">Search app name or package</string>
+    <string name="proxy_selected">Proxy Selected</string>
+    <string name="bypass_selected">Bypass Selected</string>
+    <string name="selected_count">%1$d selected</string>
+    <string name="select_visible">[Select Visible]</string>
+    <string name="clear_selection">[Clear]</string>
+
+    <!-- Config Editor Screen -->
+    <string name="edit_node">Edit Node</string>
+    <string name="add_node_title">Add Node</string>
+    <string name="save">Save</string>
+    <string name="basic_config">Basic Config</string>
+    <string name="alias">Alias/Remark</string>
+    <string name="alias_placeholder">e.g. US Server 01</string>
+    <string name="address">Address (IP/Domain)</string>
+    <string name="port">Port</string>
+    <string name="password">Password</string>
+    <string name="encryption">Encryption</string>
+    <string name="security">Security</string>
+    <string name="protocol_no_config">No specific config for this protocol, continue with transport and TLS</string>
+    <string name="transport_config">Transport Config</string>
+    <string name="network_protocol">Network Protocol</string>
+    <string name="path">Path</string>
+    <string name="host">Host</string>
+    <string name="service_name">ServiceName</string>
+    <string name="header_type">Header Type</string>
+    <string name="seed">Seed (Optional)</string>
+    <string name="tls_config">TLS Config</string>
+    <string name="enable_tls">Enable TLS</string>
+    <string name="sni">SNI (Server Name)</string>
+    <string name="allow_insecure_label">Allow Insecure</string>
+    <string name="group_settings">Group Settings</string>
+    <string name="group">Group</string>
+    <string name="no_group">No Group</string>
+
+    <!-- Bypass LAN -->
+    <string name="bypass_lan">Bypass LAN</string>
+    <string name="bypass_lan_desc">Don\'t proxy LAN IP and BT traffic</string>
+
+    <!-- Traffic History -->
+    <string name="traffic_history">Traffic History</string>
+    <string name="traffic_history_desc">View traffic usage records for each session</string>
+    <string name="traffic_history_empty">No traffic records yet</string>
+    <string name="traffic_history_empty_desc">Connect and disconnect to see traffic statistics here</string>
+    <string name="traffic_history_summary">Traffic Summary</string>
+    <string name="traffic_upload">Upload</string>
+    <string name="traffic_download">Download</string>
+    <string name="traffic_sessions">Sessions</string>
+    <string name="traffic_total">Total %1$s</string>
+    <string name="traffic_history_clear">Clear History</string>
+
 </resources>

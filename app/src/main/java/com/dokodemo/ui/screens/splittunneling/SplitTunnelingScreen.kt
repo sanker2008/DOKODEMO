@@ -23,15 +23,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.ClearAll
+import androidx.compose.material.icons.rounded.Android
+import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.foundation.layout.size
+import androidx.core.graphics.drawable.toBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dokodemo.R
 import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.data.preferences.SplitTunnelingMode
 import com.dokodemo.ui.components.IndustrialCard
@@ -63,9 +73,28 @@ fun SplitTunnelingScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("分应用代理", fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.split_tunneling_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, "返回") }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back)) }
+                },
+                actions = {
+                    Row(
+                        modifier = Modifier
+                            .clickable { viewModel.setShowSystemApps(!uiState.showSystemApps) }
+                            .padding(end = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.system_apps),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Switch(
+                            checked = uiState.showSystemApps,
+                            onCheckedChange = { viewModel.setShowSystemApps(it) }
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
@@ -80,12 +109,30 @@ fun SplitTunnelingScreen(
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.search(it) },
-                placeholder = { Text("搜索应用名称或包名") },
+                placeholder = { 
+                    Text(
+                        text = stringResource(R.string.search_apps),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    ) 
+                },
+                leadingIcon = { 
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    ) 
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 singleLine = true,
-                shape = RoundedCornerShape(18.dp)
+                shape = RoundedCornerShape(24.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    focusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent
+                )
             )
 
             SplitModeSection(
@@ -93,17 +140,11 @@ fun SplitTunnelingScreen(
                 onModeChange = viewModel::setSplitMode
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             SummarySection(
                 selectedCount = uiState.selectedCount,
-                showSystemApps = uiState.showSystemApps,
-                onToggleSystemApps = viewModel::setShowSystemApps,
                 onSelectVisibleApps = viewModel::selectVisibleApps,
                 onClearSelection = viewModel::clearSelection
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -111,21 +152,10 @@ fun SplitTunnelingScreen(
                 }
             } else {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 32.dp)
                 ) {
-                    item {
-                        Text(
-                            text = if (uiState.splitMode == SplitTunnelingMode.PROXY_SELECTED) {
-                                "仅你选中的应用会进入代理，其他应用保持直连。"
-                            } else {
-                                "除你选中的应用外，其余应用都会进入代理。"
-                            },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                     items(uiState.filteredApps) { app ->
                         AppItem(
                             app = app,
@@ -140,45 +170,71 @@ fun SplitTunnelingScreen(
 
 @Composable
 private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
-    IndustrialCard(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onToggle() }
+            .padding(horizontal = 4.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
+        val context = LocalContext.current
+        val iconBitmap = remember(app.packageName) {
+            try {
+                context.packageManager.getApplicationIcon(app.packageName)
+                    .toBitmap(config = android.graphics.Bitmap.Config.ARGB_8888)
+                    .asImageBitmap()
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        if (iconBitmap != null) {
+            Image(
+                bitmap = iconBitmap,
+                contentDescription = app.appName,
+                modifier = Modifier.size(48.dp)
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Rounded.Android,
+                contentDescription = app.appName,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = app.appName,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = app.packageName,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
                 if (app.isSystemApp) {
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "系统应用",
+                        text = stringResource(R.string.system_apps),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
-            IndustrialToggle(
-                checked = app.isProxied,
-                onCheckedChange = { onToggle() }
+            Text(
+                text = app.packageName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        Switch(
+            checked = app.isProxied,
+            onCheckedChange = { onToggle() }
+        )
     }
 }
 
@@ -187,79 +243,69 @@ private fun SplitModeSection(
     currentMode: SplitTunnelingMode,
     onModeChange: (SplitTunnelingMode) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = "分应用模式",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold
+    SingleChoiceSegmentedButtonRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        SegmentedButton(
+            selected = currentMode == SplitTunnelingMode.PROXY_SELECTED,
+            onClick = { onModeChange(SplitTunnelingMode.PROXY_SELECTED) },
+            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+            colors = SegmentedButtonDefaults.colors(
+                activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            label = { Text(stringResource(R.string.proxy_selected)) }
         )
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            SegmentedButton(
-                selected = currentMode == SplitTunnelingMode.PROXY_SELECTED,
-                onClick = { onModeChange(SplitTunnelingMode.PROXY_SELECTED) },
-                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                label = { Text("仅选中走代理") }
-            )
-            SegmentedButton(
-                selected = currentMode == SplitTunnelingMode.BYPASS_SELECTED,
-                onClick = { onModeChange(SplitTunnelingMode.BYPASS_SELECTED) },
-                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                label = { Text("仅选中直连") }
-            )
-        }
+        SegmentedButton(
+            selected = currentMode == SplitTunnelingMode.BYPASS_SELECTED,
+            onClick = { onModeChange(SplitTunnelingMode.BYPASS_SELECTED) },
+            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+            colors = SegmentedButtonDefaults.colors(
+                activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            label = { Text(stringResource(R.string.bypass_selected)) }
+        )
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SummarySection(
     selectedCount: Int,
-    showSystemApps: Boolean,
-    onToggleSystemApps: (Boolean) -> Unit,
     onSelectVisibleApps: () -> Unit,
     onClearSelection: () -> Unit
 ) {
-    IndustrialCard {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.selected_count, selectedCount),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "已选应用 $selectedCount 个",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                text = stringResource(R.string.select_visible),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onSelectVisibleApps() }
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "显示系统应用",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                IndustrialToggle(
-                    checked = showSystemApps,
-                    onCheckedChange = onToggleSystemApps
-                )
-            }
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                OutlinedButton(onClick = onSelectVisibleApps) {
-                    Icon(Icons.Rounded.Checklist, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("选择当前列表")
-                }
-                OutlinedButton(onClick = onClearSelection) {
-                    Icon(Icons.Rounded.ClearAll, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("清空选择")
-                }
-            }
+            Text(
+                text = stringResource(R.string.clear_selection),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onClearSelection() }
+            )
         }
     }
 }

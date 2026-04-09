@@ -6,9 +6,11 @@ import com.dokodemo.data.AppDatabase
 import com.dokodemo.data.MIGRATION_1_2
 import com.dokodemo.data.MIGRATION_2_3
 import com.dokodemo.data.MIGRATION_3_4
+import com.dokodemo.data.MIGRATION_4_5
 import com.dokodemo.data.dao.GroupDao
 import com.dokodemo.data.dao.ServerDao
 import com.dokodemo.data.dao.SubscriptionDao
+import com.dokodemo.data.dao.TrafficRecordDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +30,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "doko_database"
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
             .build()
     }
 
@@ -48,5 +50,11 @@ object DatabaseModule {
     @Singleton
     fun provideGroupDao(appDatabase: AppDatabase): GroupDao {
         return appDatabase.groupDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrafficRecordDao(appDatabase: AppDatabase): TrafficRecordDao {
+        return appDatabase.trafficRecordDao()
     }
 }

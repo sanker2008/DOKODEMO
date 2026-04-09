@@ -140,6 +140,9 @@ fun DokoNavHost(
                 },
                 onNavigateToLogs = {
                     navController.navigate(Route.Logs.path)
+                },
+                onNavigateToTrafficHistory = {
+                    navController.navigate(Route.TrafficHistory.path)
                 }
             )
         }
@@ -173,6 +176,15 @@ fun DokoNavHost(
         // Subscriptions
         composable(Route.Subscriptions.path) {
             com.dokodemo.ui.screens.subscription.SubscriptionScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        // Traffic History
+        composable(Route.TrafficHistory.path) {
+            com.dokodemo.ui.screens.traffichistory.TrafficHistoryScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }
