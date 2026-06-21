@@ -34,9 +34,9 @@ data class MyUiState(
 ## 3. Create Screen Composable
 - Create a new Composable function.
 - Use `Scaffold` as the root container.
-- **CRITICAL**: Set `containerColor = IndustrialBlack` (from `ui.theme.Color`).
+- **CRITICAL**: Set `containerColor = MaterialTheme.colorScheme.background`.
 - Inject the ViewModel using `hiltViewModel()`.
-- Adhere strictly to **Industrial Neubrutalism** (Pure Black background, No Rounded Corners).
+- Adhere strictly to **Mist & Dawn** aesthetic (Clean, Transparent, Warm, Rounded Corners).
 
 ```kotlin
 @Composable
@@ -47,7 +47,7 @@ fun MyScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        containerColor = IndustrialBlack,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = { /* ... */ }
     ) { paddingValues ->
         // Content

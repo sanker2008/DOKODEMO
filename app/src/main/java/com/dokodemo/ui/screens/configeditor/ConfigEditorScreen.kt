@@ -8,7 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.R
 import com.dokodemo.data.model.Protocol
-import com.dokodemo.ui.components.IndustrialCard
-import com.dokodemo.ui.components.IndustrialInput
-import com.dokodemo.ui.components.IndustrialTabButton
-import com.dokodemo.ui.components.IndustrialToggleRow
+import com.dokodemo.ui.components.DokoCard
+import com.dokodemo.ui.components.DokoInput
+import com.dokodemo.ui.components.DokoTabButton
+import com.dokodemo.ui.components.DokoToggleRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +50,7 @@ fun ConfigEditorScreen(
             TopAppBar(
                 title = { Text(if (serverId != null) stringResource(R.string.edit_node) else stringResource(R.string.add_node_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back)) }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
                     IconButton(onClick = { viewModel.saveConfig(onNavigateBack) }) {
@@ -77,19 +77,19 @@ fun ConfigEditorScreen(
 
             // Basic Info
             ConfigSection(stringResource(R.string.basic_config)) {
-                IndustrialInput(
+                DokoInput(
                     value = uiState.name, onValueChange = viewModel::updateName,
                     label = stringResource(R.string.alias), placeholder = stringResource(R.string.alias_placeholder),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
                 Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
-                    IndustrialInput(
+                    DokoInput(
                         value = uiState.address, onValueChange = viewModel::updateAddress,
                         label = stringResource(R.string.address),
                         errorMessage = uiState.addressError,
                         modifier = Modifier.weight(2f).padding(end = 12.dp)
                     )
-                    IndustrialInput(
+                    DokoInput(
                         value = uiState.port, onValueChange = viewModel::updatePort,
                         label = stringResource(R.string.port), keyboardType = KeyboardType.Number,
                         errorMessage = uiState.portError,
@@ -100,7 +100,7 @@ fun ConfigEditorScreen(
                 // Authentication based on Protocol
                 when (uiState.protocol) {
                     Protocol.VMESS, Protocol.VLESS, Protocol.TROJAN -> {
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.uuid, onValueChange = viewModel::updateUuid,
                             label = if (uiState.protocol == Protocol.TROJAN) stringResource(R.string.password) else "UUID",
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
@@ -115,7 +115,7 @@ fun ConfigEditorScreen(
                         }
                     }
                     Protocol.SHADOWSOCKS -> {
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.password, onValueChange = viewModel::updatePassword,
                             label = stringResource(R.string.password), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
@@ -143,17 +143,17 @@ fun ConfigEditorScreen(
 
                 when (uiState.network) {
                     "ws", "httpupgrade" -> {
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.wsPath, onValueChange = viewModel::updateWsPath,
                             label = stringResource(R.string.path), placeholder = "/", modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.wsHost, onValueChange = viewModel::updateWsHost,
                             label = stringResource(R.string.host), modifier = Modifier.fillMaxWidth()
                         )
                     }
                     "grpc" -> {
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.wsPath, onValueChange = viewModel::updateWsPath,
                             label = stringResource(R.string.service_name), modifier = Modifier.fillMaxWidth()
                         )
@@ -165,7 +165,7 @@ fun ConfigEditorScreen(
                             onValueChange = viewModel::updateKcpHeader,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        IndustrialInput(
+                        DokoInput(
                             value = uiState.kcpSeed, onValueChange = viewModel::updateKcpSeed,
                             label = stringResource(R.string.seed), modifier = Modifier.fillMaxWidth()
                         )
@@ -175,17 +175,17 @@ fun ConfigEditorScreen(
 
             // TLS / Security
             ConfigSection(stringResource(R.string.tls_config)) {
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.enable_tls), checked = uiState.useTls,
                     onCheckedChange = viewModel::updateUseTls
                 )
                 if (uiState.useTls) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant)
-                    IndustrialInput(
+                    DokoInput(
                         value = uiState.serverName, onValueChange = viewModel::updateServerName,
                         label = stringResource(R.string.sni), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                     )
-                    IndustrialToggleRow(
+                    DokoToggleRow(
                         label = stringResource(R.string.allow_insecure_label), checked = uiState.allowInsecure,
                         onCheckedChange = viewModel::updateAllowInsecure
                     )
@@ -215,7 +215,7 @@ private fun ConfigSection(title: String, content: @Composable ColumnScope.() -> 
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
     )
-    IndustrialCard {
+    DokoCard {
         Column(modifier = Modifier.padding(16.dp), content = content)
     }
 }
@@ -226,7 +226,7 @@ private fun ProtocolSelector(selected: Protocol, onSelected: (Protocol) -> Unit)
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(Protocol.entries) { proto ->
-            IndustrialTabButton(
+            DokoTabButton(
                 text = proto.name,
                 isSelected = selected == proto,
                 onClick = { onSelected(proto) }

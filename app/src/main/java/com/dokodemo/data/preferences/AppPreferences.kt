@@ -84,6 +84,7 @@ class AppPreferences @Inject constructor(
     private val SPLIT_TUNNELING_MODE_KEY = stringPreferencesKey("split_tunneling_mode")
     private val CUSTOM_ROUTING_RULES_KEY = stringPreferencesKey("custom_routing_rules")
     private val BYPASS_LAN_KEY = booleanPreferencesKey("bypass_lan")
+    private val AUTO_UPDATE_SUB_KEY = booleanPreferencesKey("auto_update_sub")
 
     val isDarkMode: Flow<Boolean> = dataStore.data
         .map { it[DARK_MODE_KEY] ?: false }
@@ -111,6 +112,9 @@ class AppPreferences @Inject constructor(
 
     val bypassLan: Flow<Boolean> = dataStore.data
         .map { it[BYPASS_LAN_KEY] ?: true }
+
+    val autoUpdateSubscription: Flow<Boolean> = dataStore.data
+        .map { it[AUTO_UPDATE_SUB_KEY] ?: false }
 
     val splitTunnelingMode: Flow<SplitTunnelingMode> = dataStore.data
         .map { prefs ->
@@ -156,6 +160,10 @@ class AppPreferences @Inject constructor(
 
     suspend fun setBypassLan(enabled: Boolean) {
         dataStore.edit { it[BYPASS_LAN_KEY] = enabled }
+    }
+
+    suspend fun setAutoUpdateSubscription(enabled: Boolean) {
+        dataStore.edit { it[AUTO_UPDATE_SUB_KEY] = enabled }
     }
 
     suspend fun setSplitTunnelingMode(mode: SplitTunnelingMode) {

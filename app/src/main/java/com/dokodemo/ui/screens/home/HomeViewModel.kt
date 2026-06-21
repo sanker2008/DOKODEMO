@@ -10,6 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.repository.ServerRepository
+import com.dokodemo.data.repository.SubscriptionRepository
+import com.dokodemo.data.repository.GroupRepository
+import com.dokodemo.core.SubscriptionFetcher
 import com.dokodemo.service.DokoDemoVpnService
 import com.dokodemo.service.VpnController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +53,10 @@ data class HomeUiState(
     
     // Ping
     val isPinging: Boolean = false,
-    val toastMessage: String? = null
+    val toastMessage: String? = null,
+    
+    // Empty state
+    val hasNoServers: Boolean = false
 )
 
 @HiltViewModel
@@ -59,7 +65,10 @@ class HomeViewModel @Inject constructor(
     private val vpnController: VpnController,
     private val serverRepository: ServerRepository,
     private val appPreferences: com.dokodemo.data.preferences.AppPreferences,
-    private val serverPinger: com.dokodemo.core.ServerPinger
+    private val serverPinger: com.dokodemo.core.ServerPinger,
+    private val subscriptionRepository: SubscriptionRepository,
+    private val groupRepository: GroupRepository,
+    private val subscriptionFetcher: SubscriptionFetcher
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -67,6 +76,8 @@ class HomeViewModel @Inject constructor(
     
     private var trafficReceiver: BroadcastReceiver? = null
     private var vpnStateReceiver: BroadcastReceiver? = null
+    private var fallbackCount = 0
+    private val MAX_FALLBACK = 3
     
     init {
         loadSelectedServer()
@@ -74,12 +85,48 @@ class HomeViewModel @Inject constructor(
         updateCoreVersion()
         checkVpnState()
         observeRoutingMode()
+        checkAutoUpdateSubscriptions()
     }
     
     private fun observeRoutingMode() {
         viewModelScope.launch {
             appPreferences.routingMode.collect { mode ->
                 _uiState.update { it.copy(routingMode = mode) }
+            }
+        }
+    }
+    
+    private fun checkAutoUpdateSubscriptions() {
+        viewModelScope.launch {
+            val autoUpdate = appPreferences.autoUpdateSubscription.first()
+            if (autoUpdate) {
+                try {
+                    val subs = subscriptionRepository.getAllSubscriptions().first()
+                    for (sub in subs) {
+                        if (sub.isActive) {
+                            var group = groupRepository.getGroupBySubscriptionId(sub.id)
+                            if (group == null) {
+                                val newGroupId = groupRepository.insertGroup(com.dokodemo.data.model.Group(name = sub.name, subscriptionId = sub.id))
+                                group = groupRepository.getGroupById(newGroupId)
+                            }
+                            val result = subscriptionFetcher.fetchAndParse(sub.url, group?.id)
+                            result.onSuccess { (nodes, info) ->
+                                serverRepository.replaceServersForSubscription(sub.id, nodes)
+                                subscriptionRepository.updateSyncStatus(
+                                    id = sub.id, 
+                                    timestamp = System.currentTimeMillis(), 
+                                    count = nodes.size,
+                                    upload = info?.upload ?: sub.upload,
+                                    download = info?.download ?: sub.download,
+                                    total = info?.total ?: sub.total,
+                                    expire = info?.expire ?: sub.expire
+                                )
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Ignore auto-update errors on background
+                }
             }
         }
     }
@@ -120,6 +167,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadSelectedServer() {
+        viewModelScope.launch {
+            serverRepository.getAllServers().collect { servers ->
+                _uiState.update { it.copy(hasNoServers = servers.isEmpty()) }
+            }
+        }
         viewModelScope.launch {
             // Try to get selected server from database
             serverRepository.getSelectedServer().collect { server ->
@@ -169,6 +221,7 @@ class HomeViewModel @Inject constructor(
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     DokoDemoVpnService.ACTION_VPN_CONNECTED -> {
+                        fallbackCount = 0 // Reset on success
                         _uiState.update { state ->
                             state.copy(
                                 isConnected = true,
@@ -179,16 +232,22 @@ class HomeViewModel @Inject constructor(
                     }
                     DokoDemoVpnService.ACTION_VPN_DISCONNECTED -> {
                         val errorReason = intent?.getStringExtra(DokoDemoVpnService.EXTRA_ERROR_REASON)
-                        _uiState.update { state ->
-                            state.copy(
-                                isConnected = false,
-                                isConnecting = false,
-                                ipAddress = "UNPROTECTED",
-                                uploadSpeed = "0 KB/s",
-                                downloadSpeed = "0 KB/s",
-                                speedHistory = List(50) { 0f },
-                                toastMessage = errorReason?.let { "连接失败：$it" }
-                            )
+                        if (errorReason != null && fallbackCount < MAX_FALLBACK) {
+                            fallbackCount++
+                            tryFallbackNextNode()
+                        } else {
+                            fallbackCount = 0
+                            _uiState.update { state ->
+                                state.copy(
+                                    isConnected = false,
+                                    isConnecting = false,
+                                    ipAddress = "UNPROTECTED",
+                                    uploadSpeed = "0 KB/s",
+                                    downloadSpeed = "0 KB/s",
+                                    speedHistory = List(50) { 0f },
+                                    toastMessage = errorReason?.let { "连接失败：$it" }
+                                )
+                            }
                         }
                     }
                 }
@@ -323,6 +382,30 @@ class HomeViewModel @Inject constructor(
         }
     }
     
+    private fun tryFallbackNextNode() {
+        viewModelScope.launch {
+            val servers = serverRepository.getAllServers().first()
+            if (servers.isEmpty()) return@launch
+            
+            val current = _uiState.value.currentServer
+            if (current != null) {
+                val currentIndex = servers.indexOfFirst { it.id == current.id }
+                val nextServer = if (currentIndex != -1 && currentIndex + 1 < servers.size) {
+                    servers[currentIndex + 1]
+                } else {
+                    servers.first()
+                }
+                
+                _uiState.update { it.copy(toastMessage = "节点异常，正在尝试切换到: ${nextServer.name}") }
+                
+                // Select and connect
+                serverRepository.selectServer(nextServer.id)
+                _uiState.update { it.copy(currentServer = nextServer) }
+                connect()
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         

@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.dokodemo.ui.components.IndustrialButton
+import com.dokodemo.ui.components.DokoButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -379,7 +379,7 @@ private fun ScannerOverlay(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 // 闪光灯按钮
-                IndustrialButton(
+                DokoButton(
                     text = "照明",
                     icon = if (isFlashOn) Icons.Rounded.FlashOn else Icons.Rounded.FlashOff,
                     isActive = isFlashOn,
@@ -390,7 +390,7 @@ private fun ScannerOverlay(
                 Spacer(modifier = Modifier.width(16.dp))
                 
                 // 相册按钮
-                IndustrialButton(
+                DokoButton(
                     text = "相册",
                     icon = Icons.Rounded.PhotoLibrary,
                     onClick = onGalleryClick,

@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Android
@@ -44,8 +44,7 @@ import androidx.lifecycle.viewModelScope
 import com.dokodemo.R
 import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.data.preferences.SplitTunnelingMode
-import com.dokodemo.ui.components.IndustrialCard
-import com.dokodemo.ui.components.IndustrialToggle
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -75,7 +74,7 @@ fun SplitTunnelingScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.split_tunneling_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back)) }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
                     Row(
@@ -156,11 +155,38 @@ fun SplitTunnelingScreen(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 32.dp)
                 ) {
-                    items(uiState.filteredApps) { app ->
-                        AppItem(
-                            app = app,
-                            onToggle = { viewModel.toggleApp(app.packageName) }
-                        )
+                    if (uiState.suggestedApps.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.suggested_apps),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                            )
+                        }
+                        items(uiState.suggestedApps, key = { it.packageName }) { app ->
+                            AppItem(
+                                app = app,
+                                onToggle = { viewModel.toggleApp(app.packageName) }
+                            )
+                        }
+                    }
+
+                    if (uiState.otherApps.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.all_apps),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                            )
+                        }
+                        items(uiState.otherApps, key = { it.packageName }) { app ->
+                            AppItem(
+                                app = app,
+                                onToggle = { viewModel.toggleApp(app.packageName) }
+                            )
+                        }
                     }
                 }
             }
@@ -319,7 +345,8 @@ data class AppInfo(
 
 data class SplitTunnelingUiState(
     val allApps: List<AppInfo> = emptyList(),
-    val filteredApps: List<AppInfo> = emptyList(),
+    val suggestedApps: List<AppInfo> = emptyList(),
+    val otherApps: List<AppInfo> = emptyList(),
     val searchQuery: String = "",
     val isLoading: Boolean = false,
     val splitMode: SplitTunnelingMode = SplitTunnelingMode.PROXY_SELECTED,
@@ -332,6 +359,17 @@ class SplitTunnelingViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val appPreferences: AppPreferences
 ) : ViewModel() {
+    companion object {
+        val COMMON_APPS = setOf(
+            "org.telegram.messenger",
+            "com.whatsapp",
+            "com.twitter.android",
+            "com.android.chrome",
+            "com.google.android.youtube",
+            "com.discord"
+        )
+    }
+
     private val _uiState = MutableStateFlow(SplitTunnelingUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -346,13 +384,15 @@ class SplitTunnelingViewModel @Inject constructor(
                         val updatedApps = state.allApps.map { app ->
                             app.copy(isProxied = proxiedSet.contains(app.packageName))
                         }
+                        val (suggested, other) = filterApps(
+                            apps = updatedApps,
+                            query = state.searchQuery,
+                            showSystemApps = state.showSystemApps
+                        )
                         state.copy(
                             allApps = updatedApps,
-                            filteredApps = filterApps(
-                                apps = updatedApps,
-                                query = state.searchQuery,
-                                showSystemApps = state.showSystemApps
-                            ),
+                            suggestedApps = suggested,
+                            otherApps = other,
                             selectedCount = proxiedSet.size,
                             splitMode = splitMode
                         )
@@ -396,13 +436,15 @@ class SplitTunnelingViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 _uiState.update { state ->
+                    val (suggested, other) = filterApps(
+                        apps = apps,
+                        query = state.searchQuery,
+                        showSystemApps = state.showSystemApps
+                    )
                     state.copy(
                         allApps = apps,
-                        filteredApps = filterApps(
-                            apps = apps,
-                            query = state.searchQuery,
-                            showSystemApps = state.showSystemApps
-                        ),
+                        suggestedApps = suggested,
+                        otherApps = other,
                         isLoading = false
                     )
                 }
@@ -412,13 +454,15 @@ class SplitTunnelingViewModel @Inject constructor(
 
     fun search(query: String) {
         _uiState.update {
+            val (suggested, other) = filterApps(
+                apps = it.allApps,
+                query = query,
+                showSystemApps = it.showSystemApps
+            )
             it.copy(
                 searchQuery = query,
-                filteredApps = filterApps(
-                    apps = it.allApps,
-                    query = query,
-                    showSystemApps = it.showSystemApps
-                )
+                suggestedApps = suggested,
+                otherApps = other
             )
         }
     }
@@ -431,13 +475,15 @@ class SplitTunnelingViewModel @Inject constructor(
 
     fun setShowSystemApps(show: Boolean) {
         _uiState.update {
+            val (suggested, other) = filterApps(
+                apps = it.allApps,
+                query = it.searchQuery,
+                showSystemApps = show
+            )
             it.copy(
                 showSystemApps = show,
-                filteredApps = filterApps(
-                    apps = it.allApps,
-                    query = it.searchQuery,
-                    showSystemApps = show
-                )
+                suggestedApps = suggested,
+                otherApps = other
             )
         }
     }
@@ -457,7 +503,7 @@ class SplitTunnelingViewModel @Inject constructor(
 
     fun selectVisibleApps() {
         viewModelScope.launch {
-            val packages = _uiState.value.filteredApps.map { it.packageName }.toSet()
+            val packages = (_uiState.value.suggestedApps + _uiState.value.otherApps).map { it.packageName }.toSet()
             appPreferences.setProxiedApps(_uiState.value.allApps.filter {
                 it.isProxied || packages.contains(it.packageName)
             }.map { it.packageName }.toSet())
@@ -474,13 +520,16 @@ class SplitTunnelingViewModel @Inject constructor(
         apps: List<AppInfo>,
         query: String,
         showSystemApps: Boolean
-    ): List<AppInfo> {
-        return apps.filter { app ->
+    ): Pair<List<AppInfo>, List<AppInfo>> {
+        val filtered = apps.filter { app ->
             (showSystemApps || !app.isSystemApp) && (
                 query.isBlank() ||
                     app.appName.contains(query, ignoreCase = true) ||
                     app.packageName.contains(query, ignoreCase = true)
                 )
         }
+        val suggested = filtered.filter { COMMON_APPS.contains(it.packageName) }
+        val other = filtered.filter { !COMMON_APPS.contains(it.packageName) }
+        return Pair(suggested, other)
     }
 }

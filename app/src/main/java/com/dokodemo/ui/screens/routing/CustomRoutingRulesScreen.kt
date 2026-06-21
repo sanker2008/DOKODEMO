@@ -17,8 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.ContentPaste
@@ -66,8 +66,8 @@ import com.dokodemo.data.preferences.AppPreferences
 import com.dokodemo.data.preferences.CustomRoutingRule
 import com.dokodemo.data.preferences.CustomRuleAction
 import com.dokodemo.data.preferences.CustomRuleMatchType
-import com.dokodemo.ui.components.IndustrialCard
-import com.dokodemo.ui.components.IndustrialToggle
+import com.dokodemo.ui.components.DokoCard
+import com.dokodemo.ui.components.DokoToggle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.UUID
 import javax.inject.Inject
@@ -98,7 +98,7 @@ fun CustomRoutingRulesScreen(
                 title = { Text(stringResource(R.string.custom_routing_rules), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
@@ -211,7 +211,7 @@ private fun OverviewCard(
     totalCount: Int,
     enabledCount: Int
 ) {
-    IndustrialCard {
+    DokoCard {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -244,7 +244,7 @@ private fun OverviewCard(
 
 @Composable
 private fun EmptyRulesCard() {
-    IndustrialCard {
+    DokoCard {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -283,7 +283,7 @@ private fun RuleCard(
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit
 ) {
-    IndustrialCard(modifier = Modifier.fillMaxWidth()) {
+    DokoCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -479,7 +479,7 @@ private fun RuleEditorDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(stringResource(R.string.custom_routing_rules_enabled), style = MaterialTheme.typography.bodyMedium)
-                    IndustrialToggle(
+                    DokoToggle(
                         checked = enabled,
                         onCheckedChange = { enabled = it }
                     )

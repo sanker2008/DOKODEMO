@@ -12,11 +12,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.*
@@ -31,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.R
-import com.dokodemo.ui.components.IndustrialSearchInput
+import com.dokodemo.ui.components.DokoSearchInput
 import com.dokodemo.ui.components.SquareFab
 import com.dokodemo.ui.theme.*
 
@@ -41,6 +42,7 @@ fun ServerListScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddProfile: () -> Unit,
     onNavigateToConfigEditor: (Long?) -> Unit,
+    onNavigateToConfigEditorWithUri: (String) -> Unit,
     viewModel: ServerListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -89,10 +91,36 @@ fun ServerListScreen(
                 title = { Text(stringResource(R.string.node_list), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 actions = {
+                    // 排序菜单
+                    var sortMenuExpanded by remember { mutableStateOf(false) }
+                    Box {
+                        IconButton(onClick = { sortMenuExpanded = true }) {
+                            Icon(Icons.AutoMirrored.Rounded.Sort, stringResource(R.string.sort_nodes))
+                        }
+                        DropdownMenu(
+                            expanded = sortMenuExpanded,
+                            onDismissRequest = { sortMenuExpanded = false },
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.sort_default), color = if(uiState.sortOption == SortOption.DEFAULT) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface) },
+                                onClick = { viewModel.setSortOption(SortOption.DEFAULT); sortMenuExpanded = false }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.sort_latency), color = if(uiState.sortOption == SortOption.LATENCY_ASC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface) },
+                                onClick = { viewModel.setSortOption(SortOption.LATENCY_ASC); sortMenuExpanded = false }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.sort_name), color = if(uiState.sortOption == SortOption.NAME_ASC) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface) },
+                                onClick = { viewModel.setSortOption(SortOption.NAME_ASC); sortMenuExpanded = false }
+                            )
+                        }
+                    }
+
                     // 测速按钮
                     TextButton(onClick = { viewModel.refreshServers() }, enabled = !uiState.isPinging) {
                         if (uiState.isPinging) {
@@ -129,10 +157,27 @@ fun ServerListScreen(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.import_from_clipboard), color = MaterialTheme.colorScheme.onSurface) },
+                        onClick = {
+                            expanded = false
+                            val clipboardManager = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                            val clipData = clipboardManager.primaryClip
+                            if (clipData != null && clipData.itemCount > 0) {
+                                val text = clipData.getItemAt(0).text?.toString()
+                                if (!text.isNullOrBlank()) {
+                                    onNavigateToConfigEditorWithUri(text)
+                                } else {
+                                    android.widget.Toast.makeText(context, context.getString(R.string.clipboard_empty), android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                android.widget.Toast.makeText(context, context.getString(R.string.clipboard_empty), android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.scan_qr), color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
@@ -157,7 +202,7 @@ fun ServerListScreen(
                 .padding(padding)
         ) {
             // ─── 搜索框 ────────────────────────────────────────────────────
-            IndustrialSearchInput(
+            DokoSearchInput(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
                 placeholder = stringResource(R.string.search_nodes),
@@ -253,23 +298,14 @@ private fun NodeCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    Card(
+    com.dokodemo.ui.components.DokoCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
+        containerColor = if (isSelected)
                 Primary.copy(alpha = 0.12f)
             else
                 MaterialTheme.colorScheme.surfaceVariant
-        ),
-        border = if (isSelected)
-            CardDefaults.outlinedCardBorder().run {
-                androidx.compose.foundation.BorderStroke(1.dp, Primary.copy(alpha = 0.5f))
-            }
-        else null,
-        elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -384,7 +420,7 @@ private fun EmptyState() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                imageVector = Icons.Rounded.List,
+                imageVector = Icons.AutoMirrored.Rounded.List,
                 contentDescription = "Empty",
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)

@@ -30,7 +30,7 @@ import androidx.compose.material3.MaterialTheme
  * 圆角16dp，支持 active 状态
  */
 @Composable
-fun IndustrialButton(
+fun DokoButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +104,7 @@ fun IndustrialButton(
  * 保持同名兼容
  */
 @Composable
-fun LargeIndustrialButton(
+fun LargeDokoButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -174,7 +174,7 @@ fun SquareFab(
  * 标签页按钮（协议选择用，替代旧 IndustrialTabButton）
  */
 @Composable
-fun IndustrialTabButton(
+fun DokoTabButton(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,

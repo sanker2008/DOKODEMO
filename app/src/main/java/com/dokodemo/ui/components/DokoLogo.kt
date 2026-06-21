@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.dokodemo.ui.theme.DokoDemoTheme
 
 @Composable
-fun IndustrialLogo(
+fun DokoLogo(
     modifier: Modifier = Modifier
 ) {
     val logoGray = Color(0xFF607D8B)
@@ -72,11 +72,11 @@ fun IndustrialLogo(
             // Upper Branch: Peels from diagonal, goes up, curves right, then into center
             val upperBranch = Path().apply {
                 moveTo(width * 0.3f, height * 0.62f) // Fork point on diagonal
-                quadraticBezierTo(width * 0.25f, height * 0.45f, width * 0.25f, height * 0.35f)
-                quadraticBezierTo(width * 0.25f, height * 0.18f, width * 0.45f, height * 0.18f)
+                quadraticTo(width * 0.25f, height * 0.45f, width * 0.25f, height * 0.35f)
+                quadraticTo(width * 0.25f, height * 0.18f, width * 0.45f, height * 0.18f)
                 lineTo(width * 0.65f, height * 0.18f)
-                quadraticBezierTo(width * 0.82f, height * 0.18f, width * 0.82f, height * 0.35f)
-                quadraticBezierTo(width * 0.82f, height * 0.48f, width * 0.68f, height * 0.48f)
+                quadraticTo(width * 0.82f, height * 0.18f, width * 0.82f, height * 0.35f)
+                quadraticTo(width * 0.82f, height * 0.48f, width * 0.68f, height * 0.48f)
                 lineTo(width * 0.5f, height * 0.48f)
             }
             drawPath(path = upperBranch, color = logoGray, style = grayStroke)
@@ -84,10 +84,10 @@ fun IndustrialLogo(
             // Lower Branch: Peels from diagonal, goes down, curves right, then ends top-right
             val lowerBranch = Path().apply {
                 moveTo(width * 0.3f, height * 0.62f) // Same fork point
-                quadraticBezierTo(width * 0.35f, height * 0.82f, width * 0.55f, height * 0.82f)
+                quadraticTo(width * 0.35f, height * 0.82f, width * 0.55f, height * 0.82f)
                 lineTo(width * 0.72f, height * 0.82f)
-                quadraticBezierTo(width * 0.95f, height * 0.82f, width * 0.95f, height * 0.6f)
-                quadraticBezierTo(width * 0.95f, height * 0.45f, width * 0.85f, height * 0.35f)
+                quadraticTo(width * 0.95f, height * 0.82f, width * 0.95f, height * 0.6f)
+                quadraticTo(width * 0.95f, height * 0.45f, width * 0.85f, height * 0.35f)
             }
             drawPath(path = lowerBranch, color = logoGray, style = grayStroke)
 
@@ -115,7 +115,7 @@ fun IndustrialLogo(
 
 @Preview(showBackground = true)
 @Composable
-fun IndustrialLogoPreview() {
+fun DokoLogoPreview() {
     DokoDemoTheme {
         Box(
             modifier = Modifier
@@ -123,7 +123,7 @@ fun IndustrialLogoPreview() {
                 .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            IndustrialLogo(modifier = Modifier.size(320.dp))
+            DokoLogo(modifier = Modifier.size(320.dp))
         }
     }
 }

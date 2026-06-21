@@ -15,8 +15,9 @@ import androidx.compose.ui.unit.dp
  * 圆角16dp，SurfaceGlass 背景，带薄边框（Glassmorphism）
  */
 @Composable
-fun IndustrialCard(
+fun DokoCard(
     modifier: Modifier = Modifier,
+    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit
 ) {
     Card(
@@ -29,7 +30,7 @@ fun IndustrialCard(
             ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = containerColor
         ),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {

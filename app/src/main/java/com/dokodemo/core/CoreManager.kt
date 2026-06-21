@@ -16,6 +16,11 @@ import libv2ray.CoreController
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.dokodemo.core.config.OutboundGenerator
+import com.dokodemo.core.config.ShadowsocksGenerator
+import com.dokodemo.core.config.TrojanGenerator
+import com.dokodemo.core.config.VlessGenerator
+import com.dokodemo.core.config.VmessGenerator
 
 /**
  * CoreManager handles V2Ray/Xray core operations
@@ -297,230 +302,14 @@ class CoreManager @Inject constructor(
         muxEnabled: Boolean,
         allowInsecure: Boolean
     ): Map<String, Any> {
-        return when (profile.protocol) {
-            Protocol.VLESS -> generateVlessOutbound(profile, muxEnabled, allowInsecure)
-            Protocol.VMESS -> generateVmessOutbound(profile, muxEnabled, allowInsecure)
-            Protocol.TROJAN -> generateTrojanOutbound(profile, muxEnabled, allowInsecure)
-            Protocol.SHADOWSOCKS -> generateShadowsocksOutbound(profile)
-            else -> generateVlessOutbound(profile, muxEnabled, allowInsecure)
+        val generator: OutboundGenerator = when (profile.protocol) {
+            Protocol.VLESS -> VlessGenerator()
+            Protocol.VMESS -> VmessGenerator()
+            Protocol.TROJAN -> TrojanGenerator()
+            Protocol.SHADOWSOCKS -> ShadowsocksGenerator()
+            else -> VlessGenerator()
         }
-    }
-    
-    private fun generateVlessOutbound(
-        profile: ServerProfile,
-        muxEnabled: Boolean,
-        allowInsecure: Boolean
-    ): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile, allowInsecure)
-        
-        val effectiveFlow = when {
-            profile.useReality && profile.flow.isEmpty() -> "xtls-rprx-vision"
-            profile.flow.isNotEmpty() -> profile.flow
-            else -> null
-        }
-        
-        return mapOf(
-            "tag" to "proxy",
-            "protocol" to "vless",
-            "settings" to mapOf(
-                "vnext" to listOf(
-                    mapOf(
-                        "address" to profile.address,
-                        "port" to profile.port,
-                        "users" to listOf(
-                            buildMap<String, Any> {
-                                put("id", profile.uuid)
-                                put("encryption", profile.encryption.ifEmpty { "none" })
-                                if (effectiveFlow != null) {
-                                    put("flow", effectiveFlow)
-                                }
-                                put("level", 0)
-                            }
-                        )
-                    )
-                )
-            ),
-            "streamSettings" to streamSettings,
-            "mux" to mapOf(
-                "enabled" to muxEnabled,
-                "concurrency" to if (muxEnabled) 8 else -1
-            )
-        )
-    }
-    
-    private fun generateVmessOutbound(
-        profile: ServerProfile,
-        muxEnabled: Boolean,
-        allowInsecure: Boolean
-    ): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile, allowInsecure)
-        
-        return mapOf(
-            "tag" to "proxy",
-            "protocol" to "vmess",
-            "settings" to mapOf(
-                "vnext" to listOf(
-                    mapOf(
-                        "address" to profile.address,
-                        "port" to profile.port,
-                        "users" to listOf(
-                            mapOf(
-                                "id" to profile.uuid,
-                                "alterId" to 0,
-                                "security" to profile.encryption.ifEmpty { "auto" },
-                                "level" to 0
-                            )
-                        )
-                    )
-                )
-            ),
-            "streamSettings" to streamSettings,
-            "mux" to mapOf(
-                "enabled" to muxEnabled,
-                "concurrency" to if (muxEnabled) 8 else -1
-            )
-        )
-    }
-    
-    private fun generateTrojanOutbound(
-        profile: ServerProfile,
-        muxEnabled: Boolean,
-        allowInsecure: Boolean
-    ): Map<String, Any> {
-        val streamSettings = generateStreamSettings(profile, allowInsecure)
-        
-        return mapOf(
-            "tag" to "proxy",
-            "protocol" to "trojan",
-            "settings" to mapOf(
-                "servers" to listOf(
-                    mapOf(
-                        "address" to profile.address,
-                        "port" to profile.port,
-                        "password" to profile.password.ifEmpty { profile.uuid },
-                        "level" to 0
-                    )
-                )
-            ),
-            "streamSettings" to streamSettings,
-            "mux" to mapOf(
-                "enabled" to muxEnabled,
-                "concurrency" to if (muxEnabled) 8 else -1
-            )
-        )
-    }
-    
-    private fun generateShadowsocksOutbound(profile: ServerProfile): Map<String, Any> {
-        return mapOf(
-            "tag" to "proxy",
-            "protocol" to "shadowsocks",
-            "settings" to mapOf(
-                "servers" to listOf(
-                    mapOf(
-                        "address" to profile.address,
-                        "port" to profile.port,
-                        "password" to profile.password.ifEmpty { profile.uuid },
-                        "method" to profile.encryption.ifEmpty { "aes-256-gcm" },
-                        "level" to 0
-                    )
-                )
-            )
-        )
-    }
-    
-    private fun generateStreamSettings(profile: ServerProfile, allowInsecure: Boolean): Map<String, Any> {
-        return buildMap {
-            put("network", profile.network.ifEmpty { "tcp" })
-            
-            if (profile.useReality) {
-                put("security", "reality")
-                put("realitySettings", mapOf(
-                    "serverName" to profile.serverName.ifEmpty { profile.address },
-                    "publicKey" to profile.realityPublicKey,
-                    "shortId" to profile.realityShortId,
-                    "spiderX" to profile.realitySpiderX.ifEmpty { "/" },
-                    "fingerprint" to profile.fingerprint.ifEmpty { "chrome" }
-                ))
-            } else if (profile.useTls) {
-                put("security", "tls")
-                put("tlsSettings", mapOf(
-                    "serverName" to profile.serverName.ifEmpty { profile.address },
-                    "allowInsecure" to (profile.allowInsecure || allowInsecure),
-                    "fingerprint" to profile.fingerprint.ifEmpty { "chrome" }
-                ))
-            } else {
-                put("security", "none")
-            }
-            
-            // Transport settings
-            when (profile.network) {
-                "ws" -> {
-                    put("wsSettings", mapOf(
-                        "path" to profile.wsPath.ifEmpty { "/" },
-                        "headers" to mapOf(
-                            "Host" to profile.wsHost.ifEmpty { profile.address }
-                        )
-                    ))
-                }
-                "grpc" -> {
-                    put("grpcSettings", mapOf(
-                        "serviceName" to profile.wsPath,
-                        "multiMode" to false
-                    ))
-                }
-                "kcp" -> {
-                    val headerType = profile.kcpHeader.ifEmpty { "none" }
-                    
-                    // kcpSettings: transport parameters only
-                    put("kcpSettings", mapOf(
-                        "mtu" to 1350,
-                        "tti" to 50,
-                        "uplinkCapacity" to 5,
-                        "downlinkCapacity" to 20,
-                        "congestion" to false,
-                        "readBufferSize" to 2,
-                        "writeBufferSize" to 2
-                    ))
-                    
-                    // finalmask: obfuscation chain (sibling of kcpSettings in streamSettings)
-                    // Order: first = outermost layer, last = innermost
-                    put("finalmask", mapOf(
-                        "udp" to buildList<Any> {
-                            // Layer 1 (outer): header obfuscation
-                            if (headerType != "none") {
-                                add(mapOf("type" to "header-$headerType"))
-                            }
-                            // Layer 2 (inner): base mKCP protocol - always required
-                            add(mapOf("type" to "mkcp-original"))
-                            // Layer 3 (optional): encryption with seed
-                            if (profile.kcpSeed.isNotEmpty()) {
-                                add(mapOf(
-                                    "type" to "mkcp-aes128gcm",
-                                    "settings" to mapOf("key" to profile.kcpSeed)
-                                ))
-                            }
-                        }
-                    ))
-                }
-                "httpupgrade" -> {
-                    put("httpupgradeSettings", mapOf(
-                        "path" to profile.wsPath.ifEmpty { "/" },
-                        "host" to profile.wsHost.ifEmpty { profile.address }
-                    ))
-                }
-                "tcp" -> {
-                    put("tcpSettings", mapOf(
-                        "header" to mapOf("type" to "none")
-                    ))
-                }
-                "xhttp", "splithttp" -> {
-                    put("xhttpSettings", mapOf(
-                        "path" to profile.wsPath.ifEmpty { "/" },
-                        "host" to listOf(profile.wsHost.ifEmpty { profile.address })
-                    ))
-                }
-            }
-        }
+        return generator.generate(profile, muxEnabled, allowInsecure)
     }
 
     private fun buildCustomRoutingRule(rule: CustomRoutingRule): Map<String, Any>? {

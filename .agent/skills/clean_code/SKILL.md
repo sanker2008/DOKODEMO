@@ -24,4 +24,4 @@ Perform these checks before finishing a task.
 
 ## 4. Final Verification
 - Re-run the app to ensure no regressions.
-- Verify the feature works as intended in specific scenarios (e.g., Light Mode vs Dark Mode/Industrial Mode).
+- Verify the feature works as intended in specific scenarios (e.g., Light Mode vs Dark Mode).

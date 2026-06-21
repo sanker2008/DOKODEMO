@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.data.model.Subscription
-import com.dokodemo.ui.components.IndustrialInput
+import com.dokodemo.ui.components.DokoInput
 import com.dokodemo.ui.theme.Primary
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,7 +49,7 @@ fun SubscriptionScreen(
             TopAppBar(
                 title = { Text("节点订阅", fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.Rounded.ArrowBack, "返回") }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, "返回") }
                 },
                 actions = {
                     IconButton(onClick = { viewModel.updateAllSubscriptions() }) {
@@ -147,11 +148,9 @@ private fun SubscriptionCard(
     var showMenu by remember { mutableStateOf(false) }
     val timeFormat = remember { SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()) }
 
-    Card(
+    com.dokodemo.ui.components.DokoCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(0.dp)
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -198,6 +197,14 @@ private fun SubscriptionCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    Spacer(Modifier.height(4.dp))
+                    LinearProgressIndicator(
+                        progress = { if (subscription.total > 0) (used.toFloat() / subscription.total.toFloat()).coerceIn(0f, 1f) else 0f },
+                        modifier = Modifier.fillMaxWidth().height(4.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.outlineVariant
+                    )
+                    Spacer(Modifier.height(4.dp))
                     Text(
                         text = "过期时间: $expireStr",
                         style = MaterialTheme.typography.bodySmall,
@@ -257,8 +264,8 @@ private fun EditSubscriptionDialog(
         title = { Text("编辑订阅") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                IndustrialInput(value = name, onValueChange = { name = it }, label = "名称（备注）")
-                IndustrialInput(value = url, onValueChange = { url = it }, label = "订阅链接")
+                DokoInput(value = name, onValueChange = { name = it }, label = "名称（备注）")
+                DokoInput(value = url, onValueChange = { url = it }, label = "订阅链接")
             }
         },
         confirmButton = {
@@ -315,11 +322,11 @@ private fun AddSubscriptionDialog(
         title = { Text("添加订阅") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                IndustrialInput(
+                DokoInput(
                     value = name, onValueChange = { name = it },
                     label = "名称（备注）", placeholder = "如: 代理机场"
                 )
-                IndustrialInput(
+                DokoInput(
                     value = url, onValueChange = { url = it },
                     label = "订阅链接", placeholder = "https://"
                 )

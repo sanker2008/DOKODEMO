@@ -15,6 +15,7 @@ data class SettingsUiState(
     val muxEnabled: Boolean = false,
     val udpEnabled: Boolean = true,
     val bypassLan: Boolean = true,
+    val autoUpdateSubscription: Boolean = false,
     val allowInsecure: Boolean = false,
     val darkModeEnabled: Boolean = true,
     val fontSizeScale: Float = 1.0f,
@@ -48,10 +49,14 @@ class SettingsViewModel @Inject constructor(
                 ) { muxEnabled, allowInsecure, udpEnabled ->
                     Triple(muxEnabled, allowInsecure, udpEnabled)
                 },
-                appPreferences.bypassLan
-            ) { primaryState, connectionState, bypass ->
+                combine(
+                    appPreferences.bypassLan,
+                    appPreferences.autoUpdateSubscription
+                ) { bypass, autoUpdate -> Pair(bypass, autoUpdate) }
+            ) { primaryState, connectionState, miscState ->
                 val (darkMode, routing, fontScale) = primaryState
                 val (muxEnabled, allowInsecure, udpEnabled) = connectionState
+                val (bypass, autoUpdate) = miscState
                 _uiState.update {
                     it.copy(
                         darkModeEnabled = darkMode,
@@ -60,7 +65,8 @@ class SettingsViewModel @Inject constructor(
                         muxEnabled = muxEnabled,
                         allowInsecure = allowInsecure,
                         udpEnabled = udpEnabled,
-                        bypassLan = bypass
+                        bypassLan = bypass,
+                        autoUpdateSubscription = autoUpdate
                     )
                 }
             }.collect()
@@ -94,5 +100,9 @@ class SettingsViewModel @Inject constructor(
 
     fun setBypassLan(enabled: Boolean) {
         viewModelScope.launch { appPreferences.setBypassLan(enabled) }
+    }
+
+    fun setAutoUpdateSubscription(enabled: Boolean) {
+        viewModelScope.launch { appPreferences.setAutoUpdateSubscription(enabled) }
     }
 }

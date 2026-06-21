@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
  * 左侧标签 + 可选副标题，右侧 Material3 Switch
  */
 @Composable
-fun IndustrialToggle(
+fun DokoToggle(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -34,7 +34,7 @@ fun IndustrialToggle(
 }
 
 @Composable
-fun IndustrialToggleRow(
+fun DokoToggleRow(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
@@ -64,7 +64,7 @@ fun IndustrialToggleRow(
                 )
             }
         }
-        IndustrialToggle(
+        DokoToggle(
             checked = checked,
             onCheckedChange = onCheckedChange
         )

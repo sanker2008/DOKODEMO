@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -44,7 +44,7 @@ fun TrafficHistoryScreen(
                 title = { Text(stringResource(R.string.traffic_history), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 actions = {
@@ -107,13 +107,9 @@ fun TrafficHistoryScreen(
 
 @Composable
 private fun SummaryCard(totalUpload: Long, totalDownload: Long, sessionCount: Int) {
-    Card(
+    com.dokodemo.ui.components.DokoCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-        ),
-        elevation = CardDefaults.cardElevation(0.dp)
+        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
@@ -182,13 +178,9 @@ private fun TrafficRecordItem(record: com.dokodemo.data.model.TrafficRecord) {
     val durationMs = record.disconnectTime - record.connectTime
     val durationStr = formatDuration(durationMs)
 
-    Card(
+    com.dokodemo.ui.components.DokoCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        elevation = CardDefaults.cardElevation(0.dp)
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

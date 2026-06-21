@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
  * Material3 OutlinedTextField，圆角16dp
  */
 @Composable
-fun IndustrialInput(
+fun DokoInput(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -59,7 +59,7 @@ fun IndustrialInput(
  * 搜索输入框（替代旧 IndustrialSearchInput）
  */
 @Composable
-fun IndustrialSearchInput(
+fun DokoSearchInput(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,

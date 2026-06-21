@@ -11,6 +11,8 @@
     <string name="please_select_node">请先选择一个节点</string>
     <string name="current_node">当前节点</string>
     <string name="no_node_selected">未选择节点</string>
+    <string name="welcome_to_dokodemo">欢迎使用 DokoDemo</string>
+    <string name="click_to_add_first_node">点击此处添加您的第一个节点</string>
     <string name="switch_node">切换 →</string>
     <string name="traffic_monitor">流量监控</string>
     <string name="home">主页</string>
@@ -22,7 +24,9 @@
     <string name="back">返回</string>
     <string name="node_management">节点管理</string>
     <string name="subscription_settings">订阅设置</string>
-    <string name="subscription_settings_desc">批量导入并自动更新节点</string>
+    <string name="subscription_settings_desc">批量导入并管理节点</string>
+    <string name="auto_update_sub">启动时更新订阅</string>
+    <string name="auto_update_sub_desc">每次打开 App 时自动在后台更新节点</string>
     <string name="proxy_routing">代理路由</string>
     <string name="routing_mode">路由模式</string>
     <string name="split_tunneling">分应用代理</string>
@@ -96,8 +100,14 @@
     <string name="node_list">节点列表</string>
     <string name="pinging">测试中...</string>
     <string name="ping_all">延迟测试</string>
+    <string name="sort_nodes">排序节点</string>
+    <string name="sort_default">默认排序</string>
+    <string name="sort_latency">按延迟升序</string>
+    <string name="sort_name">按名称排序</string>
     <string name="add_node">添加节点</string>
     <string name="scan_qr">扫码添加</string>
+    <string name="import_from_clipboard">从剪贴板导入</string>
+    <string name="clipboard_empty">剪贴板为空或内容无效</string>
     <string name="manual_config">手动配置</string>
     <string name="search_nodes">搜索节点…</string>
     <string name="all">全部</string>
@@ -116,6 +126,8 @@
 
     <!-- Split Tunneling Screen -->
     <string name="split_tunneling_title">分应用代理</string>
+    <string name="suggested_apps">Suggested Apps</string>
+    <string name="all_apps">All Apps</string>
     <string name="system_apps">系统应用</string>
     <string name="search_apps">搜索应用名称或包名</string>
     <string name="proxy_selected">仅选中走代理</string>

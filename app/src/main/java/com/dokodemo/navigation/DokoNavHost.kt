@@ -61,6 +61,10 @@ fun DokoNavHost(
                     } else {
                         navController.navigate(Route.ConfigEditor.path)
                     }
+                },
+                onNavigateToConfigEditorWithUri = { uri ->
+                    val encoded = URLEncoder.encode(uri, StandardCharsets.UTF_8.toString())
+                    navController.navigate("${Route.ConfigEditor.path}?uri=$encoded")
                 }
             )
         }

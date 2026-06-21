@@ -27,6 +27,8 @@ data class ServerItem(
     val groupId: Long? = null
 )
 
+enum class SortOption { DEFAULT, LATENCY_ASC, NAME_ASC }
+
 data class ServerListUiState(
     val servers: List<ServerItem> = emptyList(),
     val groups: List<Group> = emptyList(),       // 分组列表（用于 Tab 筛选）
@@ -34,7 +36,8 @@ data class ServerListUiState(
     val selectedServerId: Long? = null,
     val searchQuery: String = "",
     val isPinging: Boolean = false,
-    val toastMessage: String? = null
+    val toastMessage: String? = null,
+    val sortOption: SortOption = SortOption.DEFAULT
 )
 
 @HiltViewModel
@@ -171,6 +174,10 @@ class ServerListViewModel @Inject constructor(
         _uiState.update { it.copy(selectedGroupId = groupId) }
     }
 
+    fun setSortOption(option: SortOption) {
+        _uiState.update { it.copy(sortOption = option) }
+    }
+
     val filteredServers: List<ServerItem>
         get() {
             val state = _uiState.value
@@ -186,6 +193,12 @@ class ServerListViewModel @Inject constructor(
                     it.name.lowercase().contains(query) ||
                     it.countryCode.lowercase().contains(query)
                 }
+            }
+            // 排序
+            when (state.sortOption) {
+                SortOption.LATENCY_ASC -> result = result.sortedBy { it.ping ?: Int.MAX_VALUE }
+                SortOption.NAME_ASC -> result = result.sortedBy { it.name.lowercase() }
+                SortOption.DEFAULT -> {} // DB default order
             }
             return result
         }

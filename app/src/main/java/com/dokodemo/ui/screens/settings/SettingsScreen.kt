@@ -6,8 +6,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.R
 import com.dokodemo.data.preferences.RoutingMode
-import com.dokodemo.ui.components.IndustrialToggleRow
+import com.dokodemo.ui.components.DokoToggleRow
 import com.dokodemo.ui.components.LanguageDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +45,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Rounded.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -68,6 +68,14 @@ fun SettingsScreen(
                     title = stringResource(R.string.subscription_settings),
                     subtitle = stringResource(R.string.subscription_settings_desc),
                     onClick = onNavigateToSubscriptions
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                DokoToggleRow(
+                    label = stringResource(R.string.auto_update_sub),
+                    subtitle = stringResource(R.string.auto_update_sub_desc),
+                    checked = uiState.autoUpdateSubscription,
+                    onCheckedChange = { viewModel.setAutoUpdateSubscription(it) },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
 
@@ -94,7 +102,7 @@ fun SettingsScreen(
 
             // ─── 连接设置 ─────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.connection)) {
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.mux_multiplexing),
                     subtitle = stringResource(R.string.mux_desc),
                     checked = uiState.muxEnabled,
@@ -102,7 +110,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.allow_insecure),
                     subtitle = stringResource(R.string.allow_insecure_desc),
                     checked = uiState.allowInsecure,
@@ -110,7 +118,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.udp_proxy),
                     subtitle = stringResource(R.string.udp_proxy_desc),
                     checked = uiState.udpEnabled,
@@ -118,7 +126,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.bypass_lan),
                     subtitle = stringResource(R.string.bypass_lan_desc),
                     checked = uiState.bypassLan,
@@ -129,7 +137,7 @@ fun SettingsScreen(
 
             // ─── 外观 ─────────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.appearance)) {
-                IndustrialToggleRow(
+                DokoToggleRow(
                     label = stringResource(R.string.dark_mode),
                     subtitle = stringResource(R.string.dark_mode_desc),
                     checked = uiState.darkModeEnabled,
@@ -363,7 +371,7 @@ private fun SettingsClickRow(title: String, subtitle: String, onClick: () -> Uni
             Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Icon(Icons.Rounded.ArrowForward, null, tint = MaterialTheme.colorScheme.onSurface)
+        Icon(Icons.AutoMirrored.Rounded.ArrowForward, null, tint = MaterialTheme.colorScheme.onSurface)
     }
 }
 
