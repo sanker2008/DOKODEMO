@@ -236,7 +236,7 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
     val bgColor by animateColorAsState(
         targetValue = when {
             isConnecting -> MaterialTheme.colorScheme.outline
-            isConnected  -> AccentGreen.copy(alpha = 0.15f)
+            isConnected  -> AccentState.copy(alpha = 0.15f)
             else         -> MaterialTheme.colorScheme.surfaceVariant
         },
         animationSpec = tween(400), label = "statusBg"
@@ -244,7 +244,7 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
     val textColor by animateColorAsState(
         targetValue = when {
             isConnecting -> MaterialTheme.colorScheme.onSurfaceVariant
-            isConnected  -> AccentGreen
+            isConnected  -> AccentState
             else         -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         animationSpec = tween(400), label = "statusText"
@@ -252,7 +252,7 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
     val dotColor by animateColorAsState(
         targetValue = when {
             isConnecting -> MaterialTheme.colorScheme.outline
-            isConnected  -> AccentGreen
+            isConnected  -> AccentState
             else         -> MaterialTheme.colorScheme.outline
         },
         animationSpec = tween(400), label = "dotColor"
@@ -309,13 +309,26 @@ private fun ConnectButton(
     )
 
     val bgColor by animateColorAsState(
-        targetValue = MaterialTheme.colorScheme.background,
+        targetValue = when {
+            isConnected -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.background
+        },
         animationSpec = spring(stiffness = Spring.StiffnessLow),
         label = "btnBg"
     )
     val textColor by animateColorAsState(
-        targetValue = MaterialTheme.colorScheme.primary,
+        targetValue = when {
+            isConnected -> Color.White
+            else -> MaterialTheme.colorScheme.primary
+        },
         label = "btnText"
+    )
+    val borderColor by animateColorAsState(
+        targetValue = when {
+            isConnected -> Color.Transparent
+            else -> MaterialTheme.colorScheme.primary
+        },
+        label = "btnBorder"
     )
     val buttonText = when {
         isConnecting -> stringResource(R.string.connecting)
@@ -346,12 +359,21 @@ private fun ConnectButton(
                 .background(bgColor)
                 .border(
                     width = 2.dp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = borderColor,
                     shape = CircleShape
                 )
                 .clickable(enabled = isEnabled && !isConnecting, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
+            // Connecting loading indicator
+            if (isConnecting) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(136.dp), // slightly smaller than button
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 2.dp
+                )
+            }
+
             // Very soft diffused glow behind icon when connected
             if (isConnected) {
                 Box(
@@ -435,9 +457,9 @@ private fun CurrentNodeCard(
                         fontWeight = FontWeight.SemiBold,
                         color = when {
                             latency.isEmpty() || latency == "--" -> MaterialTheme.colorScheme.onSurfaceVariant
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> AccentGreen
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> AccentOrange
-                            else -> AccentRed
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> AccentState
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> TextIconography
+                            else -> IcyLemon
                         },
                         fontSize = 18.sp
                     )

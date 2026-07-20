@@ -11,7 +11,6 @@ import com.dokodemo.ui.screens.configeditor.ConfigEditorScreen
 import com.dokodemo.ui.screens.home.HomeScreen
 import com.dokodemo.ui.screens.qrscanner.QrScannerScreen
 import com.dokodemo.ui.screens.serverlist.ServerListScreen
-import com.dokodemo.ui.screens.splash.SplashScreen
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -21,19 +20,8 @@ fun DokoNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.Splash.path
+        startDestination = Route.Home.path
     ) {
-        // Splash Screen
-        composable(Route.Splash.path) {
-            SplashScreen(
-                onNavigateToHome = {
-                    navController.navigate(Route.Home.path) {
-                        popUpTo(Route.Splash.path) { inclusive = true }
-                    }
-                }
-            )
-        }
-        
         // Home Dashboard
         composable(Route.Home.path) {
             HomeScreen(

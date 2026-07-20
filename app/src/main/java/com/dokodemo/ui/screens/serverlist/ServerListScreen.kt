@@ -318,7 +318,7 @@ private fun NodeCard(
                     .clip(CircleShape)
                     .background(
                         when {
-                            server.isConnected -> AccentGreen
+                            server.isConnected -> AccentState
                             isSelected -> Primary
                             else -> MaterialTheme.colorScheme.outline
                         }
@@ -352,9 +352,9 @@ private fun NodeCard(
                     fontSize = 15.sp,
                     color = when {
                         ping == null -> MaterialTheme.colorScheme.onSurfaceVariant
-                        ping < 100   -> AccentGreen
-                        ping < 200   -> AccentOrange
-                        else         -> AccentRed
+                        ping < 100   -> AccentState
+                        ping < 200   -> TextIconography
+                        else         -> IcyLemon
                     }
                 )
                 // 信号格（简化版 4 格）
