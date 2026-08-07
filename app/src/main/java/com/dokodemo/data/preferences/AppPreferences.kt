@@ -85,6 +85,7 @@ class AppPreferences @Inject constructor(
     private val CUSTOM_ROUTING_RULES_KEY = stringPreferencesKey("custom_routing_rules")
     private val BYPASS_LAN_KEY = booleanPreferencesKey("bypass_lan")
     private val AUTO_UPDATE_SUB_KEY = booleanPreferencesKey("auto_update_sub")
+    private val ALLOW_LAN_CONNECTION_KEY = booleanPreferencesKey("allow_lan_connection")
 
     val isDarkMode: Flow<Boolean> = dataStore.data
         .map { it[DARK_MODE_KEY] ?: false }
@@ -109,6 +110,9 @@ class AppPreferences @Inject constructor(
 
     val udpEnabled: Flow<Boolean> = dataStore.data
         .map { it[UDP_ENABLED_KEY] ?: true }
+
+    val allowLanConnection: Flow<Boolean> = dataStore.data
+        .map { it[ALLOW_LAN_CONNECTION_KEY] ?: false }
 
     val bypassLan: Flow<Boolean> = dataStore.data
         .map { it[BYPASS_LAN_KEY] ?: true }
@@ -168,6 +172,12 @@ class AppPreferences @Inject constructor(
 
     suspend fun setSplitTunnelingMode(mode: SplitTunnelingMode) {
         dataStore.edit { it[SPLIT_TUNNELING_MODE_KEY] = mode.name }
+    }
+
+    suspend fun setAllowLanConnection(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[ALLOW_LAN_CONNECTION_KEY] = enabled
+        }
     }
 
     suspend fun setProxiedApps(packages: Set<String>) {

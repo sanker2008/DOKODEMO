@@ -153,6 +153,14 @@
     <string name="bypass_lan">Bypass LAN</string>
     <string name="bypass_lan_desc">Don\'t proxy LAN IP and BT traffic</string>
 
+    <!-- Allow LAN -->
+    <string name="allow_lan_connection">Allow LAN Connection</string>
+    <string name="allow_lan_connection_desc">Share proxy with other devices on the LAN</string>
+    <string name="lan_proxy_info_title">LAN Proxy Info</string>
+    <string name="lan_proxy_info_desc">Configure the following proxy on other devices:\n\nIP Address: %1$s\nHTTP Port: %2$d\nSOCKS Port: %3$d</string>
+    <string name="ip_unknown">Unknown IP</string>
+    <string name="ok">OK</string>
+
     <!-- Traffic History -->
     <string name="traffic_history">Traffic History</string>
     <string name="traffic_history_desc">View traffic usage records for each session</string>
