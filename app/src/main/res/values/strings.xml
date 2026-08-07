@@ -168,6 +168,14 @@
     <string name="bypass_lan">绕过局域网</string>
     <string name="bypass_lan_desc">连接时不代理局域网IP和BT流量</string>
 
+    <!-- Allow LAN -->
+    <string name="allow_lan_connection">允许局域网连接</string>
+    <string name="allow_lan_connection_desc">将代理分享给局域网其他设备</string>
+    <string name="lan_proxy_info_title">局域网代理信息</string>
+    <string name="lan_proxy_info_desc">请在其他设备上配置以下代理信息：\n\nIP 地址: %1$s\nHTTP 端口: %2$d\nSOCKS 端口: %3$d</string>
+    <string name="ip_unknown">未知 IP</string>
+    <string name="ok">确定</string>
+
     <!-- Traffic History -->
     <string name="traffic_history">流量历史</string>
     <string name="traffic_history_desc">查看每次连接的流量使用记录</string>

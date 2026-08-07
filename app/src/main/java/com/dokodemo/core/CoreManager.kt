@@ -96,7 +96,8 @@ class CoreManager @Inject constructor(
         allowInsecure: Boolean = false,
         udpEnabled: Boolean = true,
         customRules: List<CustomRoutingRule> = emptyList(),
-        dnsPort: Int = DNS_INBOUND_PORT
+        dnsPort: Int = DNS_INBOUND_PORT,
+        allowLanConnection: Boolean = false
     ): String {
         val config = buildMap<String, Any> {
             // Log settings
@@ -151,7 +152,7 @@ class CoreManager @Inject constructor(
                 mapOf(
                     "tag" to "socks",
                     "port" to SOCKS_PORT,
-                    "listen" to "127.0.0.1",
+                    "listen" to if (allowLanConnection) "0.0.0.0" else "127.0.0.1",
                     "protocol" to "socks",
                     "sniffing" to mapOf(
                         "enabled" to true,
@@ -168,7 +169,7 @@ class CoreManager @Inject constructor(
                 mapOf(
                     "tag" to "http",
                     "port" to HTTP_PORT,
-                    "listen" to "127.0.0.1",
+                    "listen" to if (allowLanConnection) "0.0.0.0" else "127.0.0.1",
                     "protocol" to "http",
                     "sniffing" to mapOf(
                         "enabled" to true,
@@ -182,7 +183,7 @@ class CoreManager @Inject constructor(
                 mapOf(
                     "tag" to "dns-in",
                     "port" to dnsPort,
-                    "listen" to "127.0.0.1",
+                    "listen" to if (allowLanConnection) "0.0.0.0" else "127.0.0.1",
                     "protocol" to "dokodemo-door",
                     "settings" to mapOf(
                         "address" to "1.1.1.1",
@@ -385,7 +386,8 @@ class CoreManager @Inject constructor(
         muxEnabled: Boolean = false,
         allowInsecure: Boolean = false,
         udpEnabled: Boolean = true,
-        customRules: List<CustomRoutingRule> = emptyList()
+        customRules: List<CustomRoutingRule> = emptyList(),
+        allowLanConnection: Boolean = false
     ): String? {
         initialize()
         
@@ -398,7 +400,8 @@ class CoreManager @Inject constructor(
                 allowInsecure = allowInsecure,
                 udpEnabled = udpEnabled,
                 customRules = customRules,
-                dnsPort = dnsPort
+                dnsPort = dnsPort,
+                allowLanConnection = allowLanConnection
             )
             Log.i(TAG, "Attempting core start (attempt ${attempt + 1}/$MAX_PORT_RETRIES, dnsPort=$dnsPort)")
             

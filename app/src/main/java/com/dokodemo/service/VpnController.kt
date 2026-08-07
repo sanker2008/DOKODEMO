@@ -50,6 +50,7 @@ class VpnController @Inject constructor(
         val udpEnabled = appPreferences.udpEnabled.first()
         val customRules = appPreferences.customRoutingRules.first()
         val bypassLan = appPreferences.bypassLan.first()
+        val allowLanConnection = appPreferences.allowLanConnection.first()
         
         val configJson = coreManager.generateConfig(
             profile = profile,
@@ -57,7 +58,8 @@ class VpnController @Inject constructor(
             muxEnabled = muxEnabled,
             allowInsecure = allowInsecure,
             udpEnabled = udpEnabled,
-            customRules = customRules
+            customRules = customRules,
+            allowLanConnection = allowLanConnection
         )
         
         val intent = Intent(context, DokoDemoVpnService::class.java).apply {

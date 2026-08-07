@@ -19,8 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.R
 import com.dokodemo.data.preferences.RoutingMode
+import com.dokodemo.core.CoreManager
 import com.dokodemo.ui.components.DokoToggleRow
 import com.dokodemo.ui.components.LanguageDialog
+import com.dokodemo.ui.components.LanInfoDialog
+import com.dokodemo.utils.NetworkUtils
+import androidx.compose.material.icons.rounded.Info
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +41,7 @@ fun SettingsScreen(
     var showRoutingDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showFontSizeDialog by remember { mutableStateOf(false) }
+    var showLanInfoDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -133,6 +138,32 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setBypassLan(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DokoToggleRow(
+                        label = stringResource(R.string.allow_lan_connection),
+                        subtitle = stringResource(R.string.allow_lan_connection_desc),
+                        checked = uiState.allowLanConnection,
+                        onCheckedChange = { viewModel.setAllowLanConnection(it) },
+                        modifier = Modifier.weight(1f).padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+
+                    if (uiState.allowLanConnection) {
+                        IconButton(
+                            onClick = { showLanInfoDialog = true },
+                            modifier = Modifier.padding(end = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Info,
+                                contentDescription = stringResource(R.string.lan_proxy_info_title)
+                            )
+                        }
+                    }
+                }
             }
 
             // ─── 外观 ─────────────────────────────────────────────────────
@@ -223,6 +254,15 @@ fun SettingsScreen(
                 showFontSizeDialog = false
             },
             onDismiss = { showFontSizeDialog = false }
+        )
+    }
+
+    if (showLanInfoDialog) {
+        LanInfoDialog(
+            ipAddress = NetworkUtils.getLocalIpAddress() ?: stringResource(R.string.ip_unknown),
+            httpPort = CoreManager.HTTP_PORT,
+            socksPort = CoreManager.SOCKS_PORT,
+            onDismissRequest = { showLanInfoDialog = false }
         )
     }
 }
