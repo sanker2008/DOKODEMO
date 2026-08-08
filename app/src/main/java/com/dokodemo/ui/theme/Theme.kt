@@ -76,7 +76,7 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun DokoDemoTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true, // Force Dark Mode as requested
     fontScale: Float = 1.0f,
     content: @Composable () -> Unit
 ) {

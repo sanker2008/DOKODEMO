@@ -20,14 +20,14 @@ val AccentOrange = Color(0xFFFF9800)         // Orange: Medium latency
 val AccentRed = Color(0xFFEF5350)            // Red: High latency / Error
 
 // ─── Dark Mode Core Color Palette ─────────────────────────────────────────────
-val DarkBaseBackground = Color(0xFF121417)       // Deep Slate/Black
-val DarkPrimaryAction = Color(0xFF7CAEE0)        // Slightly muted Clear Sky Blue for dark mode
-val DarkTextIconography = Color(0xFFE2E8F0)      // Very Light Blue-Grey
-val DarkAccentState = Color(0xFF8FBAA3)          // Muted Mint Green
+val DarkBaseBackground = Color(0xFF121417)
+val DarkPrimaryAction = Color(0xFF7CAEE0)
+val DarkTextIconography = Color(0xFFE2E8F0)
+val DarkAccentState = Color(0xFFB7D5C7)          // Mint Green glow
 
 // ─── Dark Mode Semantic Colors ──────────────────────────────────────────────
-val DarkSurfaceGlass = Color(0x991E2429)         // Dark Glass for Cards
-val DarkSurfaceBorder = Color(0x33E2E8F0)        // Light opacity for Card borders
+val DarkSurfaceGlass = Color(0x991E2429)         // 60% opacity Dark Glass
+val DarkSurfaceBorder = Color(0x33E2E8F0)        // 20% opacity white border
 val DarkTextPrimaryBtn = Color(0xFF0F172A)       // Dark text on Light Primary Action
 val DarkTextBody = Color(0xB3E2E8F0)             // 70% opacity for Body Text & Subtitles
 
