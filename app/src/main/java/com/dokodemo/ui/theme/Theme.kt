@@ -37,9 +37,9 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = TextBody,
     outline = SurfaceBorder,
     outlineVariant = SurfaceBorder,
-    error = AccentRed,
+    error = IcyLemon,
     onError = BaseBackground,
-    tertiary = AccentGreen,
+    tertiary = AccentState,
     onTertiary = BaseBackground
 )
 
@@ -68,9 +68,9 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = DarkTextBody,
     outline = DarkSurfaceBorder,
     outlineVariant = DarkSurfaceBorder,
-    error = AccentRed,
+    error = IcyLemon,
     onError = DarkBaseBackground,
-    tertiary = AccentGreen,
+    tertiary = DarkAccentState,
     onTertiary = DarkBaseBackground
 )
 

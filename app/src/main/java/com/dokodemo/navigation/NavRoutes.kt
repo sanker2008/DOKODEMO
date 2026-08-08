@@ -4,8 +4,6 @@ package com.dokodemo.navigation
  * Navigation routes for DokoDemo
  */
 sealed class Route(val path: String) {
-    object Splash : Route("splash")
-    
     // Main App
     object Home : Route("home")
     object ServerList : Route("server_list")

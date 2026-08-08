@@ -14,10 +14,8 @@ val SurfaceBorder = Color(0x1A607D8B)        // 10% opacity #607D8B for Card bor
 val TextPrimaryBtn = Color(0xFF546E7A)       // Slightly darker shade for text on Primary Action
 val TextBody = Color(0xB3607D8B)             // 70% opacity #607D8B for Body Text & Subtitles
 
-// ─── Accent colors for Ping/States (Keeping some for compatibility if needed) ──
-val AccentGreen = Color(0xFF4CAF50)          // Green: Low latency / Connected indicator
-val AccentOrange = Color(0xFFFF9800)         // Orange: Medium latency
-val AccentRed = Color(0xFFEF5350)            // Red: High latency / Error
+// ─── Warning / Error color (replacing red for Mist&Dawn) ───────────────
+val IcyLemon = Color(0xFFE3E1C0)             // Warning / High latency
 
 // ─── Dark Mode Core Color Palette ─────────────────────────────────────────────
 val DarkBaseBackground = Color(0xFF121417)       // Deep Slate/Black

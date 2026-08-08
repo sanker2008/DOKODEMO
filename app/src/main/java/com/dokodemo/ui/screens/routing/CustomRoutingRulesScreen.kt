@@ -433,7 +433,7 @@ private fun RuleEditorDialog(
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeExpanded)
                         },
                         modifier = Modifier
-                            .menuAnchor()
+                            .menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth()
                     )
                     DropdownMenu(
@@ -569,7 +569,7 @@ private fun BatchImportDialog(
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeExpanded)
                         },
                         modifier = Modifier
-                            .menuAnchor()
+                            .menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth()
                     )
                     DropdownMenu(
