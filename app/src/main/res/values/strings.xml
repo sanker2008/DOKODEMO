@@ -160,6 +160,12 @@
     <string name="enable_tls">开启 TLS</string>
     <string name="sni">SNI (Server Name)</string>
     <string name="allow_insecure_label">允许不安全证书 (allowInsecure)</string>
+    <string name="use_reality">开启 Reality</string>
+    <string name="reality_public_key">Reality 公钥 (pbk)</string>
+    <string name="reality_short_id">Reality 短 ID (sid)</string>
+    <string name="reality_spider_x">Reality SpiderX (spx)</string>
+    <string name="fingerprint">uTLS 指纹 (fp)</string>
+    <string name="flow">流控 (Flow)</string>
     <string name="group_settings">分组设置</string>
     <string name="group">所属分组</string>
     <string name="no_group">无分组</string>

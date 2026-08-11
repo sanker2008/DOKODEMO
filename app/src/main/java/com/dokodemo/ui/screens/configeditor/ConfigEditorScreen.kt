@@ -190,6 +190,37 @@ fun ConfigEditorScreen(
                         onCheckedChange = viewModel::updateAllowInsecure
                     )
                 }
+                if (uiState.protocol == Protocol.VLESS) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                    DokoToggleRow(
+                        label = stringResource(R.string.use_reality), checked = uiState.useReality,
+                        onCheckedChange = viewModel::updateUseReality
+                    )
+                    if (uiState.useReality) {
+                        DokoInput(
+                            value = uiState.flow, onValueChange = viewModel::updateFlow,
+                            label = stringResource(R.string.flow), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                        )
+                        DokoInput(
+                            value = uiState.realityPublicKey, onValueChange = viewModel::updateRealityPublicKey,
+                            label = stringResource(R.string.reality_public_key), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                        )
+                        DokoInput(
+                            value = uiState.realityShortId, onValueChange = viewModel::updateRealityShortId,
+                            label = stringResource(R.string.reality_short_id), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                        )
+                        DokoInput(
+                            value = uiState.realitySpiderX, onValueChange = viewModel::updateRealitySpiderX,
+                            label = stringResource(R.string.reality_spider_x), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                        )
+                        InputDropdown(
+                            label = stringResource(R.string.fingerprint), value = uiState.fingerprint,
+                            options = listOf("chrome", "firefox", "safari", "edge", "ios", "android", "random"),
+                            onValueChange = viewModel::updateFingerprint,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
 
             // Group Assignment
