@@ -28,6 +28,12 @@ data class ConfigEditorUiState(
     // Transport & Security
     val network: String = "tcp",
     val security: String = "auto", // VMess encryption or none
+    val useReality: Boolean = false,
+    val realityPublicKey: String = "",
+    val realityShortId: String = "",
+    val realitySpiderX: String = "",
+    val fingerprint: String = "chrome",
+    val flow: String = "",
     val useTls: Boolean = false,
     val allowInsecure: Boolean = false,
     val serverName: String = "",
@@ -89,6 +95,12 @@ class ConfigEditorViewModel @Inject constructor(
                         network = server.network,
                         wsPath = server.wsPath,
                         wsHost = server.wsHost,
+                        useReality = server.useReality,
+                        realityPublicKey = server.realityPublicKey,
+                        realityShortId = server.realityShortId,
+                        realitySpiderX = server.realitySpiderX,
+                        fingerprint = server.fingerprint,
+                        flow = server.flow,
                         useTls = server.useTls,
                         allowInsecure = server.allowInsecure,
                         serverName = server.serverName,
@@ -121,6 +133,12 @@ class ConfigEditorViewModel @Inject constructor(
                             network = profile.network,
                             wsPath = profile.wsPath,
                             wsHost = profile.wsHost,
+                            useReality = profile.useReality,
+                            realityPublicKey = profile.realityPublicKey,
+                            realityShortId = profile.realityShortId,
+                            realitySpiderX = profile.realitySpiderX,
+                            fingerprint = profile.fingerprint,
+                            flow = profile.flow,
                             useTls = profile.useTls,
                             serverName = profile.serverName,
                             kcpHeader = profile.kcpHeader
@@ -151,6 +169,12 @@ class ConfigEditorViewModel @Inject constructor(
     
     fun updateSecurity(security: String) = _uiState.update { it.copy(security = security) }
     fun updateUseTls(useTls: Boolean) = _uiState.update { it.copy(useTls = useTls) }
+    fun updateUseReality(useReality: Boolean) = _uiState.update { it.copy(useReality = useReality) }
+    fun updateRealityPublicKey(realityPublicKey: String) = _uiState.update { it.copy(realityPublicKey = realityPublicKey) }
+    fun updateRealityShortId(realityShortId: String) = _uiState.update { it.copy(realityShortId = realityShortId) }
+    fun updateRealitySpiderX(realitySpiderX: String) = _uiState.update { it.copy(realitySpiderX = realitySpiderX) }
+    fun updateFingerprint(fingerprint: String) = _uiState.update { it.copy(fingerprint = fingerprint) }
+    fun updateFlow(flow: String) = _uiState.update { it.copy(flow = flow) }
     fun updateAllowInsecure(allowInsecure: Boolean) = _uiState.update { it.copy(allowInsecure = allowInsecure) }
     fun updateServerName(serverName: String) = _uiState.update { it.copy(serverName = serverName) }
     
@@ -188,6 +212,12 @@ class ConfigEditorViewModel @Inject constructor(
                 network = state.network,
                 wsPath = state.wsPath,
                 wsHost = state.wsHost,
+                useReality = state.useReality,
+                realityPublicKey = state.realityPublicKey,
+                realityShortId = state.realityShortId,
+                realitySpiderX = state.realitySpiderX,
+                fingerprint = state.fingerprint,
+                flow = state.flow,
                 useTls = state.useTls,
                 allowInsecure = state.allowInsecure,
                 serverName = state.serverName,
