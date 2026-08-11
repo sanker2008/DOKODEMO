@@ -2,6 +2,7 @@ package com.dokodemo.ui.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -502,10 +503,22 @@ private fun TrafficMonitorCard(
     speedHistory: List<Float>,
     modifier: Modifier = Modifier
 ) {
-    com.dokodemo.ui.components.DokoCard(
-        modifier = modifier.fillMaxWidth()
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color(0xFF7CAEE0), Color(0xFF5A8BB5))
+                    )
+                )
+                .padding(16.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -513,7 +526,7 @@ private fun TrafficMonitorCard(
                 Text(
                     stringResource(R.string.traffic_monitor),
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.White.copy(alpha = 0.8f)
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     TrafficLabel("↑", uploadSpeed)
@@ -533,15 +546,15 @@ private fun TrafficMonitorCard(
 @Composable
 private fun TrafficLabel(arrow: String, speed: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(arrow, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
-        Text(speed.ifEmpty { "0 B/s" }, fontFamily = MonoFont, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface)
+        Text(arrow, color = Color.White, style = MaterialTheme.typography.labelSmall)
+        Text(speed.ifEmpty { "0 B/s" }, fontFamily = MonoFont, fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
     }
 }
 
 @Composable
 private fun SpeedGraph(dataPoints: List<Float>, modifier: Modifier = Modifier) {
-    val lineColor = MaterialTheme.colorScheme.primary
-    val gridColor = MaterialTheme.colorScheme.outline
+    val lineColor = Color.White
+    val gridColor = Color.White.copy(alpha = 0.2f)
     Canvas(modifier = modifier) {
         if (dataPoints.size < 2) return@Canvas
         val w = size.width
@@ -560,8 +573,21 @@ private fun SpeedGraph(dataPoints: List<Float>, modifier: Modifier = Modifier) {
                 if (idx == 0) moveTo(x, y) else lineTo(x, y)
             }
         }
+        val fillPath = Path().apply {
+            addPath(path)
+            lineTo(w, h)
+            lineTo(0f, h)
+            close()
+        }
+        drawPath(
+            path = fillPath,
+            brush = Brush.verticalGradient(
+                colors = listOf(Color.White.copy(alpha = 0.3f), Color.Transparent),
+                startY = 0f,
+                endY = h
+            )
+        )
         drawPath(path, lineColor, style = Stroke(width = 2.dp.toPx()))
-        drawPath(path, lineColor.copy(alpha = 0.2f), style = Stroke(width = 6.dp.toPx()))
     }
 }
 
@@ -574,9 +600,9 @@ fun HomeBottomNav(
     onNavigateToSettings: () -> Unit
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+        containerColor = Color(0x991E2429), // Dark Glass
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        tonalElevation = 8.dp,
+        tonalElevation = 0.dp,
         windowInsets = WindowInsets(0, 0, 0, 0), // Scaffold handles system insets
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 16.dp)
@@ -584,7 +610,7 @@ fun HomeBottomNav(
             .clip(CircleShape)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                color = Color(0x33E2E8F0), // 20% opacity white border
                 shape = CircleShape
             )
     ) {

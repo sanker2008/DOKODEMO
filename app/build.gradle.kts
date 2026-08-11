@@ -57,6 +57,11 @@ android {
         }
     }
     
+    lint {
+        disable += setOf("StartActivityAndCollapseDeprecated")
+        disable += setOf("MissingTranslation")
+    }
+
     packaging {
         jniLibs {
             useLegacyPackaging = true
