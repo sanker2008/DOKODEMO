@@ -35,13 +35,12 @@ jobs:
       - name: Organize Release Artifacts
         run: |
           mkdir -p release-apks
-          cd app/build/outputs/apk/release/
-          for file in *.apk; do
+          for file in app/build/outputs/apk/release/*.apk; do
             if [ -f "$file" ]; then
-              cp "$file" "../../../../release-apks/DokoDemo-${file}"
+              filename=$(basename "$file")
+              cp "$file" "release-apks/DokoDemo-${filename}"
             fi
           done
-          cd ../../../..
           ls -la release-apks/
 
       - name: Create GitHub Release
