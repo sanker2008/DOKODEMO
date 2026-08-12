@@ -600,7 +600,7 @@ fun HomeBottomNav(
     onNavigateToSettings: () -> Unit
 ) {
     NavigationBar(
-        containerColor = Color(0x991E2429), // Dark Glass
+        containerColor = MaterialTheme.colorScheme.surfaceVariant, // Uses Theme surfaceVariant
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp,
         windowInsets = WindowInsets(0, 0, 0, 0), // Scaffold handles system insets
@@ -610,7 +610,7 @@ fun HomeBottomNav(
             .clip(CircleShape)
             .border(
                 width = 1.dp,
-                color = Color(0x33E2E8F0), // 20% opacity white border
+                color = MaterialTheme.colorScheme.outline, // Theme outline border
                 shape = CircleShape
             )
     ) {
