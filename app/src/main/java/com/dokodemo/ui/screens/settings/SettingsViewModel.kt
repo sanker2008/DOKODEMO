@@ -21,7 +21,7 @@ data class SettingsUiState(
     val darkModeEnabled: Boolean = true,
     val fontSizeScale: Float = 1.0f,
     val coreVersion: String = "---",
-    val appVersion: String = "1.0.0"
+    val appVersion: String = "1.0.1"
 )
 
 @HiltViewModel
