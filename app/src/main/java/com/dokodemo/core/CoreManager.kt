@@ -112,7 +112,7 @@ class CoreManager @Inject constructor(
                 "servers" to listOf(
                     mapOf(
                         "tag" to "remote",
-                        "address" to "8.8.8.8",
+                        "address" to "https://8.8.8.8/dns-query",
                         "detour" to "proxy"
                     ),
                     mapOf(
@@ -207,6 +207,11 @@ class CoreManager @Inject constructor(
                     "settings" to mapOf(
                         "response" to mapOf("type" to "http")
                     )
+                ),
+                mapOf(
+                    "tag" to "dns-out",
+                    "protocol" to "dns",
+                    "settings" to emptyMap<String, Any>()
                 )
             ))
             
@@ -222,6 +227,21 @@ class CoreManager @Inject constructor(
                         "outboundTag" to "proxy"
                     ))
                     
+                    // Hijack port 53 to DNS out
+                    add(mapOf(
+                        "type" to "field",
+                        "port" to "53",
+                        "outboundTag" to "dns-out"
+                    ))
+
+                    // Block QUIC to force TCP fallback (Fixes YouTube/Google issues)
+                    add(mapOf(
+                        "type" to "field",
+                        "port" to "443",
+                        "network" to "udp",
+                        "outboundTag" to "block"
+                    ))
+
                     // Direct for private IPs
                     add(mapOf(
                         "type" to "field",
