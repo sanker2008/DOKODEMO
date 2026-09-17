@@ -42,6 +42,7 @@ data class ServerListUiState(
 
 @HiltViewModel
 class ServerListViewModel @Inject constructor(
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
     private val serverRepository: ServerRepository,
     private val groupRepository: GroupRepository,
     private val serverPinger: ServerPinger
@@ -132,10 +133,10 @@ class ServerListViewModel @Inject constructor(
                     }
                 }.forEach { it.join() }
                 
-                _uiState.update { it.copy(toastMessage = "测试完成：${successCount.get()}/${servers.size} 个节点可用") }
+                _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.review_ping_summary, successCount.get(), servers.size)) }
             } catch (e: Exception) {
                 android.util.Log.e("ServerListVM", "Ping failed: ${e.message}")
-                _uiState.update { it.copy(toastMessage = "测试失败: ${e.message}") }
+                _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.review_ping_failed)) }
             }
 
             _uiState.update { it.copy(isPinging = false) }
@@ -145,19 +146,19 @@ class ServerListViewModel @Inject constructor(
     fun pingSingleServer(server: ServerItem) {
         viewModelScope.launch {
             try {
-                _uiState.update { it.copy(toastMessage = "正在测试...") }
+                _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.pinging)) }
                 val latency = kotlinx.coroutines.withContext(Dispatchers.IO) {
                     serverPinger.ping(server.address, server.port)
                 }
                 serverRepository.updateLatency(server.id, latency?.toInt())
                 if (latency != null) {
-                    _uiState.update { it.copy(toastMessage = "测试成功：${latency}ms") }
+                    _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.review_ping_ok, latency)) }
                 } else {
-                    _uiState.update { it.copy(toastMessage = "测试失败：节点不可达") }
+                    _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.review_ping_failed)) }
                 }
             } catch (e: Exception) {
                 serverRepository.updateLatency(server.id, null)
-                _uiState.update { it.copy(toastMessage = "测试异常: ${e.message}") }
+                _uiState.update { it.copy(toastMessage = context.getString(com.dokodemo.R.string.review_ping_failed)) }
             }
         }
     }

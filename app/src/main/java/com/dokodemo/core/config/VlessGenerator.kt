@@ -10,11 +10,7 @@ class VlessGenerator : OutboundGenerator {
     ): Map<String, Any> {
         val streamSettings = StreamSettingsBuilder.build(profile, allowInsecure)
         
-        val effectiveFlow = when {
-            profile.useReality && profile.flow.isEmpty() -> "xtls-rprx-vision"
-            profile.flow.isNotEmpty() -> profile.flow
-            else -> null
-        }
+        val effectiveFlow = profile.flow.takeIf { it.isNotBlank() }
         
         return mapOf(
             "tag" to "proxy",

@@ -53,7 +53,7 @@ fun ConfigEditorScreen(
                     IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.saveConfig(onNavigateBack) }) {
+                    IconButton(enabled = !uiState.isSaving && !uiState.isLoading, onClick = { viewModel.saveConfig(onNavigateBack) }) {
                         Icon(Icons.Rounded.Check, stringResource(R.string.save), tint = MaterialTheme.colorScheme.primary)
                     }
                 },
@@ -64,6 +64,8 @@ fun ConfigEditorScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .widthIn(max = 840.dp)
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
@@ -101,7 +103,8 @@ fun ConfigEditorScreen(
                 when (uiState.protocol) {
                     Protocol.VMESS, Protocol.VLESS, Protocol.TROJAN -> {
                         DokoInput(
-                            value = uiState.uuid, onValueChange = viewModel::updateUuid,
+                            value = if (uiState.protocol == Protocol.TROJAN) uiState.password else uiState.uuid,
+                            onValueChange = { if (uiState.protocol == Protocol.TROJAN) viewModel.updatePassword(it) else viewModel.updateUuid(it) },
                             label = if (uiState.protocol == Protocol.TROJAN) stringResource(R.string.password) else "UUID",
                             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                         )
@@ -256,7 +259,7 @@ private fun ProtocolSelector(selected: Protocol, onSelected: (Protocol) -> Unit)
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(Protocol.entries) { proto ->
+        items(Protocol.entries.filter { it != Protocol.WIREGUARD }) { proto ->
             DokoTabButton(
                 text = proto.name,
                 isSelected = selected == proto,

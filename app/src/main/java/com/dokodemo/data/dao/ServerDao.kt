@@ -52,6 +52,46 @@ interface ServerDao {
     @Query("DELETE FROM server_profiles WHERE subscriptionId = :subscriptionId")
     suspend fun deleteBySubscription(subscriptionId: Long)
     
+    @Query("SELECT * FROM server_profiles WHERE subscriptionId = :subscriptionId")
+    suspend fun subscriptionSnapshot(subscriptionId: Long): List<ServerProfile>
+
+    @Transaction
+    suspend fun replaceSubscription(subscriptionId: Long, servers: List<ServerProfile>) {
+        require(servers.isNotEmpty()) { "Subscription contains no supported servers" }
+        val previous = subscriptionSnapshot(subscriptionId).toMutableList()
+        val selected = getSelectedServer()
+        var replacement = servers.map { incoming ->
+            val old = previous.firstOrNull {
+                it.protocol == incoming.protocol && it.address == incoming.address &&
+                    it.port == incoming.port && it.uuid == incoming.uuid && it.password == incoming.password
+            }
+            if (old != null) previous.remove(old)
+            incoming.copy(id = old?.id ?: 0, subscriptionId = subscriptionId,
+                isSelected = old?.isSelected ?: false, createdAt = old?.createdAt ?: incoming.createdAt,
+                lastConnected = old?.lastConnected, latency = old?.latency)
+        }
+        if ((selected == null || selected.subscriptionId == subscriptionId) && replacement.none { it.isSelected }) {
+            replacement = replacement.mapIndexed { index, server -> server.copy(isSelected = index == 0) }
+        }
+        deleteBySubscription(subscriptionId)
+        insertAll(replacement)
+    }
+
+    @Transaction
+    suspend fun insertAndSelect(server: ServerProfile): Long {
+        val id = insert(server.copy(isSelected = false))
+        selectServer(id)
+        return id
+    }
+
+    @Transaction
+    suspend fun updateEditableServer(server: ServerProfile) {
+        val current = requireNotNull(getServerById(server.id)) { "Node was deleted" }
+        update(server.copy(subscriptionId = current.subscriptionId, isSelected = current.isSelected,
+            countryCode = current.countryCode, countryName = current.countryName,
+            latency = current.latency, lastConnected = current.lastConnected, createdAt = current.createdAt))
+    }
+
     @Query("UPDATE server_profiles SET isSelected = 0")
     suspend fun clearSelection()
     
@@ -60,6 +100,7 @@ interface ServerDao {
     
     @Transaction
     suspend fun selectServer(id: Long) {
+        if (getServerById(id) == null) return
         clearSelection()
         markSelected(id)
     }

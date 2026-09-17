@@ -11,8 +11,6 @@ import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.repository.ServerRepository
 import com.dokodemo.data.repository.SubscriptionRepository
-import com.dokodemo.data.repository.GroupRepository
-import com.dokodemo.core.SubscriptionFetcher
 import com.dokodemo.service.DokoDemoVpnService
 import com.dokodemo.service.VpnController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +23,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 data class HomeUiState(
     val isConnected: Boolean = false,
@@ -39,6 +36,7 @@ data class HomeUiState(
     val downloadSpeed: String = "0 KB/s",
     val ping: String = "--ms",
     val ipAddress: String = "UNPROTECTED",
+    val connectionError: String? = null,
     val speedHistory: List<Float> = List(50) { 0f },
     
     // VPN Permission
@@ -67,8 +65,7 @@ class HomeViewModel @Inject constructor(
     private val appPreferences: com.dokodemo.data.preferences.AppPreferences,
     private val serverPinger: com.dokodemo.core.ServerPinger,
     private val subscriptionRepository: SubscriptionRepository,
-    private val groupRepository: GroupRepository,
-    private val subscriptionFetcher: SubscriptionFetcher
+    private val subscriptionSyncManager: com.dokodemo.core.SubscriptionSyncManager
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -76,8 +73,6 @@ class HomeViewModel @Inject constructor(
     
     private var trafficReceiver: BroadcastReceiver? = null
     private var vpnStateReceiver: BroadcastReceiver? = null
-    private var fallbackCount = 0
-    private val MAX_FALLBACK = 3
     
     init {
         loadSelectedServer()
@@ -104,24 +99,7 @@ class HomeViewModel @Inject constructor(
                     val subs = subscriptionRepository.getAllSubscriptions().first()
                     for (sub in subs) {
                         if (sub.isActive) {
-                            var group = groupRepository.getGroupBySubscriptionId(sub.id)
-                            if (group == null) {
-                                val newGroupId = groupRepository.insertGroup(com.dokodemo.data.model.Group(name = sub.name, subscriptionId = sub.id))
-                                group = groupRepository.getGroupById(newGroupId)
-                            }
-                            val result = subscriptionFetcher.fetchAndParse(sub.url, group?.id)
-                            result.onSuccess { (nodes, info) ->
-                                serverRepository.replaceServersForSubscription(sub.id, nodes)
-                                subscriptionRepository.updateSyncStatus(
-                                    id = sub.id, 
-                                    timestamp = System.currentTimeMillis(), 
-                                    count = nodes.size,
-                                    upload = info?.upload ?: sub.upload,
-                                    download = info?.download ?: sub.download,
-                                    total = info?.total ?: sub.total,
-                                    expire = info?.expire ?: sub.expire
-                                )
-                            }
+                            subscriptionSyncManager.refresh(sub.id)
                         }
                     }
                 } catch (e: Exception) {
@@ -142,20 +120,20 @@ class HomeViewModel @Inject constructor(
         if (_uiState.value.isPinging) return
         
         viewModelScope.launch {
-            _uiState.update { it.copy(isPinging = true, toastMessage = "正在测试...") }
+            _uiState.update { it.copy(isPinging = true, toastMessage = context.getString(com.dokodemo.R.string.pinging)) }
             try {
                 val latency = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
                     serverPinger.ping(server.address, server.port)
                 }
                 serverRepository.updateLatency(server.id, latency?.toInt())
                 if (latency != null) {
-                    _uiState.update { it.copy(ping = "${latency}ms", toastMessage = "测试成功：${latency}ms") }
+                    _uiState.update { it.copy(ping = "${latency}ms", toastMessage = context.getString(com.dokodemo.R.string.review_ping_ok, latency)) }
                 } else {
-                    _uiState.update { it.copy(ping = "--ms", toastMessage = "测试失败：节点不可达") }
+                    _uiState.update { it.copy(ping = "--ms", toastMessage = context.getString(com.dokodemo.R.string.review_ping_failed)) }
                 }
             } catch (e: Exception) {
                 serverRepository.updateLatency(server.id, null)
-                _uiState.update { it.copy(ping = "--ms", toastMessage = "测试异常: ${e.message}") }
+                _uiState.update { it.copy(ping = "--ms", toastMessage = context.getString(com.dokodemo.R.string.review_ping_failed)) }
             } finally {
                 _uiState.update { it.copy(isPinging = false) }
             }
@@ -178,7 +156,7 @@ class HomeViewModel @Inject constructor(
                 if (server != null) {
                     val currentState = _uiState.value
                     // Check if we are connected and the server changed
-                    val needsReconnect = currentState.isConnected && 
+                    val needsReconnect = (currentState.isConnected || currentState.isConnecting) &&
                             currentState.currentServer != null && 
                             currentState.currentServer.id != server.id
                     
@@ -197,7 +175,7 @@ class HomeViewModel @Inject constructor(
                         connect()
                     }
                 } else {
-                    // Do nothing if empty, let user add server
+                    _uiState.update { it.copy(currentServer = null, currentServerName = "", currentServerRegion = "", protocol = "", ping = "--ms") }
                 }
             }
         }
@@ -221,10 +199,10 @@ class HomeViewModel @Inject constructor(
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     DokoDemoVpnService.ACTION_VPN_CONNECTED -> {
-                        fallbackCount = 0 // Reset on success
                         _uiState.update { state ->
                             state.copy(
                                 isConnected = true,
+                                connectionError = null,
                                 isConnecting = false,
                                 ipAddress = "PROTECTED"
                             )
@@ -232,23 +210,10 @@ class HomeViewModel @Inject constructor(
                     }
                     DokoDemoVpnService.ACTION_VPN_DISCONNECTED -> {
                         val errorReason = intent?.getStringExtra(DokoDemoVpnService.EXTRA_ERROR_REASON)
-                        if (errorReason != null && fallbackCount < MAX_FALLBACK) {
-                            fallbackCount++
-                            tryFallbackNextNode()
-                        } else {
-                            fallbackCount = 0
-                            _uiState.update { state ->
-                                state.copy(
-                                    isConnected = false,
-                                    isConnecting = false,
-                                    ipAddress = "UNPROTECTED",
-                                    uploadSpeed = "0 KB/s",
-                                    downloadSpeed = "0 KB/s",
-                                    speedHistory = List(50) { 0f },
-                                    toastMessage = errorReason?.let { "连接失败：$it" }
-                                )
-                            }
-                        }
+                        _uiState.update { it.copy(isConnected = false, isConnecting = false,
+                            uploadSpeed = "0 KB/s", downloadSpeed = "0 KB/s", speedHistory = List(50) { 0f },
+                            connectionError = errorReason) }
+
                     }
                 }
             }
@@ -285,7 +250,7 @@ class HomeViewModel @Inject constructor(
         val downloadStr = formatSpeed(downloadBytes)
         
         // Update speed history for graph (normalized 0-1)
-        val normalizedSpeed = (downloadBytes.toFloat() / (1024 * 1024)).coerceIn(0f, 1f)
+        val normalizedSpeed = downloadBytes.toFloat().coerceAtLeast(0f)
         
         _uiState.update { state ->
             val newHistory = state.speedHistory.toMutableList()
@@ -326,7 +291,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val currentState = _uiState.value
             
-            if (currentState.isConnected) {
+            if (currentState.isConnected || currentState.isConnecting) {
                 // Disconnect
                 disconnect()
             } else {
@@ -355,14 +320,15 @@ class HomeViewModel @Inject constructor(
         }
         
         // Start connecting
-        _uiState.update { it.copy(isConnecting = true) }
+        _uiState.update { it.copy(isConnecting = true, connectionError = null) }
         
         // Start VPN
-        vpnController.connect(server)
+        try { vpnController.connect(server) }
+        catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Exception) { _uiState.update { it.copy(isConnecting = false, connectionError = e.message) } }
     }
     
     private fun disconnect() {
-        _uiState.update { it.copy(isConnecting = true) }
+        _uiState.update { it.copy(isConnecting = true, connectionError = null) }
         vpnController.disconnect()
     }
     
@@ -382,30 +348,6 @@ class HomeViewModel @Inject constructor(
         }
     }
     
-    private fun tryFallbackNextNode() {
-        viewModelScope.launch {
-            val servers = serverRepository.getAllServers().first()
-            if (servers.isEmpty()) return@launch
-            
-            val current = _uiState.value.currentServer
-            if (current != null) {
-                val currentIndex = servers.indexOfFirst { it.id == current.id }
-                val nextServer = if (currentIndex != -1 && currentIndex + 1 < servers.size) {
-                    servers[currentIndex + 1]
-                } else {
-                    servers.first()
-                }
-                
-                _uiState.update { it.copy(toastMessage = "节点异常，正在尝试切换到: ${nextServer.name}") }
-                
-                // Select and connect
-                serverRepository.selectServer(nextServer.id)
-                _uiState.update { it.copy(currentServer = nextServer) }
-                connect()
-            }
-        }
-    }
-
     override fun onCleared() {
         super.onCleared()
         

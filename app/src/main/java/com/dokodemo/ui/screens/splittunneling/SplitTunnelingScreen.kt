@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -103,8 +106,15 @@ fun SplitTunnelingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
         ) {
+            Text(stringResource(R.string.network_reconnect_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.split_enable), modifier = Modifier.weight(1f))
+                Switch(checked = uiState.splitEnabled, onCheckedChange = viewModel::setSplitEnabled)
+            }
+            if (uiState.selectedCount == 0) Text(stringResource(R.string.split_empty_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.search(it) },
@@ -117,7 +127,7 @@ fun SplitTunnelingScreen(
                 leadingIcon = { 
                     Icon(
                         imageVector = Icons.Rounded.Search,
-                        contentDescription = "Search",
+                        contentDescription = stringResource(R.string.review_search),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     ) 
                 },
@@ -152,7 +162,7 @@ fun SplitTunnelingScreen(
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.heightIn(min = 320.dp, max = 600.dp),
                     contentPadding = PaddingValues(bottom = 32.dp)
                 ) {
                     if (uiState.suggestedApps.isNotEmpty()) {
@@ -344,6 +354,7 @@ data class AppInfo(
 )
 
 data class SplitTunnelingUiState(
+    val splitEnabled: Boolean = false,
     val allApps: List<AppInfo> = emptyList(),
     val suggestedApps: List<AppInfo> = emptyList(),
     val otherApps: List<AppInfo> = emptyList(),
@@ -374,6 +385,11 @@ class SplitTunnelingViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            appPreferences.routingMode.collect { mode ->
+                _uiState.update { it.copy(splitEnabled = mode == com.dokodemo.data.preferences.RoutingMode.SPLIT) }
+            }
+        }
         viewModelScope.launch {
             combine(
                 appPreferences.proxiedApps,
@@ -465,6 +481,10 @@ class SplitTunnelingViewModel @Inject constructor(
                 otherApps = other
             )
         }
+    }
+
+    fun setSplitEnabled(enabled: Boolean) {
+        viewModelScope.launch { appPreferences.setRoutingMode(if (enabled) com.dokodemo.data.preferences.RoutingMode.SPLIT else com.dokodemo.data.preferences.RoutingMode.GLOBAL) }
     }
 
     fun setSplitMode(mode: SplitTunnelingMode) {

@@ -35,7 +35,7 @@ fun DokoInput(
         onValueChange = onValueChange,
         modifier = modifier,
         label = if (label.isNotEmpty()) ({ Text(label.trimEnd(':')) }) else null,
-        placeholder = if (placeholder.isNotEmpty()) ({ Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) }) else null,
+        placeholder = if (placeholder.isNotEmpty()) ({ Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant) }) else null,
         singleLine = singleLine,
         enabled = enabled,
         trailingIcon = trailingContent,
@@ -63,13 +63,13 @@ fun DokoSearchInput(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "搜索..."
+    placeholder: String = androidx.compose.ui.res.stringResource(com.dokodemo.R.string.review_search)
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
+        placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         shape = RoundedCornerShape(16.dp),

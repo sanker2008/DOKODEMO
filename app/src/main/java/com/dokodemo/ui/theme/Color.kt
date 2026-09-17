@@ -5,14 +5,14 @@ import androidx.compose.ui.graphics.Color
 // ─── Core Color Palette ───────────────────────────────────────────────────────
 val BaseBackground = Color(0xFFF0F4F7)       // Ultra-light Ice White/Grey
 val PrimaryAction = Color(0xFFA0C4E3)        // Clear Sky Blue
-val TextIconography = Color(0xFF607D8B)      // Cool Blue-Grey
+val TextIconography = Color(0xFF405865)      // Cool Blue-Grey
 val AccentState = Color(0xFFB7D5C7)          // Soft Mint Green
 
 // ─── Semantic Colors ────────────────────────────────────────────────────────
 val SurfaceGlass = Color(0xB3FFFFFF)         // 70% opacity White for Cards
 val SurfaceBorder = Color(0x1A607D8B)        // 10% opacity #607D8B for Card borders
-val TextPrimaryBtn = Color(0xFF546E7A)       // Slightly darker shade for text on Primary Action
-val TextBody = Color(0xB3607D8B)             // 70% opacity #607D8B for Body Text & Subtitles
+val TextPrimaryBtn = Color(0xFF294655)       // Slightly darker shade for text on Primary Action
+val TextBody = Color(0xFF526773)             // 70% opacity #607D8B for Body Text & Subtitles
 
 // ─── Warning / Error color (replacing red for Mist&Dawn) ───────────────
 val IcyLemon = Color(0xFFE3E1C0)             // Warning / High latency

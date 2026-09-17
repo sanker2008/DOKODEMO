@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val releaseSigningValues = listOf("DOKODEMO_KEYSTORE", "DOKODEMO_STORE_PASSWORD", "DOKODEMO_KEY_ALIAS", "DOKODEMO_KEY_PASSWORD")
+    .associateWith { providers.environmentVariable(it).orElse(providers.gradleProperty(it)).orNull }
+val hasReleaseSigning = releaseSigningValues.values.all { !it.isNullOrBlank() }
+
 android {
     namespace = "com.dokodemo"
     compileSdk = 35
@@ -14,13 +18,19 @@ android {
         applicationId = "com.dokodemo"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
+        if (hasReleaseSigning) create("release") {
+            storeFile = file(releaseSigningValues.getValue("DOKODEMO_KEYSTORE")!!)
+            storePassword = releaseSigningValues.getValue("DOKODEMO_STORE_PASSWORD")
+            keyAlias = releaseSigningValues.getValue("DOKODEMO_KEY_ALIAS")
+            keyPassword = releaseSigningValues.getValue("DOKODEMO_KEY_PASSWORD")
+        }
         getByName("debug") {
             storeFile = file("debug.keystore")
             storePassword = "android"
@@ -32,7 +42,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -80,6 +90,8 @@ kotlin {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     // Native libraries (AAR from libs folder)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
     
@@ -132,4 +144,15 @@ dependencies {
     
     // OkHttp
     implementation(libs.okhttp)
+}
+
+// Debug development remains available without release credentials. Release packaging fails closed.
+val validateReleaseCredentials by tasks.registering {
+    doLast {
+        check(hasReleaseSigning) { "Release signing requires DOKODEMO_KEYSTORE, DOKODEMO_STORE_PASSWORD, DOKODEMO_KEY_ALIAS and DOKODEMO_KEY_PASSWORD" }
+        check(file(releaseSigningValues.getValue("DOKODEMO_KEYSTORE")!!).isFile) { "Release keystore does not exist" }
+    }
+}
+tasks.configureEach {
+    if (name == "preReleaseBuild") dependsOn(validateReleaseCredentials)
 }

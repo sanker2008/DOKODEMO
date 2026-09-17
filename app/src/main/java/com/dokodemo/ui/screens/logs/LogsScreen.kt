@@ -10,7 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.*
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,6 +36,7 @@ fun LogsScreen(
     viewModel: LogsViewModel = hiltViewModel()
 ) {
     val logs by viewModel.logs.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
     val listState = rememberLazyListState()
 
     LaunchedEffect(logs.size) {
@@ -51,10 +56,31 @@ fun LogsScreen(
                 },
                 actions = {
                     IconButton(onClick = { viewModel.refreshLogs() }) {
-                        Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                        Icon(Icons.Rounded.Refresh, contentDescription = stringResource(R.string.review_refresh))
                     }
-                    IconButton(onClick = { viewModel.clearLogs() }) {
-                        Icon(Icons.Rounded.Delete, contentDescription = "Clear")
+                    var menuOpen by remember { mutableStateOf(false) }
+                    Box {
+                        IconButton(onClick = { menuOpen = true }) {
+                            Icon(Icons.Rounded.MoreVert, contentDescription = stringResource(R.string.more))
+                        }
+                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                            DropdownMenuItem(text = { Text(stringResource(R.string.copy_logs)) }, onClick = {
+                                menuOpen = false
+                                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("DokoDemo logs", logs.joinToString("\n")))
+                            })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.share_logs)) }, onClick = {
+                                menuOpen = false
+                                context.startActivity(android.content.Intent.createChooser(android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(android.content.Intent.EXTRA_TEXT, logs.joinToString("\n"))
+                                }, context.getString(R.string.share_logs)))
+                            })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.delete)) }, onClick = {
+                                menuOpen = false
+                                viewModel.clearLogs()
+                            })
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -67,7 +93,7 @@ fun LogsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Color(0xFF1E1E1E))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             SelectionContainer {
                 LazyColumn(
@@ -77,10 +103,11 @@ fun LogsScreen(
                         .padding(8.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
+                    item { Text(stringResource(R.string.logs_hint), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(12.dp)) }
                     items(logs) { log ->
                         Text(
                             text = log,
-                            color = Color(0xFF00FF00),
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 11.sp,
                             lineHeight = 16.sp,

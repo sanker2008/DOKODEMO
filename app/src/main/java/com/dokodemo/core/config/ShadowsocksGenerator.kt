@@ -19,7 +19,7 @@ class ShadowsocksGenerator : OutboundGenerator {
                         "address" to profile.address,
                         "port" to profile.port,
                         "password" to profile.password.ifEmpty { profile.uuid },
-                        "method" to profile.encryption.ifEmpty { "aes-256-gcm" },
+                        "method" to profile.ssMethod,
                         "level" to 0
                     )
                 )

@@ -23,23 +23,22 @@ class ServerRepository @Inject constructor(
         serverDao.getServersBySubscription(subscriptionId)
     
     suspend fun addServer(server: ServerProfile): Long = serverDao.insert(server)
+
+    suspend fun addAndSelectServer(server: ServerProfile): Long = serverDao.insertAndSelect(server)
     
     suspend fun addServers(servers: List<ServerProfile>) = serverDao.insertAll(servers)
     
     suspend fun replaceServersForSubscription(subscriptionId: Long, servers: List<ServerProfile>) {
-        serverDao.deleteBySubscription(subscriptionId)
-        val withSubId = servers.map { it.copy(subscriptionId = subscriptionId) }
-        serverDao.insertAll(withSubId)
+        serverDao.replaceSubscription(subscriptionId, servers)
     }
     
-    suspend fun updateServer(server: ServerProfile) = serverDao.update(server)
+    suspend fun updateServer(server: ServerProfile) = serverDao.updateEditableServer(server)
     
     suspend fun deleteServer(server: ServerProfile) = serverDao.delete(server)
     
     suspend fun deleteServerById(id: Long) = serverDao.deleteById(id)
     
     suspend fun selectServer(id: Long) {
-        serverDao.clearSelection()
         serverDao.selectServer(id)
     }
     

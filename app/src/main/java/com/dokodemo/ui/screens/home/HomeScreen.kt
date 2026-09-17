@@ -3,6 +3,8 @@ package com.dokodemo.ui.screens.home
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -87,6 +89,9 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .widthIn(max = 720.dp)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -97,16 +102,6 @@ fun HomeScreen(
             )
 
             Spacer(Modifier.height(8.dp))
-
-            // ─── 流量监控（折线图） ────────────────────────────────────────
-            TrafficMonitorCard(
-                uploadSpeed = uiState.uploadSpeed,
-                downloadSpeed = uiState.downloadSpeed,
-                speedHistory = uiState.speedHistory,
-                modifier = Modifier.weight(1f)
-            )
-
-            Spacer(Modifier.height(24.dp))
 
             // ─── 当前节点/空状态卡片 ─────────────────────────────────────────────
             if (uiState.hasNoServers) {
@@ -132,13 +127,17 @@ fun HomeScreen(
 
             Spacer(Modifier.height(16.dp))
 
+            uiState.connectionError?.let { error ->
+                Text(error, color = MaterialTheme.colorScheme.error, modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp))
+                TextButton(onClick = onNavigateToServerList) { Text(stringResource(R.string.node_list)) }
+            }
             // ─── 大圆形连接按钮 ───────────────────────────────────────────
             ConnectButton(
                 isConnected = uiState.isConnected,
                 isConnecting = uiState.isConnecting,
-                isEnabled = !uiState.hasNoServers,
+                isEnabled = uiState.isConnected || uiState.isConnecting || !uiState.hasNoServers,
                 onClick = {
-                    if (uiState.currentServer == null) {
+                    if (uiState.currentServer == null && !uiState.isConnected && !uiState.isConnecting) {
                         Toast.makeText(context, context.getString(R.string.please_select_node), Toast.LENGTH_SHORT).show()
                     } else {
                         viewModel.toggleConnection()
@@ -146,6 +145,15 @@ fun HomeScreen(
                 }
             )
 
+            if (uiState.isConnected) {
+                TrafficMonitorCard(
+                    uploadSpeed = uiState.uploadSpeed,
+                    downloadSpeed = uiState.downloadSpeed,
+                    speedHistory = uiState.speedHistory,
+                    modifier = Modifier.fillMaxWidth().height(220.dp)
+                )
+                Spacer(Modifier.height(24.dp))
+            }
             Spacer(Modifier.height(32.dp))
         }
     }
@@ -201,7 +209,7 @@ private fun TopBar(
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
                         imageVector = Icons.Rounded.ArrowDropDown,
-                        contentDescription = "Select Routing Mode",
+                        contentDescription = stringResource(R.string.routing_mode),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
@@ -210,7 +218,7 @@ private fun TopBar(
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
             ) {
                 com.dokodemo.data.preferences.RoutingMode.entries.forEach { mode ->
                     val title = when (mode) {
@@ -245,7 +253,7 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
     val textColor by animateColorAsState(
         targetValue = when {
             isConnecting -> MaterialTheme.colorScheme.onSurfaceVariant
-            isConnected  -> AccentState
+            isConnected  -> MaterialTheme.colorScheme.onSurface
             else         -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         animationSpec = tween(400), label = "statusText"
@@ -253,7 +261,7 @@ private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
     val dotColor by animateColorAsState(
         targetValue = when {
             isConnecting -> MaterialTheme.colorScheme.outline
-            isConnected  -> AccentState
+            isConnected  -> MaterialTheme.colorScheme.onSurface
             else         -> MaterialTheme.colorScheme.outline
         },
         animationSpec = tween(400), label = "dotColor"
@@ -319,7 +327,7 @@ private fun ConnectButton(
     )
     val textColor by animateColorAsState(
         targetValue = when {
-            isConnected -> Color.White
+            isConnected -> MaterialTheme.colorScheme.onPrimary
             else -> MaterialTheme.colorScheme.primary
         },
         label = "btnText"
@@ -332,7 +340,7 @@ private fun ConnectButton(
         label = "btnBorder"
     )
     val buttonText = when {
-        isConnecting -> stringResource(R.string.connecting)
+        isConnecting -> stringResource(R.string.cancel)
         isConnected  -> stringResource(R.string.disconnect)
         else         -> stringResource(R.string.connect)
     }
@@ -363,7 +371,7 @@ private fun ConnectButton(
                     color = borderColor,
                     shape = CircleShape
                 )
-                .clickable(enabled = isEnabled && !isConnecting, onClick = onClick),
+                .clickable(enabled = isEnabled, role = androidx.compose.ui.semantics.Role.Button, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
             // Connecting loading indicator
@@ -458,9 +466,9 @@ private fun CurrentNodeCard(
                         fontWeight = FontWeight.SemiBold,
                         color = when {
                             latency.isEmpty() || latency == "--" -> MaterialTheme.colorScheme.onSurfaceVariant
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> AccentState
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> TextIconography
-                            else -> IcyLemon
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> MaterialTheme.colorScheme.primary
+                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> MaterialTheme.colorScheme.onSurfaceVariant
+                            else -> MaterialTheme.colorScheme.error
                         },
                         fontSize = 18.sp
                     )
@@ -478,7 +486,7 @@ private fun CurrentNodeCard(
                         } else {
                             Icon(
                                 imageVector = Icons.Rounded.Refresh,
-                                contentDescription = "Ping",
+                                contentDescription = stringResource(R.string.ping_all),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -514,7 +522,7 @@ private fun TrafficMonitorCard(
             modifier = Modifier
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color(0xFF7CAEE0), Color(0xFF5A8BB5))
+                        colors = listOf(Color(0xFF355F7B), Color(0xFF294655))
                     )
                 )
                 .padding(16.dp)
@@ -534,6 +542,7 @@ private fun TrafficMonitorCard(
                 }
             }
             Spacer(Modifier.height(12.dp))
+            Text(stringResource(R.string.graph_scale, (speedHistory.maxOrNull() ?: 0f).toLong().toString()), color = Color.White, style = MaterialTheme.typography.labelSmall)
             // 折线图
             SpeedGraph(
                 dataPoints = speedHistory,
@@ -547,7 +556,7 @@ private fun TrafficMonitorCard(
 private fun TrafficLabel(arrow: String, speed: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(arrow, color = Color.White, style = MaterialTheme.typography.labelSmall)
-        Text(speed.ifEmpty { "0 B/s" }, fontFamily = MonoFont, fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+        Text(speed.ifEmpty { "0 B/s" }, fontFamily = MonoFont, style = MaterialTheme.typography.labelSmall, color = Color.White, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -569,7 +578,7 @@ private fun SpeedGraph(dataPoints: List<Float>, modifier: Modifier = Modifier) {
         val path = Path().apply {
             dataPoints.forEachIndexed { idx, v ->
                 val x = idx * step
-                val y = h - (v * h * 0.85f).coerceIn(0f, h)
+                val y = h - (v / (dataPoints.maxOrNull() ?: 1f).coerceAtLeast(1f) * h * 0.85f).coerceIn(0f, h)
                 if (idx == 0) moveTo(x, y) else lineTo(x, y)
             }
         }

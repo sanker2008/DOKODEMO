@@ -1,5 +1,7 @@
 package com.dokodemo.ui.screens.subscription
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +13,8 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import com.dokodemo.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.data.model.Subscription
 import com.dokodemo.ui.components.DokoInput
-import com.dokodemo.ui.theme.Primary
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +37,19 @@ fun SubscriptionScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var editingSub by remember { mutableStateOf<com.dokodemo.data.model.Subscription?>(null) }
 
+    var deletingSub by remember { mutableStateOf<Subscription?>(null) }
+    deletingSub?.let { sub ->
+        AlertDialog(onDismissRequest = { deletingSub = null },
+            title = { Text(stringResource(R.string.delete)) },
+            text = { Text(stringResource(R.string.delete_subscription_confirm, sub.name)) },
+            confirmButton = { TextButton(onClick = { viewModel.deleteSubscription(sub); deletingSub = null }) { Text(stringResource(R.string.delete)) } },
+            dismissButton = { TextButton(onClick = { deletingSub = null }) { Text(stringResource(R.string.cancel)) } })
+    }
+    uiState.successCount?.takeIf { !uiState.isRefreshing && uiState.errorMessage == null }?.let { count ->
+        AlertDialog(onDismissRequest = viewModel::clearSuccess,
+            text = { Text(stringResource(R.string.subscription_imported, count)) },
+            confirmButton = { TextButton(onClick = viewModel::clearSuccess) { Text(stringResource(R.string.confirm)) } })
+    }
     // 错误提示
     LaunchedEffect(uiState.errorMessage) {
         if (uiState.errorMessage != null) {
@@ -47,12 +63,12 @@ fun SubscriptionScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("节点订阅", fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.review_subscriptions), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, "返回") }
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.updateAllSubscriptions() }) {
+                    IconButton(enabled = !uiState.isRefreshing, onClick = { viewModel.updateAllSubscriptions() }) {
                         if (uiState.isRefreshing) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
@@ -60,7 +76,7 @@ fun SubscriptionScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Icon(Icons.Rounded.Refresh, "全部更新", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Rounded.Refresh, stringResource(R.string.review_update_all), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 },
@@ -69,12 +85,12 @@ fun SubscriptionScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = Primary,
-                contentColor = Color.White,
+                onClick = { if (!uiState.isRefreshing) showAddDialog = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(16.dp),
-                icon = { Icon(Icons.Rounded.Add, "添加订阅") },
-                text = { Text("添加订阅") }
+                icon = { Icon(Icons.Rounded.Add, stringResource(R.string.review_add_subscription)) },
+                text = { Text(stringResource(R.string.review_add_subscription)) }
             )
         }
     ) { paddingValues ->
@@ -92,7 +108,7 @@ fun SubscriptionScreen(
                             subscription = sub,
                             isRefreshing = uiState.refreshingId == sub.id,
                             onRefresh = { viewModel.updateSubscription(sub) },
-                            onDelete = { viewModel.deleteSubscription(sub) },
+                            onDelete = { deletingSub = sub },
                             onEdit = { editingSub = sub }
                         )
                     }
@@ -128,10 +144,10 @@ fun SubscriptionScreen(
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
             containerColor = MaterialTheme.colorScheme.background,
-            title = { Text("提示") },
+            title = { Text(stringResource(R.string.review_notice)) },
             text = { Text(uiState.errorMessage!!) },
             confirmButton = {
-                TextButton(onClick = { viewModel.clearError() }) { Text("确定") }
+                TextButton(onClick = { viewModel.clearError() }) { Text(stringResource(R.string.confirm)) }
             }
         )
     }
@@ -166,13 +182,13 @@ private fun SubscriptionCard(
                 Spacer(Modifier.height(4.dp))
                 
                 val lastUpdateStr = if (subscription.lastUpdated != null) {
-                    "上次更新: " + timeFormat.format(Date(subscription.lastUpdated))
+                    stringResource(R.string.review_last_update, timeFormat.format(Date(subscription.lastUpdated)))
                 } else {
-                    "从未更新"
+                    stringResource(R.string.review_never_updated)
                 }
 
                 Text(
-                    text = "$lastUpdateStr • ${subscription.serverCount} 个节点",
+                    text = stringResource(R.string.review_sub_count, lastUpdateStr, subscription.serverCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -189,11 +205,11 @@ private fun SubscriptionCard(
                         val expireDate = if (subscription.expire > 9999999999L) Date(subscription.expire) else Date(subscription.expire * 1000)
                         timeFormat.format(expireDate)
                     } else {
-                        "无限制"
+                        stringResource(R.string.review_unlimited)
                     }
                     
                     Text(
-                        text = "流量: $usedStr / $totalStr (剩余 $remainStr)",
+                        text = stringResource(R.string.review_quota, usedStr, totalStr, remainStr),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -206,7 +222,7 @@ private fun SubscriptionCard(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "过期时间: $expireStr",
+                        text = stringResource(R.string.review_expire, expireStr),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -220,13 +236,13 @@ private fun SubscriptionCard(
                 )
             } else {
                 IconButton(onClick = onRefresh) {
-                    Icon(Icons.Rounded.Refresh, "刷新", tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Rounded.Refresh, stringResource(R.string.review_refresh), tint = MaterialTheme.colorScheme.primary)
                 }
             }
 
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Rounded.MoreVert, "更多", tint = MaterialTheme.colorScheme.onSurface)
+                    Icon(Icons.Rounded.MoreVert, stringResource(R.string.review_more), tint = MaterialTheme.colorScheme.onSurface)
                 }
                 DropdownMenu(
                     expanded = showMenu, 
@@ -234,12 +250,12 @@ private fun SubscriptionCard(
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     DropdownMenuItem(
-                        text = { Text("编辑") },
+                        text = { Text(stringResource(R.string.edit)) },
                         leadingIcon = { Icon(Icons.Rounded.Edit, null) },
                         onClick = { showMenu = false; onEdit() }
                     )
                     DropdownMenuItem(
-                        text = { Text("删除订阅", color = MaterialTheme.colorScheme.error) },
+                        text = { Text(stringResource(R.string.review_delete_sub), color = MaterialTheme.colorScheme.error) },
                         leadingIcon = { Icon(Icons.Rounded.Delete, null, tint = MaterialTheme.colorScheme.error) },
                         onClick = { showMenu = false; onDelete() }
                     )
@@ -261,27 +277,25 @@ private fun EditSubscriptionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
-        title = { Text("编辑订阅") },
+        title = { Text(stringResource(R.string.review_edit_sub)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                DokoInput(value = name, onValueChange = { name = it }, label = "名称（备注）")
-                DokoInput(value = url, onValueChange = { url = it }, label = "订阅链接")
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                DokoInput(value = name, onValueChange = { name = it }, label = stringResource(R.string.review_sub_name))
+                DokoInput(value = url, onValueChange = { url = it }, label = stringResource(R.string.review_sub_url))
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { onSave(name, url) },
-                enabled = name.isNotBlank() && url.isNotBlank()
-            ) { Text("保存", fontWeight = FontWeight.Bold) }
+                onClick = { onSave(name.trim(), url.trim()) },
+                enabled = name.isNotBlank() && runCatching { val parsed = java.net.URI(url.trim()); parsed.scheme in listOf("http", "https") && !parsed.host.isNullOrBlank() }.getOrDefault(false)
+            ) { Text(stringResource(R.string.save), fontWeight = FontWeight.Bold) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("取消") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }
 
-// Placeholder to avoid duplicate definition
-private fun _placeholder_SubscriptionCard_old() {}
 
 @Composable
 private fun EmptySubState() {
@@ -297,10 +311,10 @@ private fun EmptySubState() {
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )
         Spacer(Modifier.height(16.dp))
-        Text("暂无订阅", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+        Text(stringResource(R.string.review_sub_empty), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
         Spacer(Modifier.height(8.dp))
         Text(
-            "通过订阅链接一次性导入多个节点。\n支持 Clash 格式、Base64 格式等常见订阅链接。",
+            stringResource(R.string.subscription_formats),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -319,29 +333,29 @@ private fun AddSubscriptionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
-        title = { Text("添加订阅") },
+        title = { Text(stringResource(R.string.review_add_subscription)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 DokoInput(
                     value = name, onValueChange = { name = it },
-                    label = "名称（备注）", placeholder = "如: 代理机场"
+                    label = stringResource(R.string.review_sub_name), placeholder = stringResource(R.string.review_sub_example)
                 )
                 DokoInput(
                     value = url, onValueChange = { url = it },
-                    label = "订阅链接", placeholder = "https://"
+                    label = stringResource(R.string.review_sub_url), placeholder = "https://"
                 )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { onAdd(name, url) },
-                enabled = name.isNotBlank() && url.isNotBlank()
+                onClick = { onAdd(name.trim(), url.trim()) },
+                enabled = name.isNotBlank() && runCatching { val parsed = java.net.URI(url.trim()); parsed.scheme in listOf("http", "https") && !parsed.host.isNullOrBlank() }.getOrDefault(false)
             ) {
-                Text("确定", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.confirm), fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("取消") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

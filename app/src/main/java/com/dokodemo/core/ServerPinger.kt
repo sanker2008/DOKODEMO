@@ -20,12 +20,12 @@ class ServerPinger @Inject constructor() {
     suspend fun ping(host: String, port: Int, timeout: Int = 3000): Long? {
         return withContext(Dispatchers.IO) {
             try {
-                val socket = Socket()
+                Socket().use { socket ->
                 val start = System.currentTimeMillis()
                 socket.connect(InetSocketAddress(host, port), timeout)
                 val end = System.currentTimeMillis()
-                socket.close()
                 end - start
+                }
             } catch (e: Exception) {
                 null
             }

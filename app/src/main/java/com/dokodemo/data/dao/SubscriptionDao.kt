@@ -30,6 +30,19 @@ interface SubscriptionDao {
     @Delete
     suspend fun delete(subscription: Subscription)
     
+    @Query("UPDATE server_profiles SET subscriptionId = NULL WHERE subscriptionId = :id")
+    suspend fun detachServers(id: Long)
+
+    @Query("UPDATE groups SET subscriptionId = NULL WHERE subscriptionId = :id")
+    suspend fun detachGroups(id: Long)
+
+    @androidx.room.Transaction
+    suspend fun deleteKeepingServers(subscription: Subscription) {
+        detachServers(subscription.id)
+        detachGroups(subscription.id)
+        delete(subscription)
+    }
+
     @Query("DELETE FROM subscriptions WHERE id = :id")
     suspend fun deleteById(id: Long)
     

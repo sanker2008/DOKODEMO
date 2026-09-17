@@ -29,8 +29,28 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Verify source
+        run: ./gradlew testDebugUnitTest lintDebug
+
+      - name: Prepare release signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.DOKODEMO_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$KEYSTORE_BASE64" || { echo "Missing release keystore secret"; exit 1; }
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/dokodemo-release.jks"
+
       - name: Build Release APK
+        env:
+          DOKODEMO_KEYSTORE: ${{ runner.temp }}/dokodemo-release.jks
+          DOKODEMO_STORE_PASSWORD: ${{ secrets.DOKODEMO_STORE_PASSWORD }}
+          DOKODEMO_KEY_ALIAS: ${{ secrets.DOKODEMO_KEY_ALIAS }}
+          DOKODEMO_KEY_PASSWORD: ${{ secrets.DOKODEMO_KEY_PASSWORD }}
         run: ./gradlew assembleRelease
+
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/dokodemo-release.jks"
 
       - name: Organize Release Artifacts
         run: |
@@ -43,9 +63,16 @@ jobs:
           done
           ls -la release-apks/
 
+      - name: Upload verified APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apks
+          path: release-apks/*.apk
+          if-no-files-found: error
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: release-apks/*.apk
           generate_release_notes: true

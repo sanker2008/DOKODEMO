@@ -8,7 +8,7 @@ object Tun2socksWrapper {
     private var proxyService: TProxyService? = null
     
     @JvmStatic
-    fun start(tunFd: Int, socksAddr: String, dnsAddr: String, mtu: Int, dnsPort: Int = 10853): Boolean {
+    fun start(tunFd: Int, socksAddr: String, dnsAddr: String, mtu: Int, cacheDir: File): Boolean {
         try {
             val parts = socksAddr.split(":")
             val addr = parts.getOrNull(0) ?: "127.0.0.1"
@@ -22,13 +22,12 @@ object Tun2socksWrapper {
                   port: $port
                   udp: 'udp'
                 mapdns:
-                  address: 198.18.0.2
+                  address: $dnsAddr
                   port: 53
                   network: 198.18.0.0
                   netmask: 255.255.0.0
             """.trimIndent()
             
-            val cacheDir = "/data/data/com.dokodemo/cache"
             val file = File(cacheDir, "hev.yml")
             file.parentFile?.mkdirs()
             file.writeText(config)
@@ -48,7 +47,7 @@ object Tun2socksWrapper {
     
     @JvmStatic
     fun stop() {
-        try { proxyService?.TProxyStopService() } catch (_: Throwable) {}
+        try { proxyService?.TProxyStopService() } catch (_: Throwable) {} finally { proxyService = null }
     }
     
     @JvmStatic

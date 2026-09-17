@@ -1,122 +1,50 @@
 package com.dokodemo.core
 
-import android.util.Base64
-import com.dokodemo.data.model.Protocol
 import com.dokodemo.data.model.ServerProfile
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.net.URLDecoder
 import javax.inject.Inject
 import javax.inject.Singleton
-import java.nio.charset.StandardCharsets
 
-/**
- * 订阅抓取与解析引擎
- */
 @Singleton
 class SubscriptionFetcher @Inject constructor(
     private val httpClient: OkHttpClient,
     private val shareLinkParser: ShareLinkParser
 ) {
+    data class SubscriptionInfo(val upload: Long, val download: Long, val total: Long, val expire: Long)
+    class InvalidContentException : Exception("Subscription has no supported nodes")
 
-data class SubscriptionInfo(
-    val upload: Long,
-    val download: Long,
-    val total: Long,
-    val expire: Long
-)
-
-    /**
-     * 抓取并解析订阅链接
-     * @param url 订阅链接
-     * @param defaultGroupId 给解析出的节点分配的默认分组id
-     * @return 解析得出的节点列表，带有错误处理
-     */
     suspend fun fetchAndParse(url: String, defaultGroupId: Long?): Result<Pair<List<ServerProfile>, SubscriptionInfo?>> = withContext(Dispatchers.IO) {
         try {
-            val request = Request.Builder()
-                .url(url)
-                // 伪装 User-Agent 以防止被一些机场的 WAF 拦截
-                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                .build()
-
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful) {
-                return@withContext Result.failure(Exception("HTTP 错误: ${response.code}"))
-            }
-
-            val bodyText = response.body?.string() ?: return@withContext Result.failure(Exception("订阅内容为空"))
-
-            val userInfoHeader = response.header("Subscription-Userinfo") ?: response.header("subscription-userinfo")
-            var subInfo: SubscriptionInfo? = null
-            if (userInfoHeader != null) {
-                var upload = 0L
-                var download = 0L
-                var total = 0L
-                var expire = 0L
-                userInfoHeader.split(";").forEach { part ->
-                    val kv = part.trim().split("=")
-                    if (kv.size == 2) {
-                        when (kv[0].lowercase()) {
-                            "upload" -> upload = kv[1].toLongOrNull() ?: 0L
-                            "download" -> download = kv[1].toLongOrNull() ?: 0L
-                            "total" -> total = kv[1].toLongOrNull() ?: 0L
-                            "expire" -> expire = kv[1].toLongOrNull() ?: 0L
-                        }
-                    }
+            val request = Request.Builder().url(url)
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36").build()
+            httpClient.newCall(request).execute().use { response ->
+                check(response.isSuccessful) { "HTTP ${response.code}" }
+                val source = requireNotNull(response.body).source()
+                val limit = 8L * 1024 * 1024
+                source.request(limit + 1)
+                require(source.buffer.size <= limit) { "Subscription exceeds 8 MiB" }
+                val content = source.readUtf8().trim().removePrefix("\uFEFF")
+                ensureActive()
+                val decoded = if (content.filterNot(Char::isWhitespace).matches(Regex("[A-Za-z0-9+/_=-]+"))) {
+                    runCatching { decodeShareBase64(content) }.getOrDefault(content)
+                } else content
+                val nodes = decoded.lineSequence().mapNotNull { shareLinkParser.parse(it.trim()) }
+                    .map { it.copy(groupId = defaultGroupId) }.toList()
+                if (nodes.isEmpty()) throw InvalidContentException()
+                val info = response.header("Subscription-Userinfo")?.let { header ->
+                    val values = header.split(';').mapNotNull {
+                        val pair = it.trim().split('=', limit = 2)
+                        if (pair.size == 2) pair[0].lowercase() to (pair[1].toLongOrNull() ?: 0L).coerceAtLeast(0L) else null
+                    }.toMap()
+                    SubscriptionInfo(values["upload"] ?: 0L, values["download"] ?: 0L, values["total"] ?: 0L, values["expire"] ?: 0L)
                 }
-                subInfo = SubscriptionInfo(upload, download, total, expire)
+                Result.success(nodes to info)
             }
-
-            // 解析内容并设置 groupId
-            val parsedProfiles = parseContent(bodyText).map { it.copy(groupId = defaultGroupId) }
-            
-            Result.success(Pair(parsedProfiles, subInfo))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    private fun parseContent(content: String): List<ServerProfile> {
-        val servers = mutableListOf<ServerProfile>()
-
-        // 尝试按 Base64 解码
-        val decodedText = tryDecodeBase64(content) ?: content
-
-        // 按行分割并解析
-        decodedText.lines().map { it.trim() }.filter { it.isNotEmpty() }.forEach { line ->
-            // 这里我们复用 ShareLinkParser 的逻辑，但 ShareLinkParser 返回的是 VpnProfile 或内部模型
-            // 为了安全，这使用 shareLinkParser 解析出内部对象（需补齐 ShareLinkParser）
-            try {
-                if (line.startsWith("vmess://") || line.startsWith("vless://") || line.startsWith("trojan://") || line.startsWith("ss://")) {
-                    // shareLinkParser 目前需要适配返回 ServerProfile，或者在其中处理
-                    // 暂时这里手动转接一次或者调用 parser
-                    val profile = shareLinkParser.parse(line)
-                    if (profile != null) {
-                        servers.add(profile)
-                    }
-                }
-            } catch (e: Exception) {
-                // 忽略解析失败的单行
-                e.printStackTrace()
-            }
-        }
-        return servers
-    }
-
-    private fun tryDecodeBase64(content: String): String? {
-        // Base64 文本通常不包含空格/换行，但是如果较长可能会有
-        val cleanContent = content.replace(Regex("\\s+"), "")
-        if (cleanContent.matches(Regex("^[A-Za-z0-9+/]+={0,2}$"))) {
-            try {
-                val bytes = Base64.decode(cleanContent, Base64.DEFAULT)
-                return String(bytes, StandardCharsets.UTF_8)
-            } catch (e: Exception) {
-                // Not valid base64
-            }
-        }
-        return null
+        } catch (e: CancellationException) { throw e } catch (e: Exception) { Result.failure(e) }
     }
 }

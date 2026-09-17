@@ -36,7 +36,7 @@ class QrCodeAnalyzer(
             val height = image.height
             
             // If the image is rotated, we need to rotate the data, also dropping the row padding
-            val processedData = rotateAndCleanYUV420(data, width, height, rowStride, rotation)
+            val processedData = normalizeQrLuminance(data, width, height, rowStride, yPlane.pixelStride, rotation)
             
             // Swap dimensions if rotated
             val finalWidth = if (rotation == 90 || rotation == 270) height else width
@@ -59,8 +59,12 @@ class QrCodeAnalyzer(
                 DecodeHintType.TRY_HARDER to true,
                 DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)
             )
-            val result = reader.decode(binaryBitmap, hints)
-            Log.d("QrCodeAnalyzer", "QR Code detected successfully: ${result.text.take(20)}...")
+            val result = try { reader.decode(binaryBitmap, hints) }
+            catch (_: com.google.zxing.NotFoundException) {
+                reader.reset()
+                reader.decode(BinaryBitmap(HybridBinarizer(source.invert())), hints)
+            }
+            Log.d("QrCodeAnalyzer", "QR code detected")
             onQrCodeDetected(result.text)
             
         } catch (e: Exception) {
@@ -69,55 +73,16 @@ class QrCodeAnalyzer(
                 Log.d("QrCodeAnalyzer", "Still scanning... frame $frameCount, error: ${e.message}")
             }
         } finally {
+            reader.reset()
             image.close()
         }
     }
 
     private fun toByteArray(buffer: ByteBuffer): ByteArray {
-        buffer.rewind()
+        val buffer = buffer.duplicate()
         val data = ByteArray(buffer.remaining())
         buffer.get(data)
         return data
     }
     
-    private fun rotateAndCleanYUV420(data: ByteArray, imageWidth: Int, imageHeight: Int, rowStride: Int, rotation: Int): ByteArray {
-        val yuv = ByteArray(imageWidth * imageHeight)
-        var i = 0
-        
-        when (rotation) {
-            90 -> {
-                for (x in 0 until imageWidth) {
-                    for (y in imageHeight - 1 downTo 0) {
-                        yuv[i++] = data[y * rowStride + x]
-                    }
-                }
-            }
-            270 -> {
-                for (x in imageWidth - 1 downTo 0) {
-                    for (y in 0 until imageHeight) {
-                        yuv[i++] = data[y * rowStride + x]
-                    }
-                }
-            }
-            180 -> {
-                for (y in imageHeight - 1 downTo 0) {
-                    for (x in imageWidth - 1 downTo 0) {
-                        yuv[i++] = data[y * rowStride + x]
-                    }
-                }
-            }
-            else -> {
-                // Remove padding
-                if (imageWidth == rowStride) {
-                    return data
-                } else {
-                    for (y in 0 until imageHeight) {
-                        System.arraycopy(data, y * rowStride, yuv, y * imageWidth, imageWidth)
-                    }
-                }
-            }
-        }
-        
-        return yuv
-    }
 }

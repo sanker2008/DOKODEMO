@@ -14,12 +14,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryAction,
-    onPrimary = TextPrimaryBtn,
+    primary = Color(0xFF355F7B),
+    onPrimary = Color.White,
     primaryContainer = PrimaryAction,
     onPrimaryContainer = TextPrimaryBtn,
     secondary = AccentState,
-    onSecondary = BaseBackground,
+    onSecondary = Color(0xFF294C3D),
     secondaryContainer = SurfaceGlass,
     onSecondaryContainer = TextIconography,
     background = BaseBackground,
@@ -37,10 +37,10 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = TextBody,
     outline = SurfaceBorder,
     outlineVariant = SurfaceBorder,
-    error = IcyLemon,
+    error = Color(0xFFB33B35),
     onError = BaseBackground,
     tertiary = AccentState,
-    onTertiary = BaseBackground
+    onTertiary = Color(0xFF294C3D)
 )
 
 // Defaulting to the same scheme for dark mode as per the new specific aesthetic goal
@@ -68,7 +68,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = DarkTextBody,
     outline = DarkSurfaceBorder,
     outlineVariant = DarkSurfaceBorder,
-    error = IcyLemon,
+    error = Color(0xFFFFB4AB),
     onError = DarkBaseBackground,
     tertiary = DarkAccentState,
     onTertiary = DarkBaseBackground
@@ -92,18 +92,18 @@ fun DokoDemoTheme(
     }
 
     val scaledTypography = androidx.compose.material3.Typography(
-        headlineLarge = AppTypography.headlineLarge.copy(fontSize = AppTypography.headlineLarge.fontSize * fontScale),
-        headlineMedium = AppTypography.headlineMedium.copy(fontSize = AppTypography.headlineMedium.fontSize * fontScale),
-        headlineSmall = AppTypography.headlineSmall.copy(fontSize = AppTypography.headlineSmall.fontSize * fontScale),
-        titleLarge = AppTypography.titleLarge.copy(fontSize = AppTypography.titleLarge.fontSize * fontScale),
-        titleMedium = AppTypography.titleMedium.copy(fontSize = AppTypography.titleMedium.fontSize * fontScale),
-        titleSmall = AppTypography.titleSmall.copy(fontSize = AppTypography.titleSmall.fontSize * fontScale),
-        bodyLarge = AppTypography.bodyLarge.copy(fontSize = AppTypography.bodyLarge.fontSize * fontScale),
-        bodyMedium = AppTypography.bodyMedium.copy(fontSize = AppTypography.bodyMedium.fontSize * fontScale),
-        bodySmall = AppTypography.bodySmall.copy(fontSize = AppTypography.bodySmall.fontSize * fontScale),
-        labelLarge = AppTypography.labelLarge.copy(fontSize = AppTypography.labelLarge.fontSize * fontScale),
-        labelMedium = AppTypography.labelMedium.copy(fontSize = AppTypography.labelMedium.fontSize * fontScale),
-        labelSmall = AppTypography.labelSmall.copy(fontSize = AppTypography.labelSmall.fontSize * fontScale)
+        headlineLarge = AppTypography.headlineLarge.copy(fontSize = AppTypography.headlineLarge.fontSize * fontScale, lineHeight = AppTypography.headlineLarge.lineHeight * fontScale),
+        headlineMedium = AppTypography.headlineMedium.copy(fontSize = AppTypography.headlineMedium.fontSize * fontScale, lineHeight = AppTypography.headlineMedium.lineHeight * fontScale),
+        headlineSmall = AppTypography.headlineSmall.copy(fontSize = AppTypography.headlineSmall.fontSize * fontScale, lineHeight = AppTypography.headlineSmall.lineHeight * fontScale),
+        titleLarge = AppTypography.titleLarge.copy(fontSize = AppTypography.titleLarge.fontSize * fontScale, lineHeight = AppTypography.titleLarge.lineHeight * fontScale),
+        titleMedium = AppTypography.titleMedium.copy(fontSize = AppTypography.titleMedium.fontSize * fontScale, lineHeight = AppTypography.titleMedium.lineHeight * fontScale),
+        titleSmall = AppTypography.titleSmall.copy(fontSize = AppTypography.titleSmall.fontSize * fontScale, lineHeight = AppTypography.titleSmall.lineHeight * fontScale),
+        bodyLarge = AppTypography.bodyLarge.copy(fontSize = AppTypography.bodyLarge.fontSize * fontScale, lineHeight = AppTypography.bodyLarge.lineHeight * fontScale),
+        bodyMedium = AppTypography.bodyMedium.copy(fontSize = AppTypography.bodyMedium.fontSize * fontScale, lineHeight = AppTypography.bodyMedium.lineHeight * fontScale),
+        bodySmall = AppTypography.bodySmall.copy(fontSize = AppTypography.bodySmall.fontSize * fontScale, lineHeight = AppTypography.bodySmall.lineHeight * fontScale),
+        labelLarge = AppTypography.labelLarge.copy(fontSize = AppTypography.labelLarge.fontSize * fontScale, lineHeight = AppTypography.labelLarge.lineHeight * fontScale),
+        labelMedium = AppTypography.labelMedium.copy(fontSize = AppTypography.labelMedium.fontSize * fontScale, lineHeight = AppTypography.labelMedium.lineHeight * fontScale),
+        labelSmall = AppTypography.labelSmall.copy(fontSize = AppTypography.labelSmall.fontSize * fontScale, lineHeight = AppTypography.labelSmall.lineHeight * fontScale)
     )
 
     MaterialTheme(

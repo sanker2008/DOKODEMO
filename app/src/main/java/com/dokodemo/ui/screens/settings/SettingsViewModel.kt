@@ -21,7 +21,7 @@ data class SettingsUiState(
     val darkModeEnabled: Boolean = true,
     val fontSizeScale: Float = 1.0f,
     val coreVersion: String = "---",
-    val appVersion: String = "1.0.1"
+    val appVersion: String = "1.0.2"
 )
 
 @HiltViewModel
@@ -58,7 +58,7 @@ class SettingsViewModel @Inject constructor(
             ) { primaryState, connectionState, miscState ->
                 val (darkMode, routing, fontScale) = primaryState
                 val (muxEnabled, allowInsecure, udpEnabled) = connectionState
-                val (bypass, autoUpdate) = miscState
+                val (bypass, autoUpdate, allowLan) = miscState
                 _uiState.update {
                     it.copy(
                         darkModeEnabled = darkMode,
@@ -68,6 +68,7 @@ class SettingsViewModel @Inject constructor(
                         allowInsecure = allowInsecure,
                         udpEnabled = udpEnabled,
                         bypassLan = bypass,
+                        allowLanConnection = allowLan,
                         autoUpdateSubscription = autoUpdate
                     )
                 }

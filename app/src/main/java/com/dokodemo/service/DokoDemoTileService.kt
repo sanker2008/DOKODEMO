@@ -45,6 +45,7 @@ class DokoDemoTileService : TileService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver()
         serviceJob.cancel()
     }
 
@@ -69,8 +70,13 @@ class DokoDemoTileService : TileService() {
             serviceScope.launch {
                 val server = serverRepository.getSelectedServer().firstOrNull()
                 if (server != null) {
-                    vpnController.connect(server)
+                    try { vpnController.connect(server) }
+                    catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+                        updateTileState()
+                        openMainActivity()
+                    }
                 } else {
+                    updateTileState()
                     // Open main activity to select a server if no server is selected
                     openMainActivity()
                 }

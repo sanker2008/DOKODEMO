@@ -1,5 +1,7 @@
 package com.dokodemo.ui.screens.routing
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -319,8 +321,8 @@ private fun RuleCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                RulePill(label = rule.matchType.displayName)
-                RulePill(label = rule.action.displayName, highlighted = true)
+                RulePill(label = ruleLabel(rule.matchType))
+                RulePill(label = ruleLabel(rule.action), highlighted = true)
             }
             Text(
                 text = rule.value,
@@ -411,8 +413,9 @@ private fun RuleEditorDialog(
             )
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
+                        shape = RoundedCornerShape(16.dp),
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
@@ -425,7 +428,8 @@ private fun RuleEditorDialog(
                     onExpandedChange = { typeExpanded = !typeExpanded }
                 ) {
                     OutlinedTextField(
-                        value = matchType.displayName,
+                        shape = RoundedCornerShape(16.dp),
+                        value = ruleLabel(matchType),
                         onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(R.string.custom_routing_rules_match_type)) },
@@ -442,7 +446,7 @@ private fun RuleEditorDialog(
                     ) {
                         CustomRuleMatchType.entries.forEach { item ->
                             DropdownMenuItem(
-                                text = { Text(item.displayName) },
+                                text = { Text(ruleLabel(item)) },
                                 onClick = {
                                     matchType = item
                                     typeExpanded = false
@@ -452,6 +456,7 @@ private fun RuleEditorDialog(
                     }
                 }
                 OutlinedTextField(
+                        shape = RoundedCornerShape(16.dp),
                     value = value,
                     onValueChange = { value = it },
                     modifier = Modifier.fillMaxWidth(),
@@ -469,7 +474,7 @@ private fun RuleEditorDialog(
                                 index = index,
                                 count = CustomRuleAction.entries.size
                             ),
-                            label = { Text(item.displayName) }
+                            label = { Text(ruleLabel(item)) }
                         )
                     }
                 }
@@ -550,7 +555,7 @@ private fun BatchImportDialog(
             )
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
                     text = stringResource(R.string.batch_import_hint),
                     style = MaterialTheme.typography.bodySmall,
@@ -561,7 +566,8 @@ private fun BatchImportDialog(
                     onExpandedChange = { typeExpanded = !typeExpanded }
                 ) {
                     OutlinedTextField(
-                        value = matchType.displayName,
+                        shape = RoundedCornerShape(16.dp),
+                        value = ruleLabel(matchType),
                         onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(R.string.batch_import_match_type)) },
@@ -578,7 +584,7 @@ private fun BatchImportDialog(
                     ) {
                         CustomRuleMatchType.entries.forEach { item ->
                             DropdownMenuItem(
-                                text = { Text(item.displayName) },
+                                text = { Text(ruleLabel(item)) },
                                 onClick = {
                                     matchType = item
                                     typeExpanded = false
@@ -596,11 +602,12 @@ private fun BatchImportDialog(
                                 index = index,
                                 count = CustomRuleAction.entries.size
                             ),
-                            label = { Text(item.displayName) }
+                            label = { Text(ruleLabel(item)) }
                         )
                     }
                 }
                 OutlinedTextField(
+                        shape = RoundedCornerShape(16.dp),
                     value = text,
                     onValueChange = { text = it },
                     modifier = Modifier
@@ -719,3 +726,20 @@ class CustomRoutingRulesViewModel @Inject constructor(
         }
     }
 }
+
+@Composable
+private fun ruleLabel(type: CustomRuleMatchType): String = when (type) {
+    CustomRuleMatchType.DOMAIN_FULL -> stringResource(R.string.rule_domain_full)
+    CustomRuleMatchType.DOMAIN_SUFFIX -> stringResource(R.string.rule_domain_suffix)
+    CustomRuleMatchType.DOMAIN_KEYWORD -> stringResource(R.string.rule_domain_keyword)
+    CustomRuleMatchType.IP_CIDR -> "IP / CIDR"
+    CustomRuleMatchType.GEOSITE -> "GeoSite"
+    CustomRuleMatchType.GEOIP -> "GeoIP"
+}
+
+@Composable
+private fun ruleLabel(action: CustomRuleAction): String = stringResource(when (action) {
+    CustomRuleAction.PROXY -> R.string.rule_proxy
+    CustomRuleAction.DIRECT -> R.string.rule_direct
+    CustomRuleAction.BLOCK -> R.string.rule_block
+})

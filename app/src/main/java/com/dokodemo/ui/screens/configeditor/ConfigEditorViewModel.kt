@@ -8,16 +8,15 @@ import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.repository.GroupRepository
 import com.dokodemo.data.repository.ServerRepository
 import com.dokodemo.core.ShareLinkParser
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 data class ConfigEditorUiState(
     val id: Long? = null,
+    val isSaving: Boolean = false,
+    val isLoading: Boolean = false,
     val name: String = "",
     val address: String = "",
     val port: String = "",
@@ -63,9 +62,11 @@ data class ConfigEditorUiState(
 class ConfigEditorViewModel @Inject constructor(
     private val serverRepository: ServerRepository,
     private val groupRepository: GroupRepository,
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
     private val shareLinkParser: ShareLinkParser
 ) : ViewModel() {
 
+    private var loadedSource: String? = null
     private val _uiState = MutableStateFlow(ConfigEditorUiState())
     val uiState: StateFlow<ConfigEditorUiState> = _uiState.asStateFlow()
 
@@ -79,7 +80,11 @@ class ConfigEditorViewModel @Inject constructor(
     }
 
     fun loadServer(serverId: Long) {
+        if (loadedSource == "id:$serverId") return
+        loadedSource = "id:$serverId"
+        _uiState.update { it.copy(id = serverId, isLoading = true) }
         viewModelScope.launch {
+            try {
             val server = serverRepository.getServerById(serverId).firstOrNull()
             if (server != null) {
                 _uiState.update {
@@ -89,7 +94,7 @@ class ConfigEditorViewModel @Inject constructor(
                         address = server.address,
                         port = if (server.port == 0) "" else server.port.toString(),
                         uuid = server.uuid,
-                        password = server.password,
+                        password = server.password.ifEmpty { if (server.protocol == Protocol.TROJAN) server.uuid else "" },
                         protocol = server.protocol,
                         security = server.encryption,
                         network = server.network,
@@ -111,10 +116,15 @@ class ConfigEditorViewModel @Inject constructor(
                     )
                 }
             }
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+                _uiState.update { it.copy(addressError = context.getString(com.dokodemo.R.string.save_failed)) }
+            } finally { _uiState.update { it.copy(isLoading = false) } }
         }
     }
 
     fun parseUri(uri: String) {
+        if (loadedSource == uri) return
+        loadedSource = uri
         viewModelScope.launch {
             try {
                 // Navigation arguments are already decoded, and raw scanned URIs shouldn't be fully decoded here
@@ -141,12 +151,14 @@ class ConfigEditorViewModel @Inject constructor(
                             flow = profile.flow,
                             useTls = profile.useTls,
                             serverName = profile.serverName,
-                            kcpHeader = profile.kcpHeader
+                            kcpHeader = profile.kcpHeader,
+                            kcpSeed = profile.kcpSeed,
+                            ssMethod = profile.ssMethod
                         )
                     }
                 } else {
                     _uiState.update {
-                        it.copy(addressError = "分享链接解析失败: 格式不支持或已损坏")
+                        it.copy(addressError = context.getString(com.dokodemo.R.string.import_invalid))
                     }
                 }
             } catch (e: Exception) {
@@ -187,28 +199,37 @@ class ConfigEditorViewModel @Inject constructor(
 
     // ─── 保存 ───────────────────────────────────────────────────────────────
     fun saveConfig(onSuccess: () -> Unit) {
+        if (_uiState.value.isSaving || _uiState.value.isLoading) return
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
+            try {
             val state = _uiState.value
             
             // 基础校验
             if (state.address.isBlank()) {
-                _uiState.update { it.copy(addressError = "地址不能为空") }
+                _uiState.update { it.copy(addressError = context.getString(com.dokodemo.R.string.validation_address)) }
                 return@launch
             }
-            if (state.port.toIntOrNull() == null) {
-                _uiState.update { it.copy(portError = "无效的端口") }
+            if (state.port.toIntOrNull() !in 1..65535) {
+                _uiState.update { it.copy(portError = context.getString(com.dokodemo.R.string.validation_port)) }
                 return@launch
             }
 
-            val serverProfile = ServerProfile(
+            val original = state.id?.let { serverRepository.getServerById(it).firstOrNull() }
+            if (state.id != null && original == null) {
+                _uiState.update { it.copy(addressError = context.getString(com.dokodemo.R.string.node_missing)) }
+                return@launch
+            }
+            val serverProfile = (original ?: ServerProfile(name = "", address = "", port = 443)).copy(
                 id = state.id ?: 0,
                 name = state.name.ifBlank { state.address },
-                address = state.address,
+                address = state.address.trim(),
                 port = state.port.toInt(),
-                uuid = state.uuid,
+                uuid = state.uuid.trim(),
                 password = state.password,
                 protocol = state.protocol,
-                encryption = state.security,
+                encryption = if (state.protocol == Protocol.SHADOWSOCKS) state.ssMethod else if (state.protocol == Protocol.VLESS) "none" else state.security,
+                updatedAt = System.currentTimeMillis(),
                 network = state.network,
                 wsPath = state.wsPath,
                 wsHost = state.wsHost,
@@ -227,12 +248,27 @@ class ConfigEditorViewModel @Inject constructor(
                 groupId = state.groupId
             )
 
+            val validation = com.dokodemo.core.ProfileValidator.validate(serverProfile)
+            if (validation != null) {
+                val error = context.getString(when (validation) {
+                    com.dokodemo.core.ProfileValidator.Error.ADDRESS -> com.dokodemo.R.string.validation_address
+                    com.dokodemo.core.ProfileValidator.Error.PORT -> com.dokodemo.R.string.validation_port
+                    com.dokodemo.core.ProfileValidator.Error.CREDENTIAL -> com.dokodemo.R.string.validation_credential
+                    com.dokodemo.core.ProfileValidator.Error.REALITY -> com.dokodemo.R.string.validation_reality
+                    com.dokodemo.core.ProfileValidator.Error.PROTOCOL -> com.dokodemo.R.string.protocol_no_config
+                })
+                _uiState.update { it.copy(addressError = error) }
+                return@launch
+            }
             if (state.id != null && state.id > 0) {
                 serverRepository.updateServer(serverProfile)
             } else {
-                serverRepository.addServer(serverProfile)
+                serverRepository.addAndSelectServer(serverProfile)
             }
             onSuccess()
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+                _uiState.update { it.copy(addressError = context.getString(com.dokodemo.R.string.save_failed)) }
+            } finally { _uiState.update { it.copy(isSaving = false) } }
         }
     }
 }

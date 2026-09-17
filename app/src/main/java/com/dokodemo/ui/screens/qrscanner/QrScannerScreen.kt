@@ -73,189 +73,162 @@ import com.google.zxing.common.HybridBinarizer
 import java.io.InputStream
 import java.util.concurrent.Executors
 
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.dokodemo.R
+import com.dokodemo.core.ShareLinkParser
+
 @Composable
-fun QrScannerScreen(
-    onNavigateBack: () -> Unit,
-    onQrCodeScanned: (String) -> Unit
-) {
+fun QrScannerScreen(onNavigateBack: () -> Unit, onQrCodeScanned: (String) -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    
-    var hasCameraPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-    
+    val scope = rememberCoroutineScope()
+    fun permissionGranted() = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+    var hasCameraPermission by remember { mutableStateOf(permissionGranted()) }
     var isFlashOn by remember { mutableStateOf(false) }
-    var scanStatus by remember { mutableStateOf("SCANNING...") }
-    var scannedCode by remember { mutableStateOf<String?>(null) }
     var camera by remember { mutableStateOf<Camera?>(null) }
-    
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        hasCameraPermission = granted
-    }
-    
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            val result = decodeQrFromUri(context, it)
-            if (result != null) {
-                scannedCode = result
-                scanStatus = "TARGET ACQUIRED"
-                android.widget.Toast.makeText(context, "解码成功", android.widget.Toast.LENGTH_SHORT).show()
-                // Navigation is handled by LaunchedEffect(scannedCode)
-            } else {
-                scanStatus = "SCAN FAILED"
-                android.widget.Toast.makeText(context, "未识别到有效的二维码", android.widget.Toast.LENGTH_SHORT).show()
-            }
+    var cameraFailed by remember { mutableStateOf(false) }
+    var decoding by remember { mutableStateOf(false) }
+    var scannedCode by remember { mutableStateOf<String?>(null) }
+    var scanStatus by remember { mutableStateOf<Int?>(null) }
+    val parser = remember { ShareLinkParser() }
+    fun acceptCode(code: String?) {
+        if (scannedCode != null) return
+        if (code != null && parser.parse(code) != null) {
+            scannedCode = code.trim()
+            scanStatus = R.string.qr_success
+        } else {
+            scanStatus = R.string.qr_invalid
         }
     }
-    
-    LaunchedEffect(Unit) {
-        if (!hasCameraPermission) {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        hasCameraPermission = it
+    }
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null && !decoding) scope.launch {
+            decoding = true
+            try { acceptCode(withContext(Dispatchers.IO) { decodeQrFromUri(context, uri) }) }
+            finally { decoding = false }
         }
     }
-    
-    // Toggle flashlight when isFlashOn or camera changes
-    LaunchedEffect(isFlashOn, camera) {
-        try {
-            if (hasCameraPermission) {
-                camera?.cameraControl?.enableTorch(isFlashOn)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+    LaunchedEffect(Unit) { if (!hasCameraPermission) permissionLauncher.launch(Manifest.permission.CAMERA) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) hasCameraPermission = permissionGranted()
         }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
-    
-    // Navigate on main thread when a QR code is detected
-    // (camera callback runs on background thread, so navigate must be deferred)
-    LaunchedEffect(scannedCode) {
-        val code = scannedCode
-        if (code != null) {
-            onQrCodeScanned(code)
-        }
+    LaunchedEffect(isFlashOn, camera, hasCameraPermission) {
+        if (hasCameraPermission) camera?.cameraControl?.enableTorch(isFlashOn)
     }
-    
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        if (hasCameraPermission) {
-            // Camera Preview
+    LaunchedEffect(scannedCode) { scannedCode?.let(onQrCodeScanned) }
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
+        if (hasCameraPermission && !cameraFailed) {
             CameraPreview(
-                onQrCodeDetected = { code ->
-                    if (scannedCode == null) {
-                        scannedCode = code
-                        scanStatus = "TARGET ACQUIRED"
-                    }
-                },
-                onCameraBound = { boundCamera ->
-                    camera = boundCamera
-                },
+                onQrCodeDetected = { if (!decoding) acceptCode(it) },
+                onCameraBound = { camera = it },
+                onCameraError = { cameraFailed = true },
                 modifier = Modifier.fillMaxSize()
             )
+            ScannerOverlay(
+                scanStatus = stringResource(if (decoding) R.string.qr_decoding else scanStatus ?: R.string.qr_prompt),
+                isFlashOn = isFlashOn,
+                flashEnabled = camera?.cameraInfo?.hasFlashUnit() == true,
+                onClose = onNavigateBack,
+                onFlashToggle = { isFlashOn = !isFlashOn },
+                onGalleryClick = { if (!decoding) galleryLauncher.launch("image/*") }
+            )
+        } else {
+            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(stringResource(R.string.qr_title), style = MaterialTheme.typography.headlineSmall)
+                Text(stringResource(if (cameraFailed) R.string.qr_camera_failed else R.string.qr_permission_required))
+                scanStatus?.let { Text(stringResource(it), color = MaterialTheme.colorScheme.error) }
+                if (!hasCameraPermission) {
+                    DokoButton(stringResource(R.string.qr_grant_permission), { permissionLauncher.launch(Manifest.permission.CAMERA) })
+                    TextButton(onClick = {
+                        context.startActivity(android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")))
+                    }) { Text(stringResource(R.string.qr_open_settings)) }
+                } else {
+                    DokoButton(stringResource(R.string.qr_retry), { cameraFailed = false })
+                }
+                DokoButton(stringResource(R.string.qr_gallery), { galleryLauncher.launch("image/*") }, enabled = !decoding)
+                TextButton(onClick = onNavigateBack) { Text(stringResource(R.string.back)) }
+            }
         }
-        
-        // Overlay
-        ScannerOverlay(
-            scanStatus = scanStatus,
-            isFlashOn = isFlashOn,
-            onClose = onNavigateBack,
-            onFlashToggle = { isFlashOn = !isFlashOn },
-            onGalleryClick = { galleryLauncher.launch("image/*") }
-        )
     }
 }
 
-private fun decodeQrFromUri(context: Context, uri: Uri): String? {
-    try {
-        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-        val bitmap = BitmapFactory.decodeStream(inputStream) ?: return null
-        
-        val width = bitmap.width
-        val height = bitmap.height
-        val pixels = IntArray(width * height)
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-        
-        val source = RGBLuminanceSource(width, height, pixels)
-        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
-        val reader = MultiFormatReader()
-        
-        val hints = mapOf(
-            DecodeHintType.TRY_HARDER to true,
-            DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)
-        )
-        return reader.decode(binaryBitmap, hints).text
-    } catch (e: Exception) {
-        e.printStackTrace()
-        return null
+private fun decodeQrFromUri(context: Context, uri: Uri): String? = runCatching {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+    require(bounds.outWidth > 0 && bounds.outHeight > 0)
+    val options = BitmapFactory.Options().apply {
+        inSampleSize = 1
+        while (bounds.outWidth / inSampleSize > 2048 || bounds.outHeight / inSampleSize > 2048) inSampleSize *= 2
     }
-}
+    val bitmap = context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
+        ?: return@runCatching null
+    try {
+        val pixels = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        val source = RGBLuminanceSource(bitmap.width, bitmap.height, pixels)
+        val reader = MultiFormatReader()
+        val hints = mapOf(DecodeHintType.TRY_HARDER to true, DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE))
+        try { reader.decode(BinaryBitmap(HybridBinarizer(source)), hints).text }
+        catch (_: com.google.zxing.NotFoundException) {
+            reader.reset()
+            reader.decode(BinaryBitmap(HybridBinarizer(source.invert())), hints).text
+        } finally { reader.reset() }
+    } finally { bitmap.recycle() }
+}.getOrNull()
 
 @Composable
 private fun CameraPreview(
     onQrCodeDetected: (String) -> Unit,
     onCameraBound: (Camera) -> Unit,
+    onCameraError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
-    
-    // Use rememberUpdatedState to avoid re-binding when the callback changes
-    val currentOnQrCodeDetected by rememberUpdatedState(onQrCodeDetected)
-    
-    AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-            }
-        },
-        modifier = modifier
-    ) { previewView ->
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
-            }
-            
-            val imageAnalysis = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-            
-            imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzer(currentOnQrCodeDetected))
-            
-            try {
-                // Only unbind and rebind if not already bound with the same use cases
-                // (Simplified: unbindAll is still safe here if 'update' is called correctly)
-                cameraProvider.unbindAll()
-                val camera = cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview,
-                    imageAnalysis
-                )
-                onCameraBound(camera)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }, ContextCompat.getMainExecutor(context))
-    }
-
-    DisposableEffect(Unit) {
+    val previewView = remember(context) { PreviewView(context).apply { implementationMode = PreviewView.ImplementationMode.COMPATIBLE } }
+    val currentDetected by rememberUpdatedState(onQrCodeDetected)
+    val currentBound by rememberUpdatedState(onCameraBound)
+    val currentError by rememberUpdatedState(onCameraError)
+    AndroidView(factory = { previewView }, modifier = modifier)
+    DisposableEffect(lifecycleOwner, previewView) {
+        val executor = Executors.newSingleThreadExecutor()
+        val mainExecutor = ContextCompat.getMainExecutor(context)
+        val providerFuture = ProcessCameraProvider.getInstance(context)
+        val preview = Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
+        val analysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build()
+        val disposed = java.util.concurrent.atomic.AtomicBoolean(false)
+        var provider: ProcessCameraProvider? = null
+        analysis.setAnalyzer(executor, QrCodeAnalyzer { code ->
+            mainExecutor.execute { if (!disposed.get()) currentDetected(code) }
+        })
+        providerFuture.addListener({
+            if (!disposed.get()) try {
+                provider = providerFuture.get()
+                currentBound(provider!!.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis))
+            } catch (_: Exception) { currentError() }
+        }, mainExecutor)
         onDispose {
-            cameraExecutor.shutdown()
+            disposed.set(true)
+            analysis.clearAnalyzer()
+            provider?.unbind(preview, analysis)
+            executor.shutdown()
         }
     }
 }
@@ -264,6 +237,7 @@ private fun CameraPreview(
 private fun ScannerOverlay(
     scanStatus: String,
     isFlashOn: Boolean,
+    flashEnabled: Boolean,
     onClose: () -> Unit,
     onFlashToggle: () -> Unit,
     onGalleryClick: () -> Unit
@@ -281,19 +255,19 @@ private fun ScannerOverlay(
     )
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
         // 顶部栏 (Mist & Dawn - Transparent + Blur feel)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background.copy(alpha = 0.85f))
-                .padding(top = 48.dp, bottom = 16.dp, start = 20.dp, end = 20.dp),
+                .padding(vertical = 12.dp, horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "扫描二维码",
+                text = stringResource(R.string.qr_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -302,7 +276,7 @@ private fun ScannerOverlay(
             // 关闭按钮
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(48.dp)
                     .clip(androidx.compose.foundation.shape.CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable { onClose() },
@@ -310,7 +284,7 @@ private fun ScannerOverlay(
             ) {
                 androidx.compose.material3.Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Close",
+                    contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(24.dp)
                 )
@@ -320,7 +294,7 @@ private fun ScannerOverlay(
         // 中间扫码区域
         Box(
             modifier = Modifier
-                .weight(1f)
+                .height(280.dp)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
@@ -367,9 +341,9 @@ private fun ScannerOverlay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = if (scanStatus == "SCANNING...") "请将二维码放入框内" else "识别成功",
+                text = scanStatus,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (scanStatus == "SCANNING...") MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -380,7 +354,8 @@ private fun ScannerOverlay(
             ) {
                 // 闪光灯按钮
                 DokoButton(
-                    text = "照明",
+                    text = stringResource(R.string.qr_flash),
+                    enabled = flashEnabled,
                     icon = if (isFlashOn) Icons.Rounded.FlashOn else Icons.Rounded.FlashOff,
                     isActive = isFlashOn,
                     onClick = onFlashToggle,
@@ -391,13 +366,13 @@ private fun ScannerOverlay(
                 
                 // 相册按钮
                 DokoButton(
-                    text = "相册",
+                    text = stringResource(R.string.qr_gallery),
                     icon = Icons.Rounded.PhotoLibrary,
                     onClick = onGalleryClick,
                     modifier = Modifier.weight(1f)
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

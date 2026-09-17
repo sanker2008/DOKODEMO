@@ -18,7 +18,7 @@ class SubscriptionRepository @Inject constructor(
 
     suspend fun updateSubscription(subscription: Subscription) = subscriptionDao.update(subscription)
 
-    suspend fun deleteSubscription(subscription: Subscription) = subscriptionDao.delete(subscription)
+    suspend fun deleteSubscription(subscription: Subscription) = subscriptionDao.deleteKeepingServers(subscription)
     
     suspend fun updateSyncStatus(id: Long, timestamp: Long, count: Int, upload: Long, download: Long, total: Long, expire: Long) {
         subscriptionDao.updateSyncStatus(id, timestamp, count, upload, download, total, expire)

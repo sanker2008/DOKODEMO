@@ -36,6 +36,12 @@ fun TrafficHistoryScreen(
     viewModel: TrafficHistoryViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var confirmClear by remember { mutableStateOf(false) }
+    if (confirmClear) AlertDialog(onDismissRequest = { confirmClear = false },
+        title = { Text(stringResource(R.string.traffic_history_clear)) },
+        text = { Text(stringResource(R.string.clear_history_confirm)) },
+        confirmButton = { TextButton(onClick = { viewModel.clearHistory(); confirmClear = false }) { Text(stringResource(R.string.delete)) } },
+        dismissButton = { TextButton(onClick = { confirmClear = false }) { Text(stringResource(R.string.cancel)) } })
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -49,7 +55,7 @@ fun TrafficHistoryScreen(
                 },
                 actions = {
                     if (uiState.records.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.clearHistory() }) {
+                        IconButton(onClick = { confirmClear = true }) {
                             Icon(Icons.Rounded.DeleteOutline, stringResource(R.string.traffic_history_clear))
                         }
                     }
@@ -79,7 +85,7 @@ fun TrafficHistoryScreen(
                     Text(
                         text = stringResource(R.string.traffic_history_empty_desc),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.outline
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             } else {
@@ -213,7 +219,7 @@ private fun TrafficRecordItem(record: com.dokodemo.data.model.TrafficRecord) {
 
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 10.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onSurfaceVariantVariant.copy(alpha = 0.5f)
             )
 
             Row(

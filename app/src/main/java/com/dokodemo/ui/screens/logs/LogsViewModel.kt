@@ -42,12 +42,9 @@ class LogsViewModel @Inject constructor() : ViewModel() {
             val newLogs = withContext(Dispatchers.IO) {
                 try {
                     val process = Runtime.getRuntime().exec("logcat -d -t 2000 -v time CoreManager:I DokoDemoVpnService:I *:S")
-                    val bufferedReader = BufferedReader(InputStreamReader(process.inputStream))
-                    val logList = mutableListOf<String>()
-                    var line: String?
-                    while (bufferedReader.readLine().also { line = it } != null) {
-                        line?.let { logList.add(it) }
-                    }
+                    val logList = try {
+                        process.inputStream.bufferedReader().use { it.readLines().toMutableList() }
+                    } finally { process.destroy() }
                     if (logList.isEmpty()) {
                         logList.add("No recent Xray core logs found.")
                     }
@@ -56,7 +53,7 @@ class LogsViewModel @Inject constructor() : ViewModel() {
                     listOf("Error reading logs: ${e.message}")
                 }
             }
-            if (newLogs.size != lastLogCount || _logs.value.isEmpty()) {
+            if (newLogs != _logs.value) {
                 _logs.value = newLogs
                 lastLogCount = newLogs.size
             }

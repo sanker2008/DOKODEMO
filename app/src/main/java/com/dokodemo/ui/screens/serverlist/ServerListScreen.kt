@@ -41,11 +41,20 @@ import com.dokodemo.ui.theme.*
 fun ServerListScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddProfile: () -> Unit,
+    onNavigateToSubscriptions: () -> Unit,
     onNavigateToConfigEditor: (Long?) -> Unit,
     onNavigateToConfigEditorWithUri: (String) -> Unit,
     viewModel: ServerListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var deletingNode by remember { mutableStateOf<ServerItem?>(null) }
+    deletingNode?.let { node ->
+        AlertDialog(onDismissRequest = { deletingNode = null },
+            title = { Text(stringResource(R.string.delete)) },
+            text = { Text(stringResource(R.string.delete_node_confirm, node.name)) },
+            confirmButton = { TextButton(onClick = { viewModel.deleteServer(node); deletingNode = null }) { Text(stringResource(R.string.delete)) } },
+            dismissButton = { TextButton(onClick = { deletingNode = null }) { Text(stringResource(R.string.cancel)) } })
+    }
     val context = androidx.compose.ui.platform.LocalContext.current
 
     LaunchedEffect(uiState.toastMessage) {
@@ -56,7 +65,7 @@ fun ServerListScreen(
     }
 
     // 直接从 uiState 中派生过滤列表，uiState 是响应式的 StateFlow，节点增删后会自动更新
-    val filteredServers = remember(uiState.servers, uiState.searchQuery, uiState.selectedGroupId) {
+    val filteredServers = remember(uiState.servers, uiState.searchQuery, uiState.selectedGroupId, uiState.sortOption) {
         val query = uiState.searchQuery.lowercase()
         var result = uiState.servers
         if (uiState.selectedGroupId != null) {
@@ -68,7 +77,11 @@ fun ServerListScreen(
                 it.countryCode.lowercase().contains(query)
             }
         }
-        result
+        when (uiState.sortOption) {
+            SortOption.DEFAULT -> result
+            SortOption.LATENCY_ASC -> result.sortedBy { it.ping?.takeIf { latency -> latency >= 0 } ?: Int.MAX_VALUE }
+            SortOption.NAME_ASC -> result.sortedBy { it.name.lowercase() }
+        }
     }
 
     val listState = rememberLazyListState()
@@ -186,6 +199,10 @@ fun ServerListScreen(
                         }
                     )
                     DropdownMenuItem(
+                        text = { Text(stringResource(R.string.subscription_settings)) },
+                        onClick = { expanded = false; onNavigateToSubscriptions() }
+                    )
+                    DropdownMenuItem(
                         text = { Text(stringResource(R.string.manual_config), color = MaterialTheme.colorScheme.onSurface) },
                         onClick = {
                             expanded = false
@@ -256,7 +273,7 @@ fun ServerListScreen(
                             onNavigateBack()
                         },
                         onEdit = { onNavigateToConfigEditor(server.id) },
-                        onDelete = { viewModel.deleteServer(server) },
+                        onDelete = { deletingNode = server },
                         onPing = { viewModel.pingSingleServer(server) }
                     )
                 }
@@ -280,8 +297,8 @@ private fun GroupChip(label: String, selected: Boolean, onClick: () -> Unit) {
         label = { Text(label) },
         shape = RoundedCornerShape(20.dp),
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = Primary,
-            selectedLabelColor = Color.White
+            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
     )
 }
@@ -352,9 +369,9 @@ private fun NodeCard(
                     fontSize = 15.sp,
                     color = when {
                         ping == null -> MaterialTheme.colorScheme.onSurfaceVariant
-                        ping < 100   -> AccentState
-                        ping < 200   -> TextIconography
-                        else         -> IcyLemon
+                        ping < 100   -> MaterialTheme.colorScheme.primary
+                        ping < 200   -> MaterialTheme.colorScheme.onSurfaceVariant
+                        else         -> MaterialTheme.colorScheme.error
                     }
                 )
                 // 信号格（简化版 4 格）
@@ -386,7 +403,7 @@ private fun NodeCard(
                 DropdownMenu(
                     expanded = showMenu, 
                     onDismissRequest = { showMenu = false },
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 ) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ping_all)) },
@@ -421,7 +438,7 @@ private fun EmptyState() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.List,
-                contentDescription = "Empty",
+                contentDescription = null,
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             )

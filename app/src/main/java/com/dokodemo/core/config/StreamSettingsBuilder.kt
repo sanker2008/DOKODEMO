@@ -94,7 +94,7 @@ object StreamSettingsBuilder {
                 "xhttp", "splithttp" -> {
                     put("xhttpSettings", mapOf(
                         "path" to profile.wsPath.ifEmpty { "/" },
-                        "host" to listOf(profile.wsHost.ifEmpty { profile.address })
+                        "host" to profile.wsHost.ifEmpty { profile.address }
                     ))
                 }
             }

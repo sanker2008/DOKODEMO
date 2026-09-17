@@ -20,6 +20,12 @@ import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.preferences.SplitTunnelingMode
 import dagger.hilt.android.AndroidEntryPoint
 import com.dokodemo.core.Tun2socksWrapper
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.asCoroutineDispatcher
+import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -46,7 +52,10 @@ class DokoDemoVpnService : VpnService() {
     lateinit var trafficRecordDao: com.dokodemo.data.dao.TrafficRecordDao
     
     private var vpnInterface: ParcelFileDescriptor? = null
-    private var isRunning = false
+    private val serviceScope = CoroutineScope(SupervisorJob() + lifecycleDispatcher)
+    private var startupJob: Job? = null
+    @Volatile private var latestStartId: Int = 0
+    @Volatile private var isRunning = false
     private var trafficJob: Job? = null
     
     // Traffic stats
@@ -60,6 +69,8 @@ class DokoDemoVpnService : VpnService() {
     private var currentSessionName = ""
     
     companion object {
+        // One process-wide queue prevents old service teardown from racing a new native core.
+        private val lifecycleDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
         private const val TAG = "DokoDemoVpnService"
         
         const val ACTION_START = "com.dokodemo.START_VPN"
@@ -117,7 +128,7 @@ class DokoDemoVpnService : VpnService() {
             coreManager.copyAssets()
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize core manager (native lib may be missing): ${e.message}")
-            // Service continues - mock mode will handle connection attempts
+            // A later connection attempt reports initialization failure to the UI.
         }
         
         // Register connectivity receiver
@@ -143,6 +154,7 @@ class DokoDemoVpnService : VpnService() {
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        latestStartId = startId
         when (intent?.action) {
             ACTION_START -> {
                 val configJson = intent.getStringExtra(EXTRA_SERVER_CONFIG)
@@ -153,8 +165,8 @@ class DokoDemoVpnService : VpnService() {
                 val bypassLan = intent.getBooleanExtra("bypass_lan", true)
 
                 if (configJson != null) {
-                    startForeground(NOTIFICATION_ID, createNotification("正在连接...", serverName))
-                    startVpn(configJson, serverName, routingMode, splitTunnelingMode, proxiedApps, bypassLan)
+                    startForeground(NOTIFICATION_ID, createNotification(getString(com.dokodemo.R.string.connecting), serverName))
+                    startVpn(startId, configJson, serverName, routingMode, splitTunnelingMode, proxiedApps, bypassLan)
                 } else {
                     Log.e(TAG, "No configuration provided")
                     stopSelf()
@@ -170,10 +182,11 @@ class DokoDemoVpnService : VpnService() {
                 }
             }
         }
-        return START_STICKY
+        return START_NOT_STICKY
     }
     
     private fun startVpn(
+        commandId: Int,
         configJson: String,
         serverName: String,
         routingMode: String? = null,
@@ -181,21 +194,10 @@ class DokoDemoVpnService : VpnService() {
         proxiedApps: List<String>? = null,
         bypassLan: Boolean = true
     ) {
-        if (isRunning) {
-            Log.w(TAG, "VPN already running, saving old session and restarting for new node: $serverName")
-            saveCurrentSessionRecord()
-            try { coreManager.stopCore() } catch (_: Throwable) {}
-            try { Tun2socksWrapper.stop() } catch (_: Throwable) {}
-            try { vpnInterface?.close() } catch (_: Throwable) {}
-            vpnInterface = null
-            trafficJob?.cancel()
-            trafficJob = null
-            isRunning = false
-            connectTime = 0L
-            Thread.sleep(500)
-        }
-        
-        CoroutineScope(Dispatchers.IO).launch {
+        startupJob?.cancel()
+        startupJob = serviceScope.launch {
+            releaseVpnResources()
+            ensureActive()
             try {
                 Log.i(TAG, "Starting VPN connection to: $serverName")
                 
@@ -241,10 +243,11 @@ class DokoDemoVpnService : VpnService() {
                     if (!coreError.contains("address already in use", ignoreCase = true)) break
                 }
                 
+                ensureActive()
                 if (coreError != null) {
                     Log.e(TAG, "Failed to start V2Ray core: $coreError")
                     broadcastDisconnected(coreError)
-                    stopSelf()
+                    stopSelf(commandId)
                     return@launch
                 }
                 Log.i(TAG, "V2Ray core started, SOCKS proxy at ${coreManager.getSocksAddress()}")
@@ -292,26 +295,20 @@ class DokoDemoVpnService : VpnService() {
                         SplitTunnelingMode.valueOf(splitTunnelingMode ?: SplitTunnelingMode.PROXY_SELECTED.name)
                     }.getOrDefault(SplitTunnelingMode.PROXY_SELECTED)
 
-                    if (proxiedApps.isNullOrEmpty()) {
-                        vpnBuilder.addDisallowedApplication(packageName)
-                    } else {
-                        Log.i(TAG, "Split tunneling mode: ${mode.name}, ${proxiedApps.size} apps")
-                        proxiedApps.forEach { pkg ->
-                            try {
-                                if (mode == SplitTunnelingMode.PROXY_SELECTED) {
-                                    vpnBuilder.addAllowedApplication(pkg)
-                                } else {
-                                    vpnBuilder.addDisallowedApplication(pkg)
-                                }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to apply split tunneling for $pkg")
-                            }
-                        }
+                    var applied = 0
+                    proxiedApps.orEmpty().distinct().filter { it != packageName }.forEach { pkg ->
                         try {
-                            vpnBuilder.addDisallowedApplication(packageName)
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Cannot exclude self from VPN", e)
+                            if (mode == SplitTunnelingMode.PROXY_SELECTED) vpnBuilder.addAllowedApplication(pkg)
+                            else vpnBuilder.addDisallowedApplication(pkg)
+                            applied++
+                        } catch (_: android.content.pm.PackageManager.NameNotFoundException) {
+                            Log.w(TAG, "Selected application is no longer installed")
                         }
+                    }
+                    if (mode == SplitTunnelingMode.PROXY_SELECTED) {
+                        check(applied > 0) { "请先选择至少一个已安装的应用，再连接分应用代理" }
+                    } else {
+                        vpnBuilder.addDisallowedApplication(packageName)
                     }
                 } else {
                     try {
@@ -326,8 +323,8 @@ class DokoDemoVpnService : VpnService() {
                 if (vpnInterface == null) {
                     Log.e(TAG, "Failed to establish VPN interface - permission may not be granted")
                     coreManager.stopCore()
-                    broadcastDisconnected()
-                    stopSelf()
+                    broadcastDisconnected(getString(com.dokodemo.R.string.connection_failed))
+                    stopSelf(commandId)
                     return@launch
                 }
                 
@@ -341,11 +338,11 @@ class DokoDemoVpnService : VpnService() {
                         coreManager.getSocksAddress(),
                         VPN_DNS_1,
                         VPN_MTU,
-                        CoreManager.DNS_INBOUND_PORT
+                        cacheDir
                     )
                 } catch (e: Throwable) {
                     Log.e(TAG, "tun2socks start error (native lib may be missing): ${e.message}", e)
-                    true // Continue anyway in degraded mode
+                    false
                 }
                 
                 if (!tun2socksStarted) {
@@ -353,20 +350,21 @@ class DokoDemoVpnService : VpnService() {
                     coreManager.stopCore()
                     try { vpnInterface?.close() } catch (_: Exception) {}
                     vpnInterface = null
-                    broadcastDisconnected()
-                    stopSelf()
+                    broadcastDisconnected(getString(com.dokodemo.R.string.connection_failed))
+                    stopSelf(commandId)
                     return@launch
                 }
                 
                 Log.i(TAG, "tun2socks started")
                 
+                ensureActive()
                 // 4. Mark as running
                 isRunning = true
                 connectTime = System.currentTimeMillis()
                 currentSessionName = serverName
                 
                 // Update notification
-                updateNotification("已连接", serverName)
+                updateNotification(getString(com.dokodemo.R.string.connected), serverName)
                 
                 // Broadcast connection status
                 sendBroadcast(Intent(ACTION_VPN_CONNECTED).apply { setPackage(packageName) })
@@ -376,14 +374,18 @@ class DokoDemoVpnService : VpnService() {
                 
                 Log.i(TAG, "VPN connection established successfully!")
                 
+            } catch (e: CancellationException) {
+                releaseVpnResources()
+                throw e
             } catch (e: Throwable) {
                 Log.e(TAG, "Fatal error starting VPN: ${e.message}", e)
                 isRunning = false
                 try { coreManager.stopCore() } catch (_: Exception) {}
                 try { vpnInterface?.close() } catch (_: Exception) {}
                 vpnInterface = null
-                broadcastDisconnected()
-                stopSelf()
+                releaseVpnResources()
+                broadcastDisconnected(e.message)
+                stopSelf(commandId)
             }
         }
     }
@@ -399,46 +401,29 @@ class DokoDemoVpnService : VpnService() {
         } catch (_: Exception) {}
     }
     
-    private fun stopVpn() {
-        Log.i(TAG, "Stopping VPN connection...")
-        
+    private fun releaseVpnResources() {
         saveCurrentSessionRecord()
-        
-        // Stop traffic monitor
+        isRunning = false
         trafficJob?.cancel()
         trafficJob = null
-        
-        // Stop tun2socks
-        try {
-            Tun2socksWrapper.stop()
-            Log.i(TAG, "tun2socks stopped")
-        } catch (e: Throwable) {
-            Log.w(TAG, "Error stopping tun2socks (native lib missing?): ${e.message}")
-        }
-        
-        // Stop V2Ray core
-        coreManager.stopCore()
-        Log.i(TAG, "V2Ray core stopped")
-        
-        // Close VPN interface
-        try {
-            vpnInterface?.close()
-            vpnInterface = null
-            Log.i(TAG, "VPN interface closed")
-        } catch (e: Exception) {
-            Log.w(TAG, "Error closing VPN interface: ${e.message}")
-        }
-        
-        // Broadcast disconnection
-        sendBroadcast(Intent(ACTION_VPN_DISCONNECTED).apply { setPackage(packageName) })
-        
-        // Stop foreground service
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
-        
-        Log.i(TAG, "VPN disconnected")
+        runCatching { Tun2socksWrapper.stop() }
+        runCatching { coreManager.stopCore() }
+        runCatching { vpnInterface?.close() }
+        vpnInterface = null
+        lastUploadBytes = 0
+        lastDownloadBytes = 0
     }
-    
+
+    private fun stopVpn(commandId: Int = latestStartId) {
+        startupJob?.cancel()
+        startupJob = serviceScope.launch {
+            releaseVpnResources()
+            ensureActive()
+            broadcastDisconnected()
+            if (stopSelfResult(commandId)) stopForeground(STOP_FOREGROUND_REMOVE)
+        }
+    }
+
     private fun saveCurrentSessionRecord() {
         if (connectTime <= 0) {
             Log.d(TAG, "No active session to save (connectTime=$connectTime)")
@@ -479,7 +464,7 @@ class DokoDemoVpnService : VpnService() {
     }
     
     private fun startTrafficMonitor() {
-        trafficJob = CoroutineScope(Dispatchers.IO).launch {
+        trafficJob = serviceScope.launch {
             while (isActive && isRunning) {
                 try {
                     val currentUpload = coreManager.getUploadBytes()
@@ -537,11 +522,10 @@ class DokoDemoVpnService : VpnService() {
         } catch (e: Exception) {
         }
         
-        saveCurrentSessionRecord()
-        
-        trafficJob?.cancel()
-        trafficJob = null
-        
+        startupJob?.cancel()
+        serviceScope.cancel()
+        CoroutineScope(lifecycleDispatcher).launch { releaseVpnResources() }
+
         Log.i(TAG, "VPN Service destroyed")
     }
     
@@ -607,7 +591,7 @@ class DokoDemoVpnService : VpnService() {
             .addAction(
                 Notification.Action.Builder(
                     android.R.drawable.ic_delete,
-                    "Disconnect",
+                    getString(com.dokodemo.R.string.disconnect),
                     stopPendingIntent
                 ).build()
             )
@@ -621,32 +605,6 @@ class DokoDemoVpnService : VpnService() {
     }
     
     private fun updateNotificationWithSpeed(speedText: String) {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        
-        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            Notification.Builder(this)
-        }
-        
-        val notification = builder
-            .setContentTitle("DokoDemo VPN - Connected")
-            .setContentText(speedText)
-            .setSmallIcon(android.R.drawable.ic_lock_lock)
-            .setContentIntent(pendingIntent)
-            .setOngoing(true)
-            .build()
-        
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        updateNotification(getString(com.dokodemo.R.string.connected), speedText)
     }
 }

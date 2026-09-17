@@ -127,27 +127,6 @@ class CoreManager @Inject constructor(
             ))
             
             // Inbounds - Local SOCKS5 proxy
-            // Stats and Policy
-            put("stats", emptyMap<String, Any>())
-            put("policy", mapOf(
-                "levels" to mapOf(
-                    "0" to mapOf(
-                        "statsUserUplink" to true,
-                        "statsUserDownlink" to true
-                    ),
-                    "8" to mapOf(
-                        "statsUserUplink" to true,
-                        "statsUserDownlink" to true
-                    )
-                ),
-                "system" to mapOf(
-                    "statsInboundUplink" to true,
-                    "statsInboundDownlink" to true,
-                    "statsOutboundUplink" to true,
-                    "statsOutboundDownlink" to true
-                )
-            ))
-
             put("inbounds", listOf(
                 mapOf(
                     "tag" to "socks",
@@ -296,6 +275,8 @@ class CoreManager @Inject constructor(
             put("policy", mapOf(
                 "levels" to mapOf(
                     "0" to mapOf(
+                        "statsUserUplink" to true,
+                        "statsUserDownlink" to true,
                         "handshake" to 4,
                         "connIdle" to 300,
                         "downlinkOnly" to 1,
@@ -328,7 +309,7 @@ class CoreManager @Inject constructor(
             Protocol.VMESS -> VmessGenerator()
             Protocol.TROJAN -> TrojanGenerator()
             Protocol.SHADOWSOCKS -> ShadowsocksGenerator()
-            else -> VlessGenerator()
+            Protocol.WIREGUARD -> error("WireGuard is not supported by the installed core")
         }
         return generator.generate(profile, muxEnabled, allowInsecure)
     }
@@ -377,13 +358,6 @@ class CoreManager @Inject constructor(
                 "outboundTag" to outboundTag
             )
         }
-    }
-    
-    /**
-     * Test configuration validity
-     */
-    fun testConfig(configJson: String): String {
-        return ""
     }
     
     /**

@@ -42,6 +42,10 @@ class VpnController @Inject constructor(
      * Start VPN connection with the given server profile
      */
     suspend fun connect(profile: ServerProfile) {
+        val effectiveProfile = if (profile.protocol == com.dokodemo.data.model.Protocol.TROJAN && profile.password.isEmpty()) profile.copy(password = profile.uuid) else profile
+        require(com.dokodemo.core.ProfileValidator.validate(effectiveProfile) == null) {
+            context.getString(com.dokodemo.R.string.validation_config)
+        }
         val routingMode = appPreferences.routingMode.first()
         val proxiedApps = appPreferences.proxiedApps.first()
         val splitTunnelingMode = appPreferences.splitTunnelingMode.first()
@@ -53,7 +57,7 @@ class VpnController @Inject constructor(
         val allowLanConnection = appPreferences.allowLanConnection.first()
         
         val configJson = coreManager.generateConfig(
-            profile = profile,
+            profile = effectiveProfile,
             routingMode = routingMode,
             muxEnabled = muxEnabled,
             allowInsecure = allowInsecure,
