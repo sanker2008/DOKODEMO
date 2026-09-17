@@ -219,7 +219,7 @@ private fun TrafficRecordItem(record: com.dokodemo.data.model.TrafficRecord) {
 
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 10.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariantVariant.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
             Row(
