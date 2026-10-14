@@ -11,7 +11,17 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.TextUnit
 import androidx.core.view.WindowCompat
+
+internal fun TextStyle.scaleSpecifiedTextUnits(scale: Float): TextStyle = copy(
+    fontSize = fontSize.scaleIfSpecified(scale),
+    lineHeight = lineHeight.scaleIfSpecified(scale)
+)
+
+private fun TextUnit.scaleIfSpecified(scale: Float): TextUnit =
+    if (this == TextUnit.Unspecified) this else this * scale
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF355F7B),
@@ -92,18 +102,18 @@ fun DokoDemoTheme(
     }
 
     val scaledTypography = androidx.compose.material3.Typography(
-        headlineLarge = AppTypography.headlineLarge.copy(fontSize = AppTypography.headlineLarge.fontSize * fontScale, lineHeight = AppTypography.headlineLarge.lineHeight * fontScale),
-        headlineMedium = AppTypography.headlineMedium.copy(fontSize = AppTypography.headlineMedium.fontSize * fontScale, lineHeight = AppTypography.headlineMedium.lineHeight * fontScale),
-        headlineSmall = AppTypography.headlineSmall.copy(fontSize = AppTypography.headlineSmall.fontSize * fontScale, lineHeight = AppTypography.headlineSmall.lineHeight * fontScale),
-        titleLarge = AppTypography.titleLarge.copy(fontSize = AppTypography.titleLarge.fontSize * fontScale, lineHeight = AppTypography.titleLarge.lineHeight * fontScale),
-        titleMedium = AppTypography.titleMedium.copy(fontSize = AppTypography.titleMedium.fontSize * fontScale, lineHeight = AppTypography.titleMedium.lineHeight * fontScale),
-        titleSmall = AppTypography.titleSmall.copy(fontSize = AppTypography.titleSmall.fontSize * fontScale, lineHeight = AppTypography.titleSmall.lineHeight * fontScale),
-        bodyLarge = AppTypography.bodyLarge.copy(fontSize = AppTypography.bodyLarge.fontSize * fontScale, lineHeight = AppTypography.bodyLarge.lineHeight * fontScale),
-        bodyMedium = AppTypography.bodyMedium.copy(fontSize = AppTypography.bodyMedium.fontSize * fontScale, lineHeight = AppTypography.bodyMedium.lineHeight * fontScale),
-        bodySmall = AppTypography.bodySmall.copy(fontSize = AppTypography.bodySmall.fontSize * fontScale, lineHeight = AppTypography.bodySmall.lineHeight * fontScale),
-        labelLarge = AppTypography.labelLarge.copy(fontSize = AppTypography.labelLarge.fontSize * fontScale, lineHeight = AppTypography.labelLarge.lineHeight * fontScale),
-        labelMedium = AppTypography.labelMedium.copy(fontSize = AppTypography.labelMedium.fontSize * fontScale, lineHeight = AppTypography.labelMedium.lineHeight * fontScale),
-        labelSmall = AppTypography.labelSmall.copy(fontSize = AppTypography.labelSmall.fontSize * fontScale, lineHeight = AppTypography.labelSmall.lineHeight * fontScale)
+        headlineLarge = AppTypography.headlineLarge.scaleSpecifiedTextUnits(fontScale),
+        headlineMedium = AppTypography.headlineMedium.scaleSpecifiedTextUnits(fontScale),
+        headlineSmall = AppTypography.headlineSmall.scaleSpecifiedTextUnits(fontScale),
+        titleLarge = AppTypography.titleLarge.scaleSpecifiedTextUnits(fontScale),
+        titleMedium = AppTypography.titleMedium.scaleSpecifiedTextUnits(fontScale),
+        titleSmall = AppTypography.titleSmall.scaleSpecifiedTextUnits(fontScale),
+        bodyLarge = AppTypography.bodyLarge.scaleSpecifiedTextUnits(fontScale),
+        bodyMedium = AppTypography.bodyMedium.scaleSpecifiedTextUnits(fontScale),
+        bodySmall = AppTypography.bodySmall.scaleSpecifiedTextUnits(fontScale),
+        labelLarge = AppTypography.labelLarge.scaleSpecifiedTextUnits(fontScale),
+        labelMedium = AppTypography.labelMedium.scaleSpecifiedTextUnits(fontScale),
+        labelSmall = AppTypography.labelSmall.scaleSpecifiedTextUnits(fontScale)
     )
 
     MaterialTheme(
