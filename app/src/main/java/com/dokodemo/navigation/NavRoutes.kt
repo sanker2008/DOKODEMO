@@ -18,7 +18,10 @@ sealed class Route(val path: String) {
     object SplitTunneling : Route("split_tunneling")
     object CustomRoutingRules : Route("custom_routing_rules")
     // object SystemLogs : Route("logs") // Not implemented yet
-    object Subscriptions : Route("subscriptions")
+    object Subscriptions : Route("subscriptions") {
+        val pattern = "$path?url={url}"
+        fun createRoute(url: String) = "$path?url=${android.net.Uri.encode(url)}"
+    }
     object Logs : Route("logs")
     object TrafficHistory : Route("traffic_history")
 }

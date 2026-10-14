@@ -1,12 +1,23 @@
 package com.dokodemo.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dokodemo.R
+import com.dokodemo.core.ImportSource
+import com.dokodemo.core.ImportSourceClassifier
 import com.dokodemo.ui.screens.configeditor.ConfigEditorScreen
 import com.dokodemo.ui.screens.home.HomeScreen
 import com.dokodemo.ui.screens.qrscanner.QrScannerScreen
@@ -16,6 +27,22 @@ import com.dokodemo.ui.screens.serverlist.ServerListScreen
 fun DokoNavHost(
     navController: NavHostController = rememberNavController()
 ) {
+    var showUnsupportedImport by remember { mutableStateOf(false) }
+    fun importDestination(text: String): String? = when (val source = ImportSourceClassifier.classify(text)) {
+        is ImportSource.Node -> "${Route.ConfigEditor.path}?uri=${android.net.Uri.encode(source.uri)}"
+        is ImportSource.Subscription -> Route.Subscriptions.createRoute(source.url)
+        ImportSource.Unsupported -> null
+    }
+    if (showUnsupportedImport) {
+        AlertDialog(
+            onDismissRequest = { showUnsupportedImport = false },
+            title = { Text(stringResource(R.string.import_unsupported_title)) },
+            text = { Text(stringResource(R.string.import_unsupported_message)) },
+            confirmButton = {
+                TextButton(onClick = { showUnsupportedImport = false }) { Text(stringResource(R.string.confirm)) }
+            }
+        )
+    }
     NavHost(
         navController = navController,
         startDestination = Route.Home.path
@@ -50,8 +77,9 @@ fun DokoNavHost(
                     }
                 },
                 onNavigateToConfigEditorWithUri = { uri ->
-                    val encoded = android.net.Uri.encode(uri)
-                    navController.navigate("${Route.ConfigEditor.path}?uri=$encoded")
+                    val destination = importDestination(uri)
+                    if (destination != null) navController.navigate(destination)
+                    else showUnsupportedImport = true
                 }
             )
         }
@@ -106,9 +134,14 @@ fun DokoNavHost(
                     navController.popBackStack()
                 },
                 onQrCodeScanned = { code ->
-                    val encoded = android.net.Uri.encode(code)
-                    navController.navigate("${Route.ConfigEditor.path}?uri=$encoded") {
-                        popUpTo(Route.QrScanner.path) { inclusive = true }
+                    val destination = importDestination(code)
+                    if (destination != null) {
+                        navController.navigate(destination) {
+                            popUpTo(Route.QrScanner.path) { inclusive = true }
+                        }
+                    } else {
+                        navController.popBackStack()
+                        showUnsupportedImport = true
                     }
                 }
             )
@@ -165,10 +198,21 @@ fun DokoNavHost(
         }
         
         // Subscriptions
-        composable(Route.Subscriptions.path) {
+        composable(
+            Route.Subscriptions.pattern,
+            arguments = listOf(navArgument("url") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            })
+        ) { backStackEntry ->
             com.dokodemo.ui.screens.subscription.SubscriptionScreen(
+                initialUrl = backStackEntry.arguments?.getString("url"),
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateHome = {
+                    navController.popBackStack(Route.Home.path, inclusive = false)
                 }
             )
         }

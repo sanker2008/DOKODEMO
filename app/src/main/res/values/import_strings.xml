@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_unsupported_title">无法识别导入内容</string>
+    <string name="import_unsupported_message">请复制或扫描 HTTP/HTTPS 订阅链接，或 VMess、VLESS、Trojan、Shadowsocks 单节点链接。</string>
+    <string name="import_subscription_confirmation">确认后下载订阅中的节点。名称留空时，使用链接的域名。</string>
+    <string name="import_subscription_name_optional">订阅名称（选填）</string>
+    <string name="import_subscription_action">导入并同步</string>
+    <string name="import_subscription_complete">节点已就绪</string>
+    <string name="import_success_count">已导入 %1$d 个节点，可返回首页连接。</string>
+    <string name="import_go_home">返回首页连接</string>
+    <string name="import_stay_here">留在订阅页</string>
+</resources>

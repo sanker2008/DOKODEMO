@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import com.dokodemo.R
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dokodemo.data.model.Subscription
+import com.dokodemo.core.ImportSourceClassifier
 import com.dokodemo.ui.components.DokoInput
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,10 +33,13 @@ import java.util.*
 @Composable
 fun SubscriptionScreen(
     onNavigateBack: () -> Unit,
+    onNavigateHome: () -> Unit = onNavigateBack,
+    initialUrl: String? = null,
     viewModel: SubscriptionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
+    var showAddDialog by rememberSaveable(initialUrl) { mutableStateOf(!initialUrl.isNullOrBlank()) }
+    var draftUrl by rememberSaveable(initialUrl) { mutableStateOf(initialUrl.orEmpty()) }
     var editingSub by remember { mutableStateOf<com.dokodemo.data.model.Subscription?>(null) }
 
     var deletingSub by remember { mutableStateOf<Subscription?>(null) }
@@ -47,16 +52,14 @@ fun SubscriptionScreen(
     }
     uiState.successCount?.takeIf { !uiState.isRefreshing && uiState.errorMessage == null }?.let { count ->
         AlertDialog(onDismissRequest = viewModel::clearSuccess,
-            text = { Text(stringResource(R.string.subscription_imported, count)) },
-            confirmButton = { TextButton(onClick = viewModel::clearSuccess) { Text(stringResource(R.string.confirm)) } })
-    }
-    // 错误提示
-    LaunchedEffect(uiState.errorMessage) {
-        if (uiState.errorMessage != null) {
-            // 在实际应用中可以用 Snackbar，这里用 LaunchedEffect 简单模拟
-            // Snackbar.show(uiState.errorMessage!!)
-            // 稍后清除
-        }
+            title = { Text(stringResource(R.string.import_subscription_complete)) },
+            text = { Text(stringResource(R.string.import_success_count, count)) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearSuccess(); onNavigateHome() }) {
+                    Text(stringResource(R.string.import_go_home))
+                }
+            },
+            dismissButton = { TextButton(onClick = viewModel::clearSuccess) { Text(stringResource(R.string.import_stay_here)) } })
     }
 
     Scaffold(
@@ -85,7 +88,7 @@ fun SubscriptionScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { if (!uiState.isRefreshing) showAddDialog = true },
+                onClick = { if (!uiState.isRefreshing) { draftUrl = ""; showAddDialog = true } },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(16.dp),
@@ -119,6 +122,7 @@ fun SubscriptionScreen(
 
     if (showAddDialog) {
         AddSubscriptionDialog(
+            initialUrl = draftUrl,
             onDismiss = { showAddDialog = false },
             onAdd = { name, url ->
                 viewModel.addSubscription(name, url)
@@ -287,7 +291,7 @@ private fun EditSubscriptionDialog(
         confirmButton = {
             TextButton(
                 onClick = { onSave(name.trim(), url.trim()) },
-                enabled = name.isNotBlank() && runCatching { val parsed = java.net.URI(url.trim()); parsed.scheme in listOf("http", "https") && !parsed.host.isNullOrBlank() }.getOrDefault(false)
+                enabled = name.isNotBlank() && ImportSourceClassifier.isSubscriptionUrl(url)
             ) { Text(stringResource(R.string.save), fontWeight = FontWeight.Bold) }
         },
         dismissButton = {
@@ -324,11 +328,12 @@ private fun EmptySubState() {
 
 @Composable
 private fun AddSubscriptionDialog(
+    initialUrl: String,
     onDismiss: () -> Unit,
     onAdd: (name: String, url: String) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var url by remember { mutableStateOf("") }
+    var name by rememberSaveable(initialUrl) { mutableStateOf(ImportSourceClassifier.suggestedSubscriptionName(initialUrl)) }
+    var url by rememberSaveable(initialUrl) { mutableStateOf(initialUrl) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -336,9 +341,14 @@ private fun AddSubscriptionDialog(
         title = { Text(stringResource(R.string.review_add_subscription)) },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(
+                    stringResource(R.string.import_subscription_confirmation),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 DokoInput(
                     value = name, onValueChange = { name = it },
-                    label = stringResource(R.string.review_sub_name), placeholder = stringResource(R.string.review_sub_example)
+                    label = stringResource(R.string.import_subscription_name_optional), placeholder = stringResource(R.string.review_sub_example)
                 )
                 DokoInput(
                     value = url, onValueChange = { url = it },
@@ -349,9 +359,9 @@ private fun AddSubscriptionDialog(
         confirmButton = {
             TextButton(
                 onClick = { onAdd(name.trim(), url.trim()) },
-                enabled = name.isNotBlank() && runCatching { val parsed = java.net.URI(url.trim()); parsed.scheme in listOf("http", "https") && !parsed.host.isNullOrBlank() }.getOrDefault(false)
+                enabled = ImportSourceClassifier.isSubscriptionUrl(url)
             ) {
-                Text(stringResource(R.string.confirm), fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.import_subscription_action), fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

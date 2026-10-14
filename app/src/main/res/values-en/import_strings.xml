@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_unsupported_title">Unrecognized import</string>
+    <string name="import_unsupported_message">Copy or scan an HTTP/HTTPS subscription URL, or a VMess, VLESS, Trojan, or Shadowsocks node link.</string>
+    <string name="import_subscription_confirmation">Confirm to download the subscription nodes. Leave the name blank to use the URL host.</string>
+    <string name="import_subscription_name_optional">Subscription name (optional)</string>
+    <string name="import_subscription_action">Import and sync</string>
+    <string name="import_subscription_complete">Nodes are ready</string>
+    <string name="import_success_count">Imported %1$d nodes. You can connect from the home screen.</string>
+    <string name="import_go_home">Go home to connect</string>
+    <string name="import_stay_here">Stay here</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_unsupported_title">無法辨識匯入內容</string>
+    <string name="import_unsupported_message">請複製或掃描 HTTP/HTTPS 訂閱連結，或 VMess、VLESS、Trojan、Shadowsocks 單節點連結。</string>
+    <string name="import_subscription_confirmation">確認後下載訂閱中的節點。名稱留空時，使用連結的網域。</string>
+    <string name="import_subscription_name_optional">訂閱名稱（選填）</string>
+    <string name="import_subscription_action">匯入並同步</string>
+    <string name="import_subscription_complete">節點已就緒</string>
+    <string name="import_success_count">已匯入 %1$d 個節點，可返回首頁連線。</string>
+    <string name="import_go_home">返回首頁連線</string>
+    <string name="import_stay_here">留在訂閱頁</string>
+</resources>

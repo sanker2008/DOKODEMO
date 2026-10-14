@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dokodemo.R
 import com.dokodemo.core.SubscriptionFetcher
 import com.dokodemo.core.SubscriptionSyncManager
+import com.dokodemo.core.ImportSourceClassifier
 import com.dokodemo.data.model.Subscription
 import com.dokodemo.data.repository.SubscriptionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,9 +42,10 @@ class SubscriptionViewModel @Inject constructor(
     }
 
     fun addSubscription(name: String, url: String) {
-        if (!validate(name, url)) return
+        val subscriptionName = name.trim().ifBlank { ImportSourceClassifier.suggestedSubscriptionName(url) }
+        if (!validate(subscriptionName, url)) return
         refreshOperation {
-            val sub = Subscription(name = name.trim(), url = url.trim())
+            val sub = Subscription(name = subscriptionName, url = url.trim())
             val id = subscriptionRepository.insertSubscription(sub)
             refresh(sub.copy(id = id))
         }
@@ -104,10 +106,7 @@ class SubscriptionViewModel @Inject constructor(
     }
 
     private fun validate(name: String, url: String): Boolean {
-        val valid = name.isNotBlank() && runCatching {
-            val uri = java.net.URI(url.trim())
-            uri.scheme in listOf("https", "http") && !uri.host.isNullOrBlank()
-        }.getOrDefault(false)
+        val valid = name.isNotBlank() && ImportSourceClassifier.isSubscriptionUrl(url)
         if (!valid) _uiState.update { it.copy(errorMessage = context.getString(R.string.review_sub_invalid)) }
         return valid
     }
