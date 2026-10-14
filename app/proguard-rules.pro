@@ -1,23 +1,23 @@
-# DokoDemo Proguard Rules
+# libv2ray.aar supplies consumer rules for its go.* and libv2ray.* JNI bridge.
+# Keep this app-owned JNI entry point's class and method names for the native symbols.
+-keep class com.v2ray.ang.service.TProxyService {
+    public native void TProxyStartService(java.lang.String, int);
+    public native void TProxyStopService();
+    public native long[] TProxyGetStats();
+}
 
-# Keep V2Ray core classes
--keep class go.** { *; }
--keep class libv2ray.** { *; }
-
-# Keep Room entities
--keep class com.dokodemo.data.model.** { *; }
-
-# Keep Hilt generated classes
--keep class dagger.hilt.** { *; }
--keep class javax.inject.** { *; }
--keep class * extends dagger.hilt.android.internal.managers.ComponentSupplier { *; }
-
-# Gson
--keepattributes Signature
--keepattributes *Annotation*
--dontwarn sun.misc.**
--keep class com.google.gson.** { *; }
-
-# Kotlin Coroutines
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+# Gson persists CustomRoutingRule as JSON using field and enum constant names.
+# Gson 2.11.0 keeps TypeToken signatures, but this model has no no-args constructor:
+# R8 full mode must keep the concrete class for Gson's reflective allocation.
+# Preserve the stored field and enum names across releases.
+-keepattributes Signature,*Annotation*
+-keep,allowobfuscation class com.dokodemo.data.preferences.CustomRoutingRule
+-keepclassmembers class com.dokodemo.data.preferences.CustomRoutingRule {
+    <fields>;
+}
+-keepclassmembers enum com.dokodemo.data.preferences.CustomRuleMatchType {
+    public static final com.dokodemo.data.preferences.CustomRuleMatchType *;
+}
+-keepclassmembers enum com.dokodemo.data.preferences.CustomRuleAction {
+    public static final com.dokodemo.data.preferences.CustomRuleAction *;
+}
