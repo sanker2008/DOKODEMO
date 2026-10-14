@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_matching_nodes">No matching nodes</string>
+    <string name="try_clearing_filters">Try clearing the search or group filter</string>
+    <string name="clear_node_filters">Clear filters</string>
+</resources>

@@ -280,7 +280,10 @@ fun ServerListScreen(
 
                 if (filteredServers.isEmpty()) {
                     item {
-                        EmptyState()
+                        EmptyState(
+                            hasServers = uiState.servers.isNotEmpty(),
+                            onClearFilters = viewModel::clearFilters
+                        )
                     }
                 }
             }
@@ -428,7 +431,7 @@ private fun NodeCard(
 
 // ─── 空状态 ────────────────────────────────────────────────────────────────
 @Composable
-private fun EmptyState() {
+private fun EmptyState(hasServers: Boolean, onClearFilters: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -444,15 +447,21 @@ private fun EmptyState() {
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                stringResource(R.string.no_nodes),
+                stringResource(if (hasServers) R.string.no_matching_nodes else R.string.no_nodes),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                stringResource(R.string.click_to_add_node),
+                stringResource(if (hasServers) R.string.try_clearing_filters else R.string.click_to_add_node),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            if (hasServers) {
+                Spacer(Modifier.height(8.dp))
+                TextButton(onClick = onClearFilters) {
+                    Text(stringResource(R.string.clear_node_filters))
+                }
+            }
         }
     }
 }

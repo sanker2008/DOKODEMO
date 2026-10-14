@@ -175,6 +175,10 @@ class ServerListViewModel @Inject constructor(
         _uiState.update { it.copy(selectedGroupId = groupId) }
     }
 
+    fun clearFilters() {
+        _uiState.update { it.copy(searchQuery = "", selectedGroupId = null) }
+    }
+
     fun setSortOption(option: SortOption) {
         _uiState.update { it.copy(sortOption = option) }
     }

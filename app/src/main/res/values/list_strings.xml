@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_matching_nodes">没有符合条件的节点</string>
+    <string name="try_clearing_filters">试试清除搜索或分组筛选</string>
+    <string name="clear_node_filters">清除筛选</string>
+</resources>
