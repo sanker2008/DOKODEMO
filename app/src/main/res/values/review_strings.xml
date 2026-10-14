@@ -2,10 +2,10 @@
 <resources>
     <string name="qr_title">扫描二维码</string>
     <string name="qr_success">识别成功</string>
-    <string name="qr_invalid">未找到有效节点二维码，请使用 VMess、VLESS、Trojan 或 Shadowsocks 分享码</string>
+    <string name="qr_invalid">未找到有效二维码，请使用节点分享码或 HTTP(S) 订阅链接二维码</string>
     <string name="qr_decoding">正在识别图片…</string>
-    <string name="qr_prompt">请将节点二维码放入框内</string>
-    <string name="qr_camera_failed">无法打开相机。请重试，或从相册导入节点二维码。</string>
+    <string name="qr_prompt">全画面识别，请让节点或订阅二维码清晰可见</string>
+    <string name="qr_camera_failed">无法打开相机。请重试，或从相册导入节点或订阅二维码。</string>
     <string name="qr_permission_required">扫描需要相机权限。也可以无需相机，从相册导入二维码。</string>
     <string name="qr_grant_permission">允许使用相机</string>
     <string name="qr_open_settings">打开应用设置</string>

@@ -2,10 +2,10 @@
 <resources>
     <string name="qr_title">Scan QR code</string>
     <string name="qr_success">Code recognized</string>
-    <string name="qr_invalid">No valid node found. Scan a VMess, VLESS, Trojan or Shadowsocks share code.</string>
+    <string name="qr_invalid">No valid QR code found. Use a node share code or an HTTP(S) subscription URL QR code.</string>
     <string name="qr_decoding">Reading image…</string>
-    <string name="qr_prompt">Place the node QR code in the frame</string>
-    <string name="qr_camera_failed">Camera unavailable. Retry or import a node QR code from your gallery.</string>
+    <string name="qr_prompt">The whole camera view is scanned. Keep a node or subscription QR code clearly visible.</string>
+    <string name="qr_camera_failed">Camera unavailable. Retry or import a node or subscription QR code from your gallery.</string>
     <string name="qr_permission_required">Camera permission is needed to scan. You can also import a QR image without camera access.</string>
     <string name="qr_grant_permission">Allow camera access</string>
     <string name="qr_open_settings">Open app settings</string>

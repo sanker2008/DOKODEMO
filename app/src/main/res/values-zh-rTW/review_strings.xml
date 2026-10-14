@@ -2,10 +2,10 @@
 <resources>
     <string name="qr_title">掃描 QR 碼</string>
     <string name="qr_success">識別成功</string>
-    <string name="qr_invalid">未找到有效節點 QR 碼，請使用 VMess、VLESS、Trojan 或 Shadowsocks 分享碼</string>
+    <string name="qr_invalid">未找到有效 QR 碼，請使用節點分享碼或 HTTP(S) 訂閱連結 QR 碼</string>
     <string name="qr_decoding">正在識別圖片…</string>
-    <string name="qr_prompt">請將節點 QR 碼放入框內</string>
-    <string name="qr_camera_failed">無法開啟相機。請重試，或從相簿匯入節點 QR 碼。</string>
+    <string name="qr_prompt">全畫面識別，請讓節點或訂閱 QR 碼清晰可見</string>
+    <string name="qr_camera_failed">無法開啟相機。請重試，或從相簿匯入節點或訂閱 QR 碼。</string>
     <string name="qr_permission_required">掃描需要相機權限。也可以無需相機，從相簿匯入 QR 碼。</string>
     <string name="qr_grant_permission">允許使用相機</string>
     <string name="qr_open_settings">開啟應用程式設定</string>

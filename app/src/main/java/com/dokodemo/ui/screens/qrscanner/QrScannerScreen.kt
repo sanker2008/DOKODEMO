@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.Camera
@@ -14,15 +13,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,32 +36,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.dokodemo.ui.components.DokoButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.FlashOff
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.runtime.rememberUpdatedState
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.BinaryBitmap
-import com.google.zxing.DecodeHintType
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.RGBLuminanceSource
-import com.google.zxing.common.HybridBinarizer
-import java.io.InputStream
 import java.util.concurrent.Executors
 
 import androidx.compose.material3.TextButton
@@ -85,7 +65,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.dokodemo.R
-import com.dokodemo.core.ShareLinkParser
 
 @Composable
 fun QrScannerScreen(onNavigateBack: () -> Unit, onQrCodeScanned: (String) -> Unit) {
@@ -100,11 +79,11 @@ fun QrScannerScreen(onNavigateBack: () -> Unit, onQrCodeScanned: (String) -> Uni
     var decoding by remember { mutableStateOf(false) }
     var scannedCode by remember { mutableStateOf<String?>(null) }
     var scanStatus by remember { mutableStateOf<Int?>(null) }
-    val parser = remember { ShareLinkParser() }
     fun acceptCode(code: String?) {
         if (scannedCode != null) return
-        if (code != null && parser.parse(code) != null) {
-            scannedCode = code.trim()
+        val accepted = acceptedQrCode(code)
+        if (accepted != null) {
+            scannedCode = accepted
             scanStatus = R.string.qr_success
         } else {
             scanStatus = R.string.qr_invalid
@@ -134,19 +113,21 @@ fun QrScannerScreen(onNavigateBack: () -> Unit, onQrCodeScanned: (String) -> Uni
     LaunchedEffect(scannedCode) { scannedCode?.let(onQrCodeScanned) }
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
         if (hasCameraPermission && !cameraFailed) {
-            CameraPreview(
-                onQrCodeDetected = { if (!decoding) acceptCode(it) },
-                onCameraBound = { camera = it },
-                onCameraError = { cameraFailed = true },
-                modifier = Modifier.fillMaxSize()
-            )
             ScannerOverlay(
                 scanStatus = stringResource(if (decoding) R.string.qr_decoding else scanStatus ?: R.string.qr_prompt),
                 isFlashOn = isFlashOn,
                 flashEnabled = camera?.cameraInfo?.hasFlashUnit() == true,
                 onClose = onNavigateBack,
                 onFlashToggle = { isFlashOn = !isFlashOn },
-                onGalleryClick = { if (!decoding) galleryLauncher.launch("image/*") }
+                onGalleryClick = { if (!decoding) galleryLauncher.launch("image/*") },
+                preview = {
+                    CameraPreview(
+                        onQrCodeDetected = { if (!decoding) acceptCode(it) },
+                        onCameraBound = { camera = it },
+                        onCameraError = { cameraFailed = true },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             )
         } else {
             Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
@@ -182,14 +163,7 @@ private fun decodeQrFromUri(context: Context, uri: Uri): String? = runCatching {
     try {
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        val source = RGBLuminanceSource(bitmap.width, bitmap.height, pixels)
-        val reader = MultiFormatReader()
-        val hints = mapOf(DecodeHintType.TRY_HARDER to true, DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE))
-        try { reader.decode(BinaryBitmap(HybridBinarizer(source)), hints).text }
-        catch (_: com.google.zxing.NotFoundException) {
-            reader.reset()
-            reader.decode(BinaryBitmap(HybridBinarizer(source.invert())), hints).text
-        } finally { reader.reset() }
+        decodeQrPixels(bitmap.width, bitmap.height, pixels)
     } finally { bitmap.recycle() }
 }.getOrNull()
 
@@ -202,7 +176,12 @@ private fun CameraPreview(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val previewView = remember(context) { PreviewView(context).apply { implementationMode = PreviewView.ImplementationMode.COMPATIBLE } }
+    val previewView = remember(context) {
+        PreviewView(context).apply {
+            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            scaleType = PreviewView.ScaleType.FIT_CENTER
+        }
+    }
     val currentDetected by rememberUpdatedState(onQrCodeDetected)
     val currentBound by rememberUpdatedState(onCameraBound)
     val currentError by rememberUpdatedState(onCameraError)
@@ -240,22 +219,11 @@ private fun ScannerOverlay(
     flashEnabled: Boolean,
     onClose: () -> Unit,
     onFlashToggle: () -> Unit,
-    onGalleryClick: () -> Unit
+    onGalleryClick: () -> Unit,
+    preview: @Composable () -> Unit
 ) {
-    // 柔和的扫码线动画
-    val infiniteTransition = rememberInfiniteTransition(label = "scanLine")
-    val scanLineOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "scanLineOffset"
-    )
-
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxSize()
     ) {
         // 顶部栏 (Mist & Dawn - Transparent + Blur feel)
         Row(
@@ -291,53 +259,15 @@ private fun ScannerOverlay(
             }
         }
         
-        // 中间扫码区域
-        Box(
-            modifier = Modifier
-                .height(280.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            // 背景暗化
-            Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.4f)))
-            
-            // 扫码框
-            val primaryColor = MaterialTheme.colorScheme.primary
-            Box(
-                modifier = Modifier
-                    .size(280.dp)
-                    .border(2.dp, primaryColor.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                    .background(androidx.compose.ui.graphics.Color.Transparent)
-            ) {
-                // 扫描线
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    val scanY = size.height * scanLineOffset
-                    drawLine(
-                        color = primaryColor,
-                        start = Offset(0f, scanY),
-                        end = Offset(size.width, scanY),
-                        strokeWidth = 3.dp.toPx()
-                    )
-                    // 渐变光晕
-                    drawRect(
-                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
-                            colors = listOf(androidx.compose.ui.graphics.Color.Transparent, primaryColor.copy(alpha = 0.3f)),
-                            startY = maxOf(0f, scanY - 60.dp.toPx()),
-                            endY = scanY
-                        ),
-                        topLeft = Offset(0f, maxOf(0f, scanY - 60.dp.toPx())),
-                        size = androidx.compose.ui.geometry.Size(size.width, minOf(60.dp.toPx(), scanY))
-                    )
-                }
-            }
-        }
+        // Show the entire camera frame between the controls, without a crop guide.
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) { preview() }
         
         // 底部控制操作区
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
-                .padding(24.dp),
+                .padding(horizontal = 24.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -346,7 +276,7 @@ private fun ScannerOverlay(
                 color = MaterialTheme.colorScheme.onSurface
             )
             
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             
             Row(
                 modifier = Modifier.fillMaxWidth(),
