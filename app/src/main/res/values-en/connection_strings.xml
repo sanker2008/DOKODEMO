@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_applying_changes">Reconnecting to apply connection settings…</string>
+    <string name="connection_settings_apply_hint">Changing the routing mode while connected automatically reconnects the VPN. Other network settings apply on the next connection.</string>
+    <string name="connection_changes_failed_keep_previous">New settings were not applied. The previous connection is still active: %1$s</string>
+</resources>

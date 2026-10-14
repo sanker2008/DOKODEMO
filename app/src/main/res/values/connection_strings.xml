@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_applying_changes">正在重新连接，以应用连接设置…</string>
+    <string name="connection_settings_apply_hint">连接期间更改路由模式会自动重新连接。其他网络设置将在下次连接时生效。</string>
+    <string name="connection_changes_failed_keep_previous">新配置未生效，仍在使用原连接：%1$s</string>
+</resources>

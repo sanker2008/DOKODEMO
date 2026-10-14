@@ -69,7 +69,7 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(stringResource(R.string.network_reconnect_hint), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 12.dp))
+            Text(stringResource(R.string.connection_settings_apply_hint), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 12.dp))
             // ─── 节点管理 ─────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.node_management)) {
                 SettingsClickRow(

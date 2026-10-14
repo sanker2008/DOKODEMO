@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.VpnService
 import com.dokodemo.core.CoreManager
+import com.dokodemo.core.ConnectionConfiguration
 import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.preferences.AppPreferences
+import com.dokodemo.data.preferences.RoutingMode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import java.util.ArrayList
@@ -23,6 +25,9 @@ class VpnController @Inject constructor(
     private val coreManager: CoreManager,
     private val appPreferences: AppPreferences
 ) {
+    // Retained across HomeViewModel recreation; this describes the request sent to the service.
+    var lastRequestedConnection: ConnectionConfiguration? = null
+        private set
     
     /**
      * Check if VPN permission is granted
@@ -41,12 +46,12 @@ class VpnController @Inject constructor(
     /**
      * Start VPN connection with the given server profile
      */
-    suspend fun connect(profile: ServerProfile) {
+    suspend fun connect(profile: ServerProfile, requestedRoutingMode: RoutingMode? = null) {
         val effectiveProfile = if (profile.protocol == com.dokodemo.data.model.Protocol.TROJAN && profile.password.isEmpty()) profile.copy(password = profile.uuid) else profile
         require(com.dokodemo.core.ProfileValidator.validate(effectiveProfile) == null) {
             context.getString(com.dokodemo.R.string.validation_config)
         }
-        val routingMode = appPreferences.routingMode.first()
+        val routingMode = requestedRoutingMode ?: appPreferences.routingMode.first()
         val proxiedApps = appPreferences.proxiedApps.first()
         val splitTunnelingMode = appPreferences.splitTunnelingMode.first()
         val muxEnabled = appPreferences.muxEnabled.first()
@@ -83,12 +88,14 @@ class VpnController @Inject constructor(
         } else {
             context.startService(intent)
         }
+        lastRequestedConnection = ConnectionConfiguration.from(profile, routingMode)
     }
     
     /**
      * Start VPN with raw JSON config
      */
     fun connectWithConfig(configJson: String, serverName: String = "Custom") {
+        lastRequestedConnection = null
         val intent = Intent(context, DokoDemoVpnService::class.java).apply {
             action = DokoDemoVpnService.ACTION_START
             putExtra(DokoDemoVpnService.EXTRA_SERVER_CONFIG, configJson)

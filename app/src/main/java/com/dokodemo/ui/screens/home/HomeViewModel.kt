@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dokodemo.data.model.Protocol
+import com.dokodemo.core.ConnectionConfiguration
 import com.dokodemo.data.model.ServerProfile
 import com.dokodemo.data.repository.ServerRepository
 import com.dokodemo.data.repository.SubscriptionRepository
@@ -15,10 +15,12 @@ import com.dokodemo.service.DokoDemoVpnService
 import com.dokodemo.service.VpnController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ import javax.inject.Inject
 data class HomeUiState(
     val isConnected: Boolean = false,
     val isConnecting: Boolean = false,
+    val isApplyingConnectionChanges: Boolean = false,
     val currentServer: ServerProfile? = null,
     val currentServerName: String = "SELECT SERVER",
     val currentServerRegion: String = "--",
@@ -73,22 +76,18 @@ class HomeViewModel @Inject constructor(
     
     private var trafficReceiver: BroadcastReceiver? = null
     private var vpnStateReceiver: BroadcastReceiver? = null
+    private var connectionJob: Job? = null
+    private var wantsConnection = vpnController.isConnected()
+    private var isStopping = false
+    private var requestedConfiguration = vpnController.lastRequestedConnection
+    private var configurationLoaded = false
     
     init {
-        loadSelectedServer()
         registerReceivers()
         updateCoreVersion()
         checkVpnState()
-        observeRoutingMode()
+        loadSelectedServer()
         checkAutoUpdateSubscriptions()
-    }
-    
-    private fun observeRoutingMode() {
-        viewModelScope.launch {
-            appPreferences.routingMode.collect { mode ->
-                _uiState.update { it.copy(routingMode = mode) }
-            }
-        }
     }
     
     private fun checkAutoUpdateSubscriptions() {
@@ -151,36 +150,39 @@ class HomeViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            // Try to get selected server from database
-            serverRepository.getSelectedServer().collect { server ->
-                if (server != null) {
-                    val currentState = _uiState.value
-                    // Check if we are connected and the server changed
-                    val needsReconnect = (currentState.isConnected || currentState.isConnecting) &&
-                            currentState.currentServer != null && 
-                            currentState.currentServer.id != server.id
-                    
-                    _uiState.update { state ->
-                        state.copy(
-                            currentServer = server,
-                            currentServerName = server.name.replace("_", " "),
-                            currentServerRegion = server.countryCode,
-                            protocol = server.protocol.name,
-                            encryption = if (server.useTls) "TLS" else "NONE",
-                            ping = server.latency?.let { "${it}ms" } ?: "--ms"
-                        )
-                    }
-                    
-                    if (needsReconnect) {
-                        connect()
-                    }
-                } else {
-                    _uiState.update { it.copy(currentServer = null, currentServerName = "", currentServerRegion = "", protocol = "", ping = "--ms") }
+            // Read the node and mode together so one configuration produces one service request.
+            combine(serverRepository.getSelectedServer(), appPreferences.routingMode) { server, mode ->
+                server to mode
+            }.collect { (server, mode) ->
+                _uiState.update { state ->
+                    state.copy(
+                        routingMode = mode,
+                        currentServer = server,
+                        currentServerName = server?.name?.replace("_", " ") ?: "",
+                        currentServerRegion = server?.countryCode ?: "",
+                        protocol = server?.protocol?.name ?: "",
+                        encryption = if (server?.useTls == true) "TLS" else "NONE",
+                        ping = server?.latency?.let { "${it}ms" } ?: "--ms"
+                    )
                 }
+                configurationLoaded = true
+                reconcileConnection()
             }
         }
     }
-    
+
+    private fun reconcileConnection() {
+        if (!wantsConnection || !configurationLoaded) return
+        val state = _uiState.value
+        val server = state.currentServer
+        if (server == null) {
+            // A deleted selection must not leave an unmanageable connection running.
+            disconnect()
+        } else if (ConnectionConfiguration.from(server, state.routingMode) != requestedConfiguration) {
+            connect(applyingChanges = true)
+        }
+    }
+
     private fun registerReceivers() {
         // Traffic update receiver
         trafficReceiver = object : BroadcastReceiver() {
@@ -199,18 +201,32 @@ class HomeViewModel @Inject constructor(
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     DokoDemoVpnService.ACTION_VPN_CONNECTED -> {
+                        if (isStopping || connectionJob?.isActive == true) return
+                        wantsConnection = true
+                        requestedConfiguration = vpnController.lastRequestedConnection
                         _uiState.update { state ->
                             state.copy(
                                 isConnected = true,
                                 connectionError = null,
                                 isConnecting = false,
+                                isApplyingConnectionChanges = false,
                                 ipAddress = "PROTECTED"
                             )
                         }
+                        // Also reconcile a service connection that completed during VM recreation.
+                        reconcileConnection()
                     }
                     DokoDemoVpnService.ACTION_VPN_DISCONNECTED -> {
+                        // A previous service request may finish while its replacement is preparing.
+                        if (connectionJob?.isActive == true) return
+                        connectionJob?.cancel()
+                        wantsConnection = false
+                        isStopping = false
+                        requestedConfiguration = null
                         val errorReason = intent?.getStringExtra(DokoDemoVpnService.EXTRA_ERROR_REASON)
                         _uiState.update { it.copy(isConnected = false, isConnecting = false,
+                            isApplyingConnectionChanges = false, ipAddress = "UNPROTECTED",
+                            needsVpnPermission = false, vpnPermissionIntent = null,
                             uploadSpeed = "0 KB/s", downloadSpeed = "0 KB/s", speedHistory = List(50) { 0f },
                             connectionError = errorReason) }
 
@@ -288,60 +304,81 @@ class HomeViewModel @Inject constructor(
     }
     
     fun toggleConnection() {
-        viewModelScope.launch {
-            val currentState = _uiState.value
-            
-            if (currentState.isConnected || currentState.isConnecting) {
-                // Disconnect
-                disconnect()
-            } else {
-                // Connect
-                connect()
-            }
+        if (wantsConnection || _uiState.value.isConnected || _uiState.value.isConnecting) {
+            disconnect()
+        } else {
+            wantsConnection = true
+            connect()
         }
     }
-    
-    private suspend fun connect() {
-        val server = _uiState.value.currentServer
-        if (server == null) {
-            // No server selected
-            return
-        }
-        
-        // Check VPN permission
+
+    private fun connect(applyingChanges: Boolean = false) {
+        val state = _uiState.value
+        val server = state.currentServer ?: return
+        connectionJob?.cancel()
+        isStopping = false
+
         if (!vpnController.isVpnPermissionGranted()) {
-            _uiState.update { state ->
-                state.copy(
-                    needsVpnPermission = true,
-                    vpnPermissionIntent = vpnController.getVpnPermissionIntent()
-                )
+            if (_uiState.value.needsVpnPermission) return
+            _uiState.update {
+                it.copy(needsVpnPermission = true, vpnPermissionIntent = vpnController.getVpnPermissionIntent())
             }
             return
         }
-        
-        // Start connecting
-        _uiState.update { it.copy(isConnecting = true, connectionError = null) }
-        
-        // Start VPN
-        try { vpnController.connect(server) }
-        catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Exception) { _uiState.update { it.copy(isConnecting = false, connectionError = e.message) } }
+
+        // Claim before launching: latency/name emissions during config preparation cannot duplicate it.
+        requestedConfiguration = ConnectionConfiguration.from(server, state.routingMode)
+        _uiState.update {
+            it.copy(isConnected = false, isConnecting = true, connectionError = null,
+                isApplyingConnectionChanges = applyingChanges)
+        }
+        connectionJob = viewModelScope.launch {
+            try {
+                vpnController.connect(server, state.routingMode)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Validation/config preparation can fail before START, leaving the old VPN alive.
+                val stillConnected = vpnController.isConnected()
+                wantsConnection = stillConnected
+                requestedConfiguration = if (stillConnected) vpnController.lastRequestedConnection else null
+                val reason = e.message ?: context.getString(com.dokodemo.R.string.validation_config)
+                val error = if (stillConnected) {
+                    context.getString(com.dokodemo.R.string.connection_changes_failed_keep_previous, reason)
+                } else reason
+                _uiState.update {
+                    it.copy(isConnected = stillConnected, isConnecting = false,
+                        isApplyingConnectionChanges = false, connectionError = error)
+                }
+            }
+        }
     }
-    
+
     private fun disconnect() {
-        _uiState.update { it.copy(isConnecting = true, connectionError = null) }
+        // Cancel config preparation before sending STOP, otherwise a suspended START can revive VPN.
+        wantsConnection = false
+        isStopping = true
+        requestedConfiguration = null
+        connectionJob?.cancel()
+        _uiState.update {
+            it.copy(isConnecting = true, isApplyingConnectionChanges = false, connectionError = null,
+                needsVpnPermission = false, vpnPermissionIntent = null)
+        }
         vpnController.disconnect()
     }
-    
+
     fun onVpnPermissionResult(granted: Boolean) {
+        val wasWaiting = _uiState.value.needsVpnPermission
         _uiState.update { it.copy(needsVpnPermission = false, vpnPermissionIntent = null) }
-        
+        if (!wasWaiting || !wantsConnection) return
         if (granted) {
-            viewModelScope.launch {
-                connect()
-            }
+            connect()
+        } else {
+            wantsConnection = false
+            requestedConfiguration = null
         }
     }
-    
+
     fun selectServer(serverId: Long) {
         viewModelScope.launch {
             serverRepository.selectServer(serverId)

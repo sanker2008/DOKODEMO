@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_applying_changes">正在重新連線，以套用連線設定…</string>
+    <string name="connection_settings_apply_hint">連線期間變更路由模式會自動重新連線。其他網路設定將在下次連線時生效。</string>
+    <string name="connection_changes_failed_keep_previous">新設定未生效，仍在使用原連線：%1$s</string>
+</resources>

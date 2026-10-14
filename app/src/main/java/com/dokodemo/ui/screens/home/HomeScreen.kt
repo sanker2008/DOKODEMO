@@ -101,6 +101,15 @@ fun HomeScreen(
                 onRoutingModeChange = { viewModel.setRoutingMode(it) }
             )
 
+            if (uiState.isApplyingConnectionChanges) {
+                Text(
+                    text = stringResource(R.string.connection_applying_changes),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                )
+            }
+
             Spacer(Modifier.height(8.dp))
 
             // ─── 当前节点/空状态卡片 ─────────────────────────────────────────────
