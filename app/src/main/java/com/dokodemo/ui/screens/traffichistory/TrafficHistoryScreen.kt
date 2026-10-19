@@ -68,7 +68,7 @@ fun TrafficHistoryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 20.dp)
         ) {
             if (uiState.records.isEmpty()) {
                 Column(
@@ -90,9 +90,9 @@ fun TrafficHistoryScreen(
                 }
             } else {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 32.dp)
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp)
                 ) {
                     item {
                         SummaryCard(
@@ -115,7 +115,7 @@ fun TrafficHistoryScreen(
 private fun SummaryCard(totalUpload: Long, totalDownload: Long, sessionCount: Int) {
     com.dokodemo.ui.components.DokoCard(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
@@ -217,10 +217,7 @@ private fun TrafficRecordItem(record: com.dokodemo.data.model.TrafficRecord) {
                 )
             }
 
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 10.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-            )
+            Spacer(Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -37,7 +37,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
@@ -114,7 +114,7 @@ fun CustomRoutingRulesScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { creatingRule = true }) {
+            com.dokodemo.ui.components.SquareFab(onClick = { creatingRule = true }) {
                 Icon(Icons.Rounded.Add, contentDescription = stringResource(R.string.custom_routing_rules_add))
             }
         }
@@ -123,8 +123,8 @@ fun CustomRoutingRulesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp, top = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 96.dp, top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
                 OverviewCard(
@@ -218,7 +218,7 @@ private fun OverviewCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
                 text = stringResource(R.string.custom_routing_rules_overview),
@@ -255,7 +255,7 @@ private fun EmptyRulesCard() {
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     text = stringResource(R.string.custom_routing_rules_empty_title),
@@ -312,7 +312,7 @@ private fun RuleCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Switch(
+                com.dokodemo.ui.components.DokoToggle(
                     checked = rule.enabled,
                     onCheckedChange = { onToggleEnabled() }
                 )
@@ -329,7 +329,7 @@ private fun RuleCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+            Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -414,7 +414,8 @@ private fun RuleEditorDialog(
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(
+                TextField(
+                    colors = com.dokodemo.ui.components.dokoTextFieldColors(),
                         shape = RoundedCornerShape(16.dp),
                     value = name,
                     onValueChange = { name = it },
@@ -427,7 +428,8 @@ private fun RuleEditorDialog(
                     expanded = typeExpanded,
                     onExpandedChange = { typeExpanded = !typeExpanded }
                 ) {
-                    OutlinedTextField(
+                    TextField(
+                    colors = com.dokodemo.ui.components.dokoTextFieldColors(),
                         shape = RoundedCornerShape(16.dp),
                         value = ruleLabel(matchType),
                         onValueChange = {},
@@ -440,7 +442,7 @@ private fun RuleEditorDialog(
                             .menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth()
                     )
-                    DropdownMenu(
+                    DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                         expanded = typeExpanded,
                         onDismissRequest = { typeExpanded = false }
                     ) {
@@ -455,7 +457,8 @@ private fun RuleEditorDialog(
                         }
                     }
                 }
-                OutlinedTextField(
+                TextField(
+                    colors = com.dokodemo.ui.components.dokoTextFieldColors(),
                         shape = RoundedCornerShape(16.dp),
                     value = value,
                     onValueChange = { value = it },
@@ -468,6 +471,7 @@ private fun RuleEditorDialog(
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                     CustomRuleAction.entries.forEachIndexed { index, item ->
                         SegmentedButton(
+            border = androidx.compose.foundation.BorderStroke(0.dp, androidx.compose.ui.graphics.Color.Transparent),
                             selected = action == item,
                             onClick = { action = item },
                             shape = SegmentedButtonDefaults.itemShape(
@@ -565,7 +569,8 @@ private fun BatchImportDialog(
                     expanded = typeExpanded,
                     onExpandedChange = { typeExpanded = !typeExpanded }
                 ) {
-                    OutlinedTextField(
+                    TextField(
+                    colors = com.dokodemo.ui.components.dokoTextFieldColors(),
                         shape = RoundedCornerShape(16.dp),
                         value = ruleLabel(matchType),
                         onValueChange = {},
@@ -578,7 +583,7 @@ private fun BatchImportDialog(
                             .menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth()
                     )
-                    DropdownMenu(
+                    DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                         expanded = typeExpanded,
                         onDismissRequest = { typeExpanded = false }
                     ) {
@@ -596,6 +601,7 @@ private fun BatchImportDialog(
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                     CustomRuleAction.entries.forEachIndexed { index, item ->
                         SegmentedButton(
+            border = androidx.compose.foundation.BorderStroke(0.dp, androidx.compose.ui.graphics.Color.Transparent),
                             selected = action == item,
                             onClick = { action = item },
                             shape = SegmentedButtonDefaults.itemShape(
@@ -606,7 +612,8 @@ private fun BatchImportDialog(
                         )
                     }
                 }
-                OutlinedTextField(
+                TextField(
+                    colors = com.dokodemo.ui.components.dokoTextFieldColors(),
                         shape = RoundedCornerShape(16.dp),
                     value = text,
                     onValueChange = { text = it },

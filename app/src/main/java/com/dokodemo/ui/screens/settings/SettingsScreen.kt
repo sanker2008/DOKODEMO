@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,13 +63,13 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentWidth(Alignment.CenterHorizontally)
-                .widthIn(max = 840.dp)
+                .widthIn(max = 600.dp)
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(stringResource(R.string.connection_settings_apply_hint), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 12.dp))
+            com.dokodemo.ui.components.DokoHint(stringResource(R.string.connection_settings_apply_hint), Modifier.padding(top = 8.dp))
             // ─── 节点管理 ─────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.node_management)) {
                 SettingsClickRow(
@@ -77,7 +77,6 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.subscription_settings_desc),
                     onClick = onNavigateToSubscriptions
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 DokoToggleRow(
                     label = stringResource(R.string.auto_update_sub),
                     subtitle = stringResource(R.string.auto_update_sub_desc),
@@ -94,13 +93,11 @@ fun SettingsScreen(
                     subtitle = getRoutingModeTitle(uiState.routingMode),
                     onClick = { showRoutingDialog = true }
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
                     title = stringResource(R.string.split_tunneling),
                     subtitle = stringResource(R.string.split_tunneling_desc),
                     onClick = onNavigateToSplitTunneling
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
                     title = stringResource(R.string.custom_routing_rules),
                     subtitle = stringResource(R.string.custom_routing_rules_desc),
@@ -117,7 +114,6 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setMuxEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 DokoToggleRow(
                     label = stringResource(R.string.allow_insecure),
                     subtitle = stringResource(R.string.allow_insecure_desc),
@@ -125,7 +121,6 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setAllowInsecure(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 DokoToggleRow(
                     label = stringResource(R.string.udp_proxy),
                     subtitle = stringResource(R.string.udp_proxy_desc),
@@ -133,7 +128,6 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setUdpEnabled(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 DokoToggleRow(
                     label = stringResource(R.string.bypass_lan),
                     subtitle = stringResource(R.string.bypass_lan_desc),
@@ -141,7 +135,6 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setBypassLan(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -178,13 +171,11 @@ fun SettingsScreen(
                     onCheckedChange = { viewModel.setDarkMode(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
                     title = stringResource(R.string.font_size),
                     subtitle = stringResource(R.string.font_size_desc),
                     onClick = { showFontSizeDialog = true }
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
                     title = stringResource(R.string.language),
                     subtitle = stringResource(R.string.language_desc),
@@ -198,7 +189,6 @@ fun SettingsScreen(
                     label = stringResource(R.string.timezone_tip_title),
                     value = stringResource(R.string.timezone_tip_desc)
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsInfoRow(
                     label = stringResource(R.string.language_tip_title),
                     value = stringResource(R.string.language_tip_desc)
@@ -212,7 +202,6 @@ fun SettingsScreen(
                     subtitle = stringResource(R.string.view_logs_desc),
                     onClick = { onNavigateToLogs?.invoke() }
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsClickRow(
                     title = stringResource(R.string.traffic_history),
                     subtitle = stringResource(R.string.traffic_history_desc),
@@ -223,7 +212,6 @@ fun SettingsScreen(
             // ─── 关于 ─────────────────────────────────────────────────────
             SettingsSection(title = stringResource(R.string.about)) {
                 SettingsInfoRow(stringResource(R.string.core_version), uiState.coreVersion)
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
                 SettingsInfoRow(stringResource(R.string.app_version), uiState.appVersion)
             }
 
@@ -386,9 +374,10 @@ private fun RoutingModeDialog(
 private fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Text(
         text = title,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp, start = 4.dp)
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 4.dp)
     )
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -410,11 +399,11 @@ private fun SettingsClickRow(title: String, subtitle: String, onClick: () -> Uni
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f).padding(end = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Icon(Icons.AutoMirrored.Rounded.ArrowForward, null, tint = MaterialTheme.colorScheme.onSurface)
+        Icon(Icons.Rounded.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurface)
     }
 }
 

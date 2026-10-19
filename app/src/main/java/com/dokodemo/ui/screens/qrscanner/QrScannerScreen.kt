@@ -229,7 +229,7 @@ private fun ScannerOverlay(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.85f))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(vertical = 12.dp, horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -266,8 +266,8 @@ private fun ScannerOverlay(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

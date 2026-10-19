@@ -2,15 +2,12 @@ package com.dokodemo.ui.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
@@ -20,18 +17,13 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -90,7 +82,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .wrapContentWidth(Alignment.CenterHorizontally)
-                .widthIn(max = 720.dp)
+                .widthIn(max = 480.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -111,6 +103,8 @@ fun HomeScreen(
             }
 
             Spacer(Modifier.height(8.dp))
+            TrafficMonitorCard(uiState.uploadSpeed, uiState.downloadSpeed)
+            Spacer(Modifier.height(16.dp))
 
             // ─── 当前节点/空状态卡片 ─────────────────────────────────────────────
             if (uiState.hasNoServers) {
@@ -154,15 +148,6 @@ fun HomeScreen(
                 }
             )
 
-            if (uiState.isConnected) {
-                TrafficMonitorCard(
-                    uploadSpeed = uiState.uploadSpeed,
-                    downloadSpeed = uiState.downloadSpeed,
-                    speedHistory = uiState.speedHistory,
-                    modifier = Modifier.fillMaxWidth().height(220.dp)
-                )
-                Spacer(Modifier.height(24.dp))
-            }
             Spacer(Modifier.height(32.dp))
         }
     }
@@ -202,12 +187,12 @@ private fun TopBar(
 
         Box {
             Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surface,
+                shape = CircleShape,
                 modifier = Modifier.clickable { expanded = true }
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    modifier = Modifier.heightIn(min = 48.dp).padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -227,7 +212,9 @@ private fun TopBar(
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
             ) {
                 com.dokodemo.data.preferences.RoutingMode.entries.forEach { mode ->
                     val title = when (mode) {
@@ -251,30 +238,13 @@ private fun TopBar(
 // ─── 状态标签 ─────────────────────────────────────────────────────────────
 @Composable
 private fun StatusBadge(isConnected: Boolean, isConnecting: Boolean) {
-    val bgColor by animateColorAsState(
-        targetValue = when {
-            isConnecting -> MaterialTheme.colorScheme.outline
-            isConnected  -> AccentState.copy(alpha = 0.15f)
-            else         -> MaterialTheme.colorScheme.surfaceVariant
-        },
-        animationSpec = tween(400), label = "statusBg"
-    )
-    val textColor by animateColorAsState(
-        targetValue = when {
-            isConnecting -> MaterialTheme.colorScheme.onSurfaceVariant
-            isConnected  -> MaterialTheme.colorScheme.onSurface
-            else         -> MaterialTheme.colorScheme.onSurfaceVariant
-        },
-        animationSpec = tween(400), label = "statusText"
-    )
-    val dotColor by animateColorAsState(
-        targetValue = when {
-            isConnecting -> MaterialTheme.colorScheme.outline
-            isConnected  -> MaterialTheme.colorScheme.onSurface
-            else         -> MaterialTheme.colorScheme.outline
-        },
-        animationSpec = tween(400), label = "dotColor"
-    )
+    val bgColor = MaterialTheme.colorScheme.surface
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val dotColor = when {
+        isConnecting -> MaterialTheme.colorScheme.primary
+        isConnected -> AccentState
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
     val statusText = when {
         isConnecting -> stringResource(R.string.connecting)
         isConnected  -> stringResource(R.string.connected)
@@ -307,121 +277,39 @@ private fun ConnectButton(
     isEnabled: Boolean,
     onClick: () -> Unit
 ) {
-    // 连接时的光圈脉冲动画
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.5f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = EaseOut),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "pulseAlpha"
-    )
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 1.4f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = EaseOut),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "pulseScale"
-    )
-
     val bgColor by animateColorAsState(
-        targetValue = when {
-            isConnected -> MaterialTheme.colorScheme.primary
-            else -> MaterialTheme.colorScheme.background
-        },
-        animationSpec = spring(stiffness = Spring.StiffnessLow),
-        label = "btnBg"
-    )
-    val textColor by animateColorAsState(
-        targetValue = when {
-            isConnected -> MaterialTheme.colorScheme.onPrimary
-            else -> MaterialTheme.colorScheme.primary
-        },
-        label = "btnText"
-    )
-    val borderColor by animateColorAsState(
-        targetValue = when {
-            isConnected -> Color.Transparent
-            else -> MaterialTheme.colorScheme.primary
-        },
-        label = "btnBorder"
+        targetValue = if (isConnected) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.secondaryContainer,
+        animationSpec = tween(250), label = "connectionFill"
     )
     val buttonText = when {
         isConnecting -> stringResource(R.string.cancel)
-        isConnected  -> stringResource(R.string.disconnect)
-        else         -> stringResource(R.string.connect)
+        isConnected -> stringResource(R.string.home_disconnect_hint)
+        else -> stringResource(R.string.home_connect_hint)
     }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.size(240.dp) // 预留呼吸效果的空间，防止连接成功后页面闪动
-    ) {
-        // 连接时的呼吸光环 (Diffused Soft Mint Green internal glow / breathing halo)
-        if (isConnected) {
-            Box(
-                modifier = Modifier
-                    .size(160.dp)
-                    .scale(pulseScale)
-                    .clip(CircleShape)
-                    .background(AccentState.copy(alpha = pulseAlpha))
-            )
-        }
-
-        // 主按钮
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
-            modifier = Modifier
-                .size(140.dp)
-                .clip(CircleShape)
+            modifier = Modifier.size(180.dp).clip(CircleShape)
                 .background(bgColor)
-                .border(
-                    width = 2.dp,
-                    color = borderColor,
-                    shape = CircleShape
-                )
                 .clickable(enabled = isEnabled, role = androidx.compose.ui.semantics.Role.Button, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            // Connecting loading indicator
             if (isConnecting) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(136.dp), // slightly smaller than button
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 2.dp
+                    modifier = Modifier.size(84.dp),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    strokeWidth = 3.dp
                 )
             }
-
-            // Very soft diffused glow behind icon when connected
-            if (isConnected) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                listOf(AccentState.copy(alpha = 0.5f), Color.Transparent)
-                            )
-                        )
-                )
-            }
-            
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.Rounded.PowerSettingsNew,
-                    contentDescription = buttonText,
-                    tint = textColor,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = buttonText,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = textColor
-                )
-            }
+            Icon(
+                Icons.Rounded.PowerSettingsNew, contentDescription = buttonText,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = if (isEnabled) 1f else 0.38f),
+                modifier = Modifier.size(64.dp)
+            )
         }
+        Spacer(Modifier.height(16.dp))
+        Text(buttonText, style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -436,176 +324,55 @@ private fun CurrentNodeCard(
     onPingClick: () -> Unit
 ) {
     com.dokodemo.ui.components.DokoCard(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).clickable(onClick = onClick)
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(R.string.current_node),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = serverName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(Modifier.height(4.dp))
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.current_node), style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Spacer(Modifier.height(8.dp))
+                Text(serverName, style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (protocol.isNotEmpty()) {
-                        Text(
-                            text = protocol,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    Text(protocol, style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    TextButton(onClick = onPingClick, enabled = !isPinging,
+                        contentPadding = PaddingValues(horizontal = 8.dp)) {
+                        if (isPinging) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+                        else Text("·  " + latency.ifEmpty { "--" }, style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Spacer(Modifier.width(4.dp))
+                        Icon(Icons.Rounded.Refresh, stringResource(R.string.ping_all), Modifier.size(14.dp))
                     }
                 }
             }
-            Column(horizontalAlignment = Alignment.End) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = latency.ifEmpty { "--" },
-                        fontFamily = MonoFont,
-                        fontWeight = FontWeight.SemiBold,
-                        color = when {
-                            latency.isEmpty() || latency == "--" -> MaterialTheme.colorScheme.onSurfaceVariant
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 100 } == true -> MaterialTheme.colorScheme.primary
-                            latency.removeSuffix("ms").toIntOrNull()?.let { it < 200 } == true -> MaterialTheme.colorScheme.onSurfaceVariant
-                            else -> MaterialTheme.colorScheme.error
-                        },
-                        fontSize = 18.sp
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    IconButton(
-                        onClick = onPingClick,
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        if (isPinging) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Rounded.Refresh,
-                                contentDescription = stringResource(R.string.ping_all),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                }
-                Text(
-                    text = stringResource(R.string.switch_node),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Box(Modifier.size(40.dp).clip(CircleShape).background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center) {
+                Icon(Icons.Rounded.ChevronRight, stringResource(R.string.switch_node),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
 }
 
-// ─── 流量监控卡片 ────────────────────────────────────────────────────────
 @Composable
-private fun TrafficMonitorCard(
-    uploadSpeed: String,
-    downloadSpeed: String,
-    speedHistory: List<Float>,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color(0xFF355F7B), Color(0xFF294655))
-                    )
-                )
-                .padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    stringResource(R.string.traffic_monitor),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    TrafficLabel("↑", uploadSpeed)
-                    TrafficLabel("↓", downloadSpeed)
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-            Text(stringResource(R.string.graph_scale, (speedHistory.maxOrNull() ?: 0f).toLong().toString()), color = Color.White, style = MaterialTheme.typography.labelSmall)
-            // 折线图
-            SpeedGraph(
-                dataPoints = speedHistory,
-                modifier = Modifier.fillMaxWidth().weight(1f)
-            )
+private fun TrafficMonitorCard(uploadSpeed: String, downloadSpeed: String) {
+    com.dokodemo.ui.components.DokoCard {
+        Row(Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
+            TrafficLabel("↑", stringResource(R.string.upload_speed), uploadSpeed, Modifier.weight(1f))
+            TrafficLabel("↓", stringResource(R.string.download_speed), downloadSpeed, Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun TrafficLabel(arrow: String, speed: String) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(arrow, color = Color.White, style = MaterialTheme.typography.labelSmall)
-        Text(speed.ifEmpty { "0 B/s" }, fontFamily = MonoFont, style = MaterialTheme.typography.labelSmall, color = Color.White, fontWeight = FontWeight.SemiBold)
-    }
-}
-
-@Composable
-private fun SpeedGraph(dataPoints: List<Float>, modifier: Modifier = Modifier) {
-    val lineColor = Color.White
-    val gridColor = Color.White.copy(alpha = 0.2f)
-    Canvas(modifier = modifier) {
-        if (dataPoints.size < 2) return@Canvas
-        val w = size.width
-        val h = size.height
-        val step = w / (dataPoints.size - 1).coerceAtLeast(1)
-        // 网格线
-        for (i in 1..3) {
-            val y = h * i / 4
-            drawLine(gridColor.copy(alpha = 0.3f), Offset(0f, y), Offset(w, y), 0.5f)
-        }
-        // 折线
-        val path = Path().apply {
-            dataPoints.forEachIndexed { idx, v ->
-                val x = idx * step
-                val y = h - (v / (dataPoints.maxOrNull() ?: 1f).coerceAtLeast(1f) * h * 0.85f).coerceIn(0f, h)
-                if (idx == 0) moveTo(x, y) else lineTo(x, y)
-            }
-        }
-        val fillPath = Path().apply {
-            addPath(path)
-            lineTo(w, h)
-            lineTo(0f, h)
-            close()
-        }
-        drawPath(
-            path = fillPath,
-            brush = Brush.verticalGradient(
-                colors = listOf(Color.White.copy(alpha = 0.3f), Color.Transparent),
-                startY = 0f,
-                endY = h
-            )
-        )
-        drawPath(path, lineColor, style = Stroke(width = 2.dp.toPx()))
+private fun TrafficLabel(arrow: String, label: String, speed: String, modifier: Modifier) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("$arrow  $label", style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(8.dp))
+        Text(speed.ifEmpty { "0 B/s" }, style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
@@ -618,26 +385,23 @@ fun HomeBottomNav(
     onNavigateToSettings: () -> Unit
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant, // Uses Theme surfaceVariant
+        containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp,
         windowInsets = WindowInsets(0, 0, 0, 0), // Scaffold handles system insets
         modifier = Modifier
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .navigationBarsPadding()
+            .padding(horizontal = 20.dp, vertical = 24.dp)
             .height(56.dp)
             .clip(CircleShape)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline, // Theme outline border
-                shape = CircleShape
-            )
+
     ) {
         val navItemColors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.primary,
+            selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
             selectedTextColor = MaterialTheme.colorScheme.primary,
             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+            indicatorColor = MaterialTheme.colorScheme.secondaryContainer
         )
 
         NavigationBarItem(
@@ -666,7 +430,7 @@ fun HomeBottomNav(
 fun HomeEmptyStateCard(onClick: () -> Unit) {
     com.dokodemo.ui.components.DokoCard(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
-        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         Column(
             modifier = Modifier.padding(24.dp).fillMaxWidth(),

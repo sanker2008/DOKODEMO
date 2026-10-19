@@ -26,9 +26,11 @@ fun DokoToggle(
         modifier = modifier,
         colors = SwitchDefaults.colors(
             checkedThumbColor = MaterialTheme.colorScheme.primary, // #A0C4E3 thumb when active
-            checkedTrackColor = MaterialTheme.colorScheme.surfaceVariant, // Gray track
+            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
             uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+            uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+            checkedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+            uncheckedBorderColor = androidx.compose.ui.graphics.Color.Transparent
         )
     )
 }

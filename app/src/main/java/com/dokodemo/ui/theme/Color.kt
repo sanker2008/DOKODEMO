@@ -9,7 +9,7 @@ val TextIconography = Color(0xFF405865)      // Cool Blue-Grey
 val AccentState = Color(0xFFB7D5C7)          // Soft Mint Green
 
 // ─── Semantic Colors ────────────────────────────────────────────────────────
-val SurfaceGlass = Color(0xB3FFFFFF)         // 70% opacity White for Cards
+val SurfaceGlass = Color(0xFFFFFFFF)         // Opaque white cards
 val SurfaceBorder = Color(0x1A607D8B)        // 10% opacity #607D8B for Card borders
 val TextPrimaryBtn = Color(0xFF294655)       // Slightly darker shade for text on Primary Action
 val TextBody = Color(0xFF526773)             // 70% opacity #607D8B for Body Text & Subtitles
@@ -24,7 +24,7 @@ val DarkTextIconography = Color(0xFFE2E8F0)
 val DarkAccentState = Color(0xFFB7D5C7)          // Mint Green glow
 
 // ─── Dark Mode Semantic Colors ──────────────────────────────────────────────
-val DarkSurfaceGlass = Color(0x991E2429)         // 60% opacity Dark Glass
+val DarkSurfaceGlass = Color(0xFF1E2429)         // Opaque dark cards
 val DarkSurfaceBorder = Color(0x33E2E8F0)        // 20% opacity white border
 val DarkTextPrimaryBtn = Color(0xFF0F172A)       // Dark text on Light Primary Action
 val DarkTextBody = Color(0xB3E2E8F0)             // 70% opacity for Body Text & Subtitles

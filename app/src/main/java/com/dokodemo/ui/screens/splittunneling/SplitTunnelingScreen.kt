@@ -92,7 +92,7 @@ fun SplitTunnelingScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Switch(
+                        com.dokodemo.ui.components.DokoToggle(
                             checked = uiState.showSystemApps,
                             onCheckedChange = { viewModel.setShowSystemApps(it) }
                         )
@@ -107,15 +107,15 @@ fun SplitTunnelingScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 20.dp)
         ) {
-            Text(stringResource(R.string.network_reconnect_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            com.dokodemo.ui.components.DokoHint(stringResource(R.string.network_reconnect_hint), Modifier.padding(vertical = 8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.split_enable), modifier = Modifier.weight(1f))
-                Switch(checked = uiState.splitEnabled, onCheckedChange = viewModel::setSplitEnabled)
+                com.dokodemo.ui.components.DokoToggle(checked = uiState.splitEnabled, onCheckedChange = viewModel::setSplitEnabled)
             }
             if (uiState.selectedCount == 0) Text(stringResource(R.string.split_empty_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            OutlinedTextField(
+            TextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.search(it) },
                 placeholder = { 
@@ -136,12 +136,7 @@ fun SplitTunnelingScreen(
                     .padding(vertical = 8.dp),
                 singleLine = true,
                 shape = RoundedCornerShape(24.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    focusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
-                    unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent
-                )
+                colors = com.dokodemo.ui.components.dokoTextFieldColors()
             )
 
             SplitModeSection(
@@ -263,11 +258,12 @@ private fun AppItem(app: AppInfo, onToggle: () -> Unit) {
             }
             Text(
                 text = app.packageName,
-                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1, overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Switch(
+        com.dokodemo.ui.components.DokoToggle(
             checked = app.isProxied,
             onCheckedChange = { onToggle() }
         )
@@ -285,6 +281,7 @@ private fun SplitModeSection(
             .padding(vertical = 8.dp)
     ) {
         SegmentedButton(
+            border = androidx.compose.foundation.BorderStroke(0.dp, androidx.compose.ui.graphics.Color.Transparent),
             selected = currentMode == SplitTunnelingMode.PROXY_SELECTED,
             onClick = { onModeChange(SplitTunnelingMode.PROXY_SELECTED) },
             shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
@@ -295,6 +292,7 @@ private fun SplitModeSection(
             label = { Text(stringResource(R.string.proxy_selected)) }
         )
         SegmentedButton(
+            border = androidx.compose.foundation.BorderStroke(0.dp, androidx.compose.ui.graphics.Color.Transparent),
             selected = currentMode == SplitTunnelingMode.BYPASS_SELECTED,
             onClick = { onModeChange(SplitTunnelingMode.BYPASS_SELECTED) },
             shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),

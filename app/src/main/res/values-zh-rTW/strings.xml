@@ -169,4 +169,10 @@
     <string name="batch_import_count">已識別 %1$d 條規則</string>
     <string name="batch_import_confirm">匯入 %1$d 條規則</string>
 
+    <string name="upload_speed">上傳速度</string>
+    <string name="download_speed">下載速度</string>
+    <string name="home_connect_hint">點擊連線</string>
+    <string name="home_disconnect_hint">點擊斷開</string>
+    <string name="node_selected">已選節點</string>
+    <string name="node_unreachable">無法連線</string>
 </resources>

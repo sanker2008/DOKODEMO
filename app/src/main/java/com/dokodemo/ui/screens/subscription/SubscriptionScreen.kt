@@ -88,9 +88,10 @@ fun SubscriptionScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
+                elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                 onClick = { if (!uiState.isRefreshing) { draftUrl = ""; showAddDialog = true } },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 shape = RoundedCornerShape(16.dp),
                 icon = { Icon(Icons.Rounded.Add, stringResource(R.string.review_add_subscription)) },
                 text = { Text(stringResource(R.string.review_add_subscription)) }
@@ -102,11 +103,11 @@ fun SubscriptionScreen(
                 EmptySubState()
             } else {
                 LazyColumn(
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 104.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(uiState.subscriptions) { sub ->
+                    items(uiState.subscriptions, key = { it.id }) { sub ->
                         SubscriptionCard(
                             subscription = sub,
                             isRefreshing = uiState.refreshingId == sub.id,
@@ -176,14 +177,15 @@ private fun SubscriptionCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
                 Text(
                     text = subscription.name,
+                    maxLines = 2, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(8.dp))
                 
                 val lastUpdateStr = if (subscription.lastUpdated != null) {
                     stringResource(R.string.review_last_update, timeFormat.format(Date(subscription.lastUpdated)))
@@ -198,7 +200,7 @@ private fun SubscriptionCard(
                 )
                 
                 if (subscription.total > 0) {
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(8.dp))
                     val used = subscription.upload + subscription.download
                     val usedStr = formatBytes(used)
                     val totalStr = formatBytes(subscription.total)
@@ -217,14 +219,14 @@ private fun SubscriptionCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(8.dp))
                     LinearProgressIndicator(
                         progress = { if (subscription.total > 0) (used.toFloat() / subscription.total.toFloat()).coerceIn(0f, 1f) else 0f },
                         modifier = Modifier.fillMaxWidth().height(4.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        trackColor = MaterialTheme.colorScheme.outlineVariant
+                        trackColor = MaterialTheme.colorScheme.secondaryContainer
                     )
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(8.dp))
                     Text(
                         text = stringResource(R.string.review_expire, expireStr),
                         style = MaterialTheme.typography.bodySmall,
@@ -248,10 +250,10 @@ private fun SubscriptionCard(
                 IconButton(onClick = { showMenu = true }) {
                     Icon(Icons.Rounded.MoreVert, stringResource(R.string.review_more), tint = MaterialTheme.colorScheme.onSurface)
                 }
-                DropdownMenu(
+                DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                     expanded = showMenu, 
                     onDismissRequest = { showMenu = false },
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.edit)) },

@@ -25,6 +25,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -114,7 +115,7 @@ fun ServerListScreen(
                         IconButton(onClick = { sortMenuExpanded = true }) {
                             Icon(Icons.AutoMirrored.Rounded.Sort, stringResource(R.string.sort_nodes))
                         }
-                        DropdownMenu(
+                        DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                             expanded = sortMenuExpanded,
                             onDismissRequest = { sortMenuExpanded = false },
                             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -160,17 +161,19 @@ fun ServerListScreen(
             var expanded by remember { mutableStateOf(false) }
             Box {
                 ExtendedFloatingActionButton(
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     onClick = { expanded = true },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     shape = RoundedCornerShape(16.dp),
                     icon = { Icon(Icons.Rounded.Add, stringResource(R.string.add_node)) },
                     text = { Text(stringResource(R.string.add_node)) }
                 )
-                DropdownMenu(
+                DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    // Floating menus need an opaque surface so node content cannot bleed through.
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 1f),
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     DropdownMenuItem(
@@ -225,14 +228,14 @@ fun ServerListScreen(
                 placeholder = stringResource(R.string.search_nodes),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
             )
 
             // ─── 分组标签 ─────────────────────────────────────────────────
             // 仅当有多个分组时才显示
             if (uiState.groups.isNotEmpty()) {
                 LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {
@@ -258,8 +261,8 @@ fun ServerListScreen(
             LazyColumn(
                 state = listState,
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 100.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(
                     items = filteredServers,
@@ -295,6 +298,7 @@ fun ServerListScreen(
 @Composable
 private fun GroupChip(label: String, selected: Boolean, onClick: () -> Unit) {
     FilterChip(
+        border = null,
         selected = selected,
         onClick = onClick,
         label = { Text(label) },
@@ -321,37 +325,34 @@ private fun NodeCard(
     com.dokodemo.ui.components.DokoCard(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
         containerColor = if (isSelected)
-                Primary.copy(alpha = 0.12f)
+                MaterialTheme.colorScheme.secondaryContainer
             else
                 MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 连接状态圆点
-            Box(
-                modifier = Modifier
-                    .size(10.dp)
-                    .clip(CircleShape)
-                    .background(
-                        when {
-                            server.isConnected -> AccentState
-                            isSelected -> Primary
-                            else -> MaterialTheme.colorScheme.outline
-                        }
-                    )
-            )
+            if (isSelected) {
+                Icon(Icons.Rounded.CheckCircle, stringResource(R.string.node_selected),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(24.dp))
+            } else {
+                Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onSurfaceVariant))
+                }
+            }
 
             Spacer(Modifier.width(12.dp))
 
             // 节点信息
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.weight(1f).padding(end = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     text = server.name,
-                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 2, overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -366,12 +367,13 @@ private fun NodeCard(
             Column(horizontalAlignment = Alignment.End) {
                 val ping = server.ping
                 Text(
-                    text = if (ping != null) "${ping}ms" else "--",
+                    text = if (ping == null) "--" else if (ping < 0) stringResource(R.string.node_unreachable) else "${ping}ms",
                     fontFamily = MonoFont,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp,
                     color = when {
                         ping == null -> MaterialTheme.colorScheme.onSurfaceVariant
+                        ping < 0 -> MaterialTheme.colorScheme.error
                         ping < 100   -> MaterialTheme.colorScheme.primary
                         ping < 200   -> MaterialTheme.colorScheme.onSurfaceVariant
                         else         -> MaterialTheme.colorScheme.error
@@ -380,7 +382,7 @@ private fun NodeCard(
                 // 信号格（简化版 4 格）
                 Row(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.Bottom) {
                     val bars = when {
-                        ping == null -> 0
+                        ping == null || ping < 0 -> 0
                         ping < 50   -> 4
                         ping < 100  -> 3
                         ping < 200  -> 2
@@ -403,7 +405,7 @@ private fun NodeCard(
                 IconButton(onClick = { showMenu = true }) {
                     Icon(Icons.Rounded.MoreVert, stringResource(R.string.more), tint = MaterialTheme.colorScheme.onSurface)
                 }
-                DropdownMenu(
+                DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
                     expanded = showMenu, 
                     onDismissRequest = { showMenu = false },
                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh

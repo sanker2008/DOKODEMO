@@ -203,4 +203,10 @@
     <string name="batch_import_count">已识别 %1$d 条规则</string>
     <string name="batch_import_confirm">导入 %1$d 条规则</string>
 
+    <string name="upload_speed">上传速度</string>
+    <string name="download_speed">下载速度</string>
+    <string name="home_connect_hint">点击连接</string>
+    <string name="home_disconnect_hint">点击断开</string>
+    <string name="node_selected">已选节点</string>
+    <string name="node_unreachable">不可达</string>
 </resources>

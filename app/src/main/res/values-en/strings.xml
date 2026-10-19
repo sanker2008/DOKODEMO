@@ -182,4 +182,10 @@
     <string name="batch_import_count">Detected %1$d rules</string>
     <string name="batch_import_confirm">Import %1$d Rules</string>
 
+    <string name="upload_speed">Upload speed</string>
+    <string name="download_speed">Download speed</string>
+    <string name="home_connect_hint">Tap to connect</string>
+    <string name="home_disconnect_hint">Tap to disconnect</string>
+    <string name="node_selected">Selected node</string>
+    <string name="node_unreachable">Unreachable</string>
 </resources>

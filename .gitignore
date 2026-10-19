@@ -93,3 +93,7 @@ fastlane/readme.md
 # Kotlin
 .kotlin/
 *.hprof
+
+# Local review and browser automation artifacts
+.codex-review/
+.playwright-mcp/

@@ -53,8 +53,8 @@ fun ConfigEditorScreen(
                     IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.back)) }
                 },
                 actions = {
-                    IconButton(enabled = !uiState.isSaving && !uiState.isLoading, onClick = { viewModel.saveConfig(onNavigateBack) }) {
-                        Icon(Icons.Rounded.Check, stringResource(R.string.save), tint = MaterialTheme.colorScheme.primary)
+                    TextButton(enabled = !uiState.isSaving && !uiState.isLoading, onClick = { viewModel.saveConfig(onNavigateBack) }) {
+                        Text(stringResource(R.string.save), fontWeight = FontWeight.SemiBold)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -65,10 +65,10 @@ fun ConfigEditorScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentWidth(Alignment.CenterHorizontally)
-                .widthIn(max = 840.dp)
+                .widthIn(max = 600.dp)
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp).imePadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Protocol Selector
@@ -183,7 +183,7 @@ fun ConfigEditorScreen(
                     onCheckedChange = viewModel::updateUseTls
                 )
                 if (uiState.useTls) {
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                    Spacer(Modifier.height(8.dp))
                     DokoInput(
                         value = uiState.serverName, onValueChange = viewModel::updateServerName,
                         label = stringResource(R.string.sni), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
@@ -194,7 +194,7 @@ fun ConfigEditorScreen(
                     )
                 }
                 if (uiState.protocol == Protocol.VLESS) {
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                    Spacer(Modifier.height(8.dp))
                     DokoToggleRow(
                         label = stringResource(R.string.use_reality), checked = uiState.useReality,
                         onCheckedChange = viewModel::updateUseReality
@@ -243,14 +243,11 @@ fun ConfigEditorScreen(
 
 @Composable
 private fun ConfigSection(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
-    )
-    DokoCard {
-        Column(modifier = Modifier.padding(16.dp), content = content)
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(title, style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 4.dp))
+        Column(content = content)
     }
 }
 
@@ -277,17 +274,17 @@ private fun InputDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = modifier.fillMaxWidth()) {
-        OutlinedTextField(
+        TextField(
             value = value, onValueChange = {}, readOnly = true, label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            colors = com.dokodemo.ui.components.dokoTextFieldColors(),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
         )
-        ExposedDropdownMenu(
+        ExposedDropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
             expanded = expanded, 
             onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             options.forEach { opt ->
                 DropdownMenuItem(text = { Text(opt) }, onClick = { onValueChange(opt); expanded = false })
@@ -305,17 +302,17 @@ private fun InputGroupDropdown(
     val selectedText = groups.find { it.id == selectedId }?.name ?: stringResource(R.string.no_group)
     
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(
+        TextField(
             value = selectedText, onValueChange = {}, readOnly = true, label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            colors = com.dokodemo.ui.components.dokoTextFieldColors(),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
         )
-        ExposedDropdownMenu(
+        ExposedDropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp,
             expanded = expanded, 
             onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             DropdownMenuItem(text = { Text(stringResource(R.string.no_group)) }, onClick = { onSelected(null); expanded = false })
             groups.forEach { g ->

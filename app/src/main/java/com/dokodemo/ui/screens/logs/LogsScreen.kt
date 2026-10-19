@@ -63,7 +63,7 @@ fun LogsScreen(
                         IconButton(onClick = { menuOpen = true }) {
                             Icon(Icons.Rounded.MoreVert, contentDescription = stringResource(R.string.more))
                         }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenu(tonalElevation = 0.dp, shadowElevation = 0.dp, expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             DropdownMenuItem(text = { Text(stringResource(R.string.copy_logs)) }, onClick = {
                                 menuOpen = false
                                 val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
@@ -100,17 +100,18 @@ fun LogsScreen(
                     state = listState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                        .padding(horizontal = 20.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    item { Text(stringResource(R.string.logs_hint), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(12.dp)) }
+                    item { com.dokodemo.ui.components.DokoHint(stringResource(R.string.logs_hint)) }
                     items(logs) { log ->
                         Text(
                             text = log,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 11.sp,
-                            lineHeight = 16.sp,
+                            fontSize = 12.sp,
+                            lineHeight = 18.sp,
                             modifier = Modifier.padding(vertical = 2.dp)
                         )
                     }
